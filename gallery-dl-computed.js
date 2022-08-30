@@ -18,16 +18,7 @@ const dumpJson1 = {
 };
 
 
-const json = dumpJson1;
-// It looks that all properties are global available in extractor .py files, so:
-globalThis.md5            = json.md5;
-globalThis.id             = json.id;
-globalThis.extension      = json.extension;
-globalThis.tags_artist    = json.tags_artist;
-globalThis.tags_character = json.tags_character;
-globalThis.tags_copyright = json.tags_copyright;
-globalThis.tags_medium    = json.tags_medium;
-globalThis.tags_general   = json.tags_general;
+const propsObject = dumpJson1;
 
 
 // -------------
@@ -36,25 +27,25 @@ const computedTagLineSetting = {
     "tags": ["tags_artist", "tags_character", "tags_copyright", "tags_general"],
     "limit": 130,           // "byteLimit": 120,
     "separator": " ",
-    "formatter": "${tag}",  // applies to each tag
+    "format": "{tag:split(_):cap():join(_)}",   // applies to each tag
 };
 // -------------
 
 
 // Here is the computed property
-Object.defineProperty(globalThis, "computedTagLine", {
+Object.defineProperty(propsObject, "computedTagLine", {
     get() {
         return computedTagLineSetting ? getComputedTagLine(computedTagLineSetting) : "";
     }
 });
 
-function getComputedTagLine({tags, limit, byteLimit, separator, formatter} = {}) {
+function getComputedTagLine({tags, limit, byteLimit, separator, format} = {}) {
     tags = tags || [];
     limit = limit || 100;
     separator = separator || " ";
-    formatter = formatter || "${tag}";
+    format = format || "{tag}";
 
-    tags = tags.map(name => globalThis[name]);
+    tags = tags.map(name => propsObject[name]);
 
     function length(string) {
         if (byteLimit) {
@@ -67,15 +58,11 @@ function getComputedTagLine({tags, limit, byteLimit, separator, formatter} = {})
     return tags
         .flat()
         .reduce((result, tag) => {
+            const props = {tag};
+            const {value: tagRendered} = renderTemplateString(format, props);
 
-            tag = formatStringSyntaxEmulation(formatter);
-
-            function formatStringSyntaxEmulation(pattern) {
-                return eval("`" + pattern + "`");
-            }
-
-            if (length(result) + length(separator) + length(tag) <= limit) {
-                return result.length ? result + separator + tag : tag;
+            if (length(result) + length(separator) + length(tagRendered) <= limit) {
+                return result.length ? result + separator + tagRendered : tagRendered;
             }
             return result;
         }, "");
@@ -88,17 +75,23 @@ const filenamePatter = "{id}—{computedTagLine}—{md5}.{extension}";
 console.log(filenamePatter);
 
 
-const resolvedFilename = renderTemplateString(filenamePatter);
+const {value: resolvedFilename} = renderTemplateString(filenamePatter);
 console.log(resolvedFilename);
 console.log(resolvedFilename.length);
 
 
-
-
-function renderTemplateString(template, props = globalThis) {
+/**
+ *
+ * @param template
+ * @param props
+ * @return {{hasUndefined: boolean, value: string}}
+ */
+function renderTemplateString(template, props = propsObject) {
     let hasUndefined = false;
     const value = template.replaceAll(/{[^{}]+?}/g, (match, index, string) => {
-        const value = props[match.slice(1, -1)];
+        const pattern = match.slice(1, -1);
+        const [key, ...mods] = pattern.split(":");
+        const value = props[key];
         if (value === undefined) {
             console.log(ANSI_RED_BOLD(`[renderTemplateString] ${match} is undefined`));
             hasUndefined = true;
