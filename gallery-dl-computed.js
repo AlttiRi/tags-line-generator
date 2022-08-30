@@ -27,7 +27,6 @@ const computedTagLineSetting = {
     "tags": ["tags_artist", "tags_character", "tags_copyright", "tags_general"],
     "limit": 130,           // "byteLimit": 120,
     "separator": " ",
-    "format": "{tag:split(_):cap():join(_)}",   // applies to each tag
 };
 // -------------
 
@@ -43,7 +42,6 @@ function getComputedTagLine({tags, limit, byteLimit, separator, format} = {}) {
     tags = tags || [];
     limit = limit || 100;
     separator = separator || " ";
-    format = format || "{tag}";
 
     tags = tags.map(name => propsObject[name]);
 
@@ -58,11 +56,8 @@ function getComputedTagLine({tags, limit, byteLimit, separator, format} = {}) {
     return tags
         .flat()
         .reduce((result, tag) => {
-            const props = {tag};
-            const {value: tagRendered} = renderTemplateString(format, props);
-
-            if (length(result) + length(separator) + length(tagRendered) <= limit) {
-                return result.length ? result + separator + tagRendered : tagRendered;
+            if (length(result) + length(separator) + length(tag) <= limit) {
+                return result.length ? result + separator + tag : tag;
             }
             return result;
         }, "");
@@ -89,8 +84,7 @@ console.log(resolvedFilename.length);
 function renderTemplateString(template, props = propsObject) {
     let hasUndefined = false;
     const value = template.replaceAll(/{[^{}]+?}/g, (match, index, string) => {
-        const pattern = match.slice(1, -1);
-        const [key, ...mods] = pattern.split(":");
+        const key = match.slice(1, -1);
         const value = props[key];
         if (value === undefined) {
             console.log(ANSI_RED_BOLD(`[renderTemplateString] ${match} is undefined`));
