@@ -1,21 +1,7 @@
-import {ANSI_RED_BOLD} from "@alttiri/util-node-js";
+import {ANSI_CYAN, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 
-const dumpJson1 = {
-    "id": 29652683,
-    "md5": "6ae32b1483fc6621dcbbbdb15144885d",
-    "created_at": 1639478267,
-    "extension": "jpg",
-    "tags_artist": ["nikita_varb"],
-    "tags_character": ["jessica_rabbit"],
-    "tags_copyright": ["who_framed_roger_rabbit"],
-    "tags_general": [
-        "1girl","bare_shoulders","between_breasts","breasts","clavicle","cleavage","clothing","cocktail_dress","dress",
-        "elbow_gloves","eyes_closed","eyeshadow","female","footwear","gloves","hair_over_one_eye","high_heels",
-        "large_breasts","lipstick","makeup","microphone_stand","purple_gloves","red_dress","red_hair","red_lipstick",
-        "shoes","solo","steam","strapless","strapless_dress","thighs"
-    ],
-    "tags_medium": ["high_resolution", "very_high_resolution", "large_filesize", "paid_reward"]
-};
+import json1 from "./jsons/sankaku-29652683.json"  assert {type: "json"};
+import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
 
 // -------------
 // Assume it's in gallery-dl.conf
@@ -28,7 +14,7 @@ const computedTagLineSetting = {
 // -------------
 
 const propsObject = {
-    ...dumpJson1,
+    ...json1,
 };
 propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 
@@ -61,7 +47,7 @@ function getComputedTagLine({tags, limit, byteLimit, separator} = {}) {
 
 
 const filenamePatter = "{id}—{computedTagLine}—{md5}.{extension}";
-console.log(filenamePatter);
+console.log(ANSI_CYAN(filenamePatter));
 
 
 const {value: resolvedFilename} = renderTemplateString(filenamePatter);
