@@ -7,13 +7,14 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
 // Assume it's in gallery-dl.conf
 const computedTagLineSetting = {
     "tags": ["tags_artist", "tags_important", "tags_character", "tags_copyright", "tags_studio", "tags_general", "tags_genre", "tags_medium", "tags_meta"],
+    "allTags": ["tags"],
     "deduplicate": true,
     "limit": 130,
     "byteLimit": 130,
     "separator": " ",
     "splitter": " ",
     "custom": {
-        "tags_important": "third-party_edit sound_edit paid_reward",
+        "tags_important": ["third-party_edit", "sound_edit", "paid_reward"],
     },
     "ignore": ["*filesize", "*resolution"]
 };
@@ -24,12 +25,18 @@ const propsObject = {
 };
 propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 
-function getComputedTagLine({tags, limit, byteLimit, separator} = {}) {
+function getComputedTagLine(settings = {}) {
+    let {tags, limit, byteLimit, separator, custom} = settings;
     tags = tags || [];
     limit = limit || 100;
     separator = separator || " ";
 
-    tags = tags.map(name => propsObject[name] || []);
+    const allTags = settings.allTags.map(name => propsObject[name] || []).flat();
+    tags = tags.map(name => propsObject[name] || (settings.custom[name] ? handleCustomTags(settings.custom[name]) : []));
+
+    function handleCustomTags(custom) {
+        return custom.filter(tag => allTags.includes(tag));
+    }
 
     function length(string) {
         if (byteLimit) {
