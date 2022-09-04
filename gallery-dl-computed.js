@@ -13,7 +13,7 @@ const computedTagLineSetting = {
     "separator": " ",
     "splitter": " ",
     "custom": {
-        "tags_important": "third-party_edit sound_edit",
+        "tags_important": "third-party_edit sound_edit paid_reward",
     },
     "ignore": ["*filesize", "*resolution"]
 };
@@ -29,7 +29,7 @@ function getComputedTagLine({tags, limit, byteLimit, separator} = {}) {
     limit = limit || 100;
     separator = separator || " ";
 
-    tags = tags.map(name => propsObject[name]);
+    tags = tags.map(name => propsObject[name] || []);
 
     function length(string) {
         if (byteLimit) {
