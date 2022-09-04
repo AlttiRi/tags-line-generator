@@ -17,28 +17,22 @@ const dumpJson1 = {
     "tags_medium": ["high_resolution", "very_high_resolution", "large_filesize", "paid_reward"]
 };
 
-
-const propsObject = dumpJson1;
-
-
 // -------------
 // Assume it's in gallery-dl.conf
 const computedTagLineSetting = {
     "tags": ["tags_artist", "tags_character", "tags_copyright", "tags_general"],
-    "limit": 130,           // "byteLimit": 120,
+    "limit": 130,
+ // "byteLimit": 120,
     "separator": " ",
 };
 // -------------
 
+const propsObject = {
+    ...dumpJson1,
+};
+propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 
-// Here is the computed property
-Object.defineProperty(propsObject, "computedTagLine", {
-    get() {
-        return computedTagLineSetting ? getComputedTagLine(computedTagLineSetting) : "";
-    }
-});
-
-function getComputedTagLine({tags, limit, byteLimit, separator, format} = {}) {
+function getComputedTagLine({tags, limit, byteLimit, separator} = {}) {
     tags = tags || [];
     limit = limit || 100;
     separator = separator || " ";
