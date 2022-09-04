@@ -6,10 +6,14 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
 // -------------
 // Assume it's in gallery-dl.conf
 const computedTagLineSetting = {
-    "tags": ["tags_artist", "tags_character", "tags_copyright", "tags_general"],
+    "tags": ["tags_artist", "tags_character", "tags_copyright", "tags_studio", "tags_general", "tags_genre", "tags_medium", "tags_meta"],
+    "deduplicate": true,
     "limit": 130,
- // "byteLimit": 120,
+ // "byteLimit": 130,
     "separator": " ",
+ // "splitter": " ",
+    "important": "third-party_edit sound_edit",
+    "ignore": ["*filesize", "*resolution"]
 };
 // -------------
 
