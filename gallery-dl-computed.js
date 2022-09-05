@@ -7,7 +7,7 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
 // Assume it's in gallery-dl.conf
 /**
  * @type {{
- * customTags: {},
+ * customTypes: {},
  * ignore: string[],
  * tags: string[],
  * [byteLimit]: number,
@@ -18,7 +18,7 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
  * }}
  */
 const computedTagLineSetting = {
-    "customTags": {
+    "customTypes": {
         "tags__important": {
             "source": ["tags"],
             "only": ["third-party_edit", "sound_edit"],
