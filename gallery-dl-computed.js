@@ -9,7 +9,6 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
  * @type {{
  * customTags: {},
  * ignore: string[],
- * allTags: string[],
  * tags: string[],
  * [byteLimit]: number,
  * [separator]: string,
@@ -20,20 +19,21 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
  */
 const computedTagLineSetting = {
     "customTags": {
-        "tags_important": {
+        "tags__important": {
             "source": ["tags"],
-            "only": ["third-party_edit", "sound_edit", "paid_reward"],
+            "only": ["third-party_edit", "sound_edit"],
         },
-        "tags_important_general": {
-            "source": ["tags_general"],
-            "only": ["female_only"]
-        }
+        "tags__important_medium": {
+            "source": ["tags_medium"],
+            "only": ["3d"]
+        },
+        "tags__custom_medium": {
+            "source": ["tags_medium"],
+            "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio"]
+        },
     },
-    "tags": ["tags_artist", "tags_important", "tags_character", "tags_important_general", "tags_copyright", "tags_studio", "tags_general", "tags_genre", "tags_medium", "tags_meta"],
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
-    "tags_meta": {
-        "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio"]
-    }
+    "tags": ["tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio", "tags__important_medium", "tags_general", "tags_genre", "tags__custom_medium", "tags_meta"]
 };
 // -------------
 
