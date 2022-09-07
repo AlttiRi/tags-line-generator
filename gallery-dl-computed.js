@@ -1,6 +1,7 @@
 import {ANSI_CYAN, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 
-import json1 from "./jsons/sankaku-29652683.json"  assert {type: "json"};
+// import json1 from "./jsons/sankaku-29652683.json"  assert {type: "json"};
+import json1 from "./jsons/sankaku-31250632.json"  assert {type: "json"};
 import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
 
 // -------------
@@ -9,7 +10,7 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
  * @type {{
  * customTypes: {},
  * ignore: string[],
- * tags: string[],
+ * tagsSet: string[],
  * [byteLimit]: number,
  * [separator]: string,
  * [splitter]: string,
@@ -30,10 +31,16 @@ const computedTagLineSetting = {
         "tags__custom_medium": {
             "source": ["tags_medium"],
             "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio"]
-        },
+        }
     },
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
-    "tags": ["tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio", "tags__important_medium", "tags_general", "tags_genre", "tags__custom_medium", "tags_meta"]
+    "selectedTags": [
+        "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
+        "tags__important_medium",
+        "tags__important_medium",
+        "tags__important_medium",
+        "tags_general", "tags_genre", "tags__custom_medium", "tags_meta"
+    ]
 };
 // -------------
 
@@ -50,17 +57,38 @@ function getComputedTagLine(settings = {}) {
     const joiner    = settings.joiner    || " ";
     const deduplicate = settings.deduplicate || true;
 
-    const allTags = settings.allTags.map(name => propsObject[name] || []).flat();
-    const selectedTags = settings.tags || allTags || [];
-    const tags = selectedTags.map(name => propsObject[name] || handleCustomTags(name) || []);
+    const selectedTags = settings.selectedTags || [];
+    const customTypes  = settings.customTypes  || {};
+    const ignore       = new Set(settings.ignore || []);
 
 
-    function handleCustomTags(name) {
-        const custom = settings.customTags[name];
-        if (!custom) {
-            return;
+
+    const customTagsMap = new Map();
+    for (const [tagsSetName, opts] of Object.entries(customTypes)) {
+        const source = propsObject[opts.source] || customTagsMap.get(opts.source);
+
+        const specialTags = new Set(opts.only || opts.ignore);
+        let result;
+        if (opts.only) {
+            result = source.filter(tag => specialTags.has(tag));
+        } else
+        if (opts.ignore) {
+            result = source.filter(tag => !specialTags.has(tag));
         }
-        return custom.filter(tag => allTags.includes(tag));
+        customTagsMap.set(tagsSetName, result);
+    }
+
+    const tags = selectedTags.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
+    const _tags = deduplicate ? new Set(tags) : tags;
+
+    let result = "";
+    for (const tag of _tags) {
+        if (ignore.has(tag)) {
+            continue;
+        }
+        if (length(result) + length(separator) + length(tag) <= limit) {
+            result = result.length ? result + separator + tag : tag;
+        }
     }
 
     function length(string) {
@@ -71,14 +99,7 @@ function getComputedTagLine(settings = {}) {
         }
     }
 
-    return tags
-        .flat()
-        .reduce((result, tag) => {
-            if (length(result) + length(separator) + length(tag) <= limit) {
-                return result.length ? result + separator + tag : tag;
-            }
-            return result;
-        }, "");
+    return result;
 }
 
 
@@ -94,7 +115,6 @@ console.log(resolvedFilename.length);
 
 
 /**
- *
  * @param template
  * @param props
  * @return {{hasUndefined: boolean, value: string}}
