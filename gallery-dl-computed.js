@@ -37,9 +37,8 @@ const computedTagLineSetting = {
     "selectedTags": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
-        "tags__important_medium",
-        "tags__important_medium",
-        "tags_general", "tags_genre", "tags__custom_medium", "tags_meta"
+        "tags_general",
+        "tags_genre", "tags__custom_medium", "tags_meta"
     ]
 };
 // -------------
@@ -74,6 +73,24 @@ function getComputedTagLine(settings = {}) {
         } else
         if (opts.ignore) {
             result = source.filter(tag => !specialTags.has(tag));
+            for (const specialTag of specialTags) {
+                if (specialTag.startsWith("*") || specialTag.endsWith("*")) {
+                    let matcher;
+                    if (specialTag.startsWith("*") && specialTag.endsWith("*")) {
+                        const substring = specialTag.slice(1, -1);
+                        matcher = text => !text.includes(substring);
+                    } else
+                    if (specialTag.startsWith("*")) {
+                        const substring = specialTag.slice(1);
+                        matcher = text => !text.endsWith(substring);
+                    } else
+                    if (specialTag.endsWith("*")) {
+                        const substring = specialTag.slice(0, -1);
+                        matcher = text => !text.startsWith(substring);
+                    }
+                    result = result.filter(matcher);
+                }
+            }
         }
         customTagsMap.set(tagsSetName, result);
     }
@@ -86,8 +103,8 @@ function getComputedTagLine(settings = {}) {
         if (ignore.has(tag)) {
             continue;
         }
-        if (length(result) + length(separator) + length(tag) <= limit) {
-            result = result.length ? result + separator + tag : tag;
+        if (length(result) + length(joiner) + length(tag) <= limit) {
+            result = result.length ? result + joiner + tag : tag;
         }
     }
 
