@@ -11,7 +11,7 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
  * customTypes: {},
  * ignore: string[],
  * tagsSet: string[],
- * [byteLimit]: number,
+ * [limitType]: "chars"|"bytes",
  * [separator]: string,
  * [splitter]: string,
  * [joiner]: string,
@@ -51,7 +51,7 @@ propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 
 function getComputedTagLine(settings = {}) {
     const limit     = settings.limit     || 120;
-    const byteLimit = settings.byteLimit || 120;
+    const limitType = settings.limitType || "chars";
     const separator = settings.separator || " ";
     const splitter  = settings.splitter  || " ";
     const joiner    = settings.joiner    || " ";
@@ -92,7 +92,7 @@ function getComputedTagLine(settings = {}) {
     }
 
     function length(string) {
-        if (byteLimit) {
+        if (limitType === "bytes") {
             return new TextEncoder().encode(string).length;
         } else {
             return string.length;
