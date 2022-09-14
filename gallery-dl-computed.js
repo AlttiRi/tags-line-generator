@@ -56,14 +56,14 @@ function getComputedTagLine(settings = {}) {
     // const separator = settings.separator     || " ";
     // const splitter  = settings.splitter      || " ";
 
-    const selectedTags = settings.selectedSets || [];
-    const customTypes  = settings.customSets   || {};
+    const selectedSets = settings.selectedSets || [];
+    const customSets  = settings.customSets   || {};
     const ignore       = new Set(settings.ignore || []);
 
 
 
     const customTagsMap = new Map();
-    for (const [tagsSetName, opts] of Object.entries(customTypes)) {
+    for (const [tagsSetName, opts] of Object.entries(customSets)) {
         const source = propsObject[opts.source] || customTagsMap.get(opts.source);
 
         const specialTags = new Set(opts.only || opts.ignore);
@@ -95,7 +95,7 @@ function getComputedTagLine(settings = {}) {
         customTagsMap.set(tagsSetName, result);
     }
 
-    let tags = selectedTags.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
+    let tags = selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
     if (deduplicate) {
         tags = new Set(tags);
     }
