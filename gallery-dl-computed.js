@@ -57,7 +57,7 @@ function getComputedTagLine(settings = {}) {
     // const splitter  = settings.splitter      || " ";
 
     const selectedSets = settings.selectedSets || [];
-    const customSets  = settings.customSets   || {};
+    const customSets   = settings.customSets   || {};
     const ignore       = new Set(settings.ignore || []);
 
 
