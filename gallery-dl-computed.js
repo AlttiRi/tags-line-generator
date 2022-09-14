@@ -3,7 +3,7 @@ import {ANSI_CYAN, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 // import json1 from "./jsons/sankaku-29652683.json"  assert {type: "json"};
 import json1 from "./jsons/sankaku-31250632.json"  assert {type: "json"};
 import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
-import {TagsLine} from "./tags-line.js";
+import {TagsLineGenerator} from "./tags-line-generator.js";
 
 // -------------
 // Assume it's in gallery-dl.conf
@@ -48,8 +48,8 @@ const propsObject = {
     ...json1,
 };
 
-const tagsLine = new TagsLine(computedTagLineSetting);
-propsObject.computedTagLine = tagsLine.getLine(propsObject);
+const tagsLine = new TagsLineGenerator(computedTagLineSetting);
+propsObject.computedTagLine = tagsLine.computeLine(propsObject);
 
 
 

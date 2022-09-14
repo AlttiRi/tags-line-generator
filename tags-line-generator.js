@@ -1,4 +1,4 @@
-export class TagsLine {
+export class TagsLineGenerator {
     constructor(settings = {}) {
         this.limit       = settings.limit       || 120;
         /** @type {"chars"|"bytes"} */
@@ -10,12 +10,20 @@ export class TagsLine {
         this.customSets   = settings.customSets   || {};
         this.ignore       = new Set(settings.ignore || []);
 
-        this.length = TagsLine._getLengthFunc(this.limitType);
+        for (const opts of Object.values(this.customSets)) {
+            for (const mod of ["only", "ignore"]) {
+                if (opts[mod]) {
+                    opts[mod] = TagsLineGenerator._splitTagsSet(opts[mod]);
+                }
+            }
+        }
+
+        this.length = TagsLineGenerator._getLengthFunc(this.limitType);
     }
 
-    getLine(propsObject) {
+    computeLine(propsObject) {
         /** @type {Map<String, String[]>} */
-        const customTagsMap = TagsLine._handleCustomTagsSets(propsObject, this.customSets);
+        const customTagsMap = TagsLineGenerator._handleCustomTagsSets(propsObject, this.customSets);
         /** @type {Array<String[]>} */
         const sets = this.selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []);
 
@@ -45,19 +53,18 @@ export class TagsLine {
 
             let result = [];
             if (opts.only) {
-                const onlyTags = new Set(opts.only);
-                result = sourceTags.filter(tag => onlyTags.has(tag));
-
-                // todo wildcards
+                const {specTagsSet, wildcardMatchers} = opts.only;
+                for (const tag of sourceTags) {
+                    if (!specTagsSet.has(tag) && !wildcardMatchers.some(matcher => matcher(tag))) {
+                        continue;
+                    }
+                    result.push(tag);
+                }
             } else
             if (opts.ignore) {
-                const {
-                    tags: ignoreTags,
-                    matchers: wildcardMatchers
-                } = TagsLine._splitTagsSet(opts.ignore);
-
+                const {specTagsSet, wildcardMatchers} = opts.ignore;
                 for (const tag of sourceTags) {
-                    if (ignoreTags.has(tag)) {
+                    if (specTagsSet.has(tag)) {
                         continue;
                     }
                     if (wildcardMatchers.some(matcher => matcher(tag))) {
@@ -68,7 +75,6 @@ export class TagsLine {
             } else {
                 result = sourceTags;
             }
-
             customTagsMap.set(name, result);
         }
 
@@ -85,8 +91,10 @@ export class TagsLine {
             }
         }
         return {
-            matchers: [...new Set(wildcards)].map(wildcardTag => TagsLine._getWildcardMatcher(wildcardTag)),
-            tags: new Set(tags)
+            wildcardMatchers: [...new Set(wildcards)].map(wildcardTag => {
+                return TagsLineGenerator._getWildcardMatcher(wildcardTag);
+            }),
+            specTagsSet: new Set(tags)
         };
     }
     static _getWildcardMatcher(wildcard) {
