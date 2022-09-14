@@ -47,24 +47,10 @@ export class TagsLine {
                 // todo wildcards
             } else
             if (opts.ignore) {
-
-                function splitTagsSet(tagsSet) {
-                    const wildcards = [];
-                    const tags = [];
-                    for (const tag of tagsSet) {
-                        if (tag.startsWith("*") || tag.endsWith("*")) {
-                            wildcards.push(tag);
-                        } else {
-                            tags.push(tag)
-                        }
-                    }
-                    return {wildcards: new Set(wildcards), tags: new Set(tags)};
-                }
-
                 const {
                     tags: ignoreTags,
                     wildcards: ignoreWTags
-                } = splitTagsSet(opts.ignore);
+                } = TagsLine._splitTagsSet(opts.ignore);
 
                 result = source.filter(tag => !ignoreTags.has(tag));
 
@@ -78,6 +64,18 @@ export class TagsLine {
         }
 
         return customTagsMap;
+    }
+    static _splitTagsSet(tagsSet) {
+        const wildcards = [];
+        const tags = [];
+        for (const tag of tagsSet) {
+            if (tag.startsWith("*") || tag.endsWith("*")) {
+                wildcards.push(tag);
+            } else {
+                tags.push(tag)
+            }
+        }
+        return {wildcards: new Set(wildcards), tags: new Set(tags)};
     }
     static _getWildcardMatcher(wildcard) {
         if (wildcard.startsWith("*") && wildcard.endsWith("*")) {
