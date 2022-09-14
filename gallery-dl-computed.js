@@ -51,9 +51,9 @@ propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 function getComputedTagLine(settings = {}) {
     const limit     = settings.limit     || 120;
     const limitType = settings.limitType || "chars";
-    const separator = settings.separator || " ";
-    const splitter  = settings.splitter  || " ";
-    const joiner    = settings.joiner    || " ";
+    // const separator = settings.separator || " ";
+    // const splitter  = settings.splitter  || " ";
+    const joiner      = settings.joiner  || " ";
     const deduplicate = settings.deduplicate || true;
 
     const selectedTags = settings.selectedTags || [];
@@ -95,11 +95,13 @@ function getComputedTagLine(settings = {}) {
         customTagsMap.set(tagsSetName, result);
     }
 
-    const tags = selectedTags.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
-    const _tags = deduplicate ? new Set(tags) : tags;
+    let tags = selectedTags.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
+    if (deduplicate) {
+        tags = new Set(tags);
+    }
 
     let result = "";
-    for (const tag of _tags) {
+    for (const tag of tags) {
         if (ignore.has(tag)) {
             continue;
         }
