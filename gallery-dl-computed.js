@@ -32,13 +32,20 @@ const computedTagLineSetting = {
         "tags__custom_medium": {
             "source": ["tags_medium"],
             "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio"]
+        },
+        "tags__custom_general": {
+            "source": ["tags_general"],
+            "limit": 3
         }
     },
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
+    "replace": [
+        ["megane", "glasses"]
+    ],
     "selectedSets": [
         // "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
-        // "tags_general",
+        "tags__custom_general",
         "tags_genre", "tags__custom_medium", "tags_meta"
     ]
 };

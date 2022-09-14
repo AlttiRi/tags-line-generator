@@ -9,6 +9,7 @@ export class TagsLineGenerator {
         this.selectedSets = settings.selectedSets || [];
         this.customSets   = settings.customSets   || {};
         this.ignore       = new Set(settings.ignore || []);
+        this.replace      = new Map(settings.replace);
 
         for (const opts of Object.values(this.customSets)) {
             for (const mod of ["only", "ignore"]) {
@@ -34,9 +35,12 @@ export class TagsLineGenerator {
         }
 
         let tagsLine = "";
-        for (const tag of tags) {
+        for (let tag of tags) {
             if (this.ignore.has(tag)) {
                 continue;
+            }
+            if (this.replace.has(tag)) {
+                tag = this.replace.get(tag);
             }
             if (this.length(tagsLine + this.joiner + tag) <= this.limit) {
                 tagsLine = tagsLine.length ? tagsLine + this.joiner + tag : tag;
@@ -74,6 +78,9 @@ export class TagsLineGenerator {
                 }
             } else {
                 result = sourceTags;
+            }
+            if (opts.limit) {
+                result = result.slice(0, opts.limit);
             }
             customTagsMap.set(name, result);
         }
