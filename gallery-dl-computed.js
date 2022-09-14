@@ -8,9 +8,9 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
 // Assume it's in gallery-dl.conf
 /**
  * @type {{
- * customTypes: {},
+ * customSets: {},
  * ignore: string[],
- * tagsSet: string[],
+ * selectedSets: string[],
  * [limitType]: "chars"|"bytes",
  * [separator]: string,
  * [splitter]: string,
@@ -19,7 +19,7 @@ import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
  * }}
  */
 const computedTagLineSetting = {
-    "customTypes": {
+    "customSets": {
         "tags__important": {
             "source": ["tags"],
             "only": ["third-party_edit", "sound_edit"],
@@ -34,7 +34,7 @@ const computedTagLineSetting = {
         }
     },
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
-    "selectedTags": [
+    "selectedSets": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
         "tags_general",
@@ -49,15 +49,15 @@ const propsObject = {
 propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 
 function getComputedTagLine(settings = {}) {
-    const limit     = settings.limit     || 120;
-    const limitType = settings.limitType || "chars";
-    // const separator = settings.separator || " ";
-    // const splitter  = settings.splitter  || " ";
-    const joiner      = settings.joiner  || " ";
+    const limit       = settings.limit       || 120;
+    const limitType   = settings.limitType   || "chars";
+    const joiner      = settings.joiner      || " ";
     const deduplicate = settings.deduplicate || true;
+    // const separator = settings.separator     || " ";
+    // const splitter  = settings.splitter      || " ";
 
-    const selectedTags = settings.selectedTags || [];
-    const customTypes  = settings.customTypes  || {};
+    const selectedTags = settings.selectedSets || [];
+    const customTypes  = settings.customSets   || {};
     const ignore       = new Set(settings.ignore || []);
 
 
