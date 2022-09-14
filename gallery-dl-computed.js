@@ -50,6 +50,7 @@ propsObject.computedTagLine = getComputedTagLine(computedTagLineSetting);
 
 function getComputedTagLine(settings = {}) {
     const limit       = settings.limit       || 120;
+    /** @type {"chars"|"bytes"} */
     const limitType   = settings.limitType   || "chars";
     const joiner      = settings.joiner      || " ";
     const deduplicate = settings.deduplicate || true;
@@ -61,7 +62,41 @@ function getComputedTagLine(settings = {}) {
     const ignore       = new Set(settings.ignore || []);
 
 
+    const customTagsMap = handleCustomTagsSets(propsObject, customSets);
+    const sets = selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []);
+    let tags = sets.flat();
+    if (deduplicate) {
+        tags = new Set(tags);
+    }
 
+    const length = getLengthFunc(limitType);
+
+    let result = "";
+    for (const tag of tags) {
+        if (ignore.has(tag)) {
+            continue;
+        }
+        if (length(result + joiner + tag) <= limit) {
+            result = result.length ? result + joiner + tag : tag;
+        }
+    }
+
+    return result;
+}
+
+function getLengthFunc(limitType) {
+    if (limitType === "bytes") {
+        const te = new TextEncoder();
+        return function(string) {
+            return te.encode(string).length;
+        }
+    }
+    return function(string) {
+        return string.length;
+    }
+}
+
+function handleCustomTagsSets(propsObject, customSets) {
     const customTagsMap = new Map();
     for (const [name, opts] of Object.entries(customSets)) {
         const source = propsObject[opts.source] || customTagsMap.get(opts.source);
@@ -95,32 +130,8 @@ function getComputedTagLine(settings = {}) {
         customTagsMap.set(name, result);
     }
 
-    let tags = selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
-    if (deduplicate) {
-        tags = new Set(tags);
-    }
-
-    let result = "";
-    for (const tag of tags) {
-        if (ignore.has(tag)) {
-            continue;
-        }
-        if (length(result) + length(joiner) + length(tag) <= limit) {
-            result = result.length ? result + joiner + tag : tag;
-        }
-    }
-
-    function length(string) {
-        if (limitType === "bytes") {
-            return new TextEncoder().encode(string).length;
-        } else {
-            return string.length;
-        }
-    }
-
-    return result;
+    return customTagsMap;
 }
-
 
 
 
