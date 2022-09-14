@@ -63,7 +63,7 @@ function getComputedTagLine(settings = {}) {
 
 
     const customTagsMap = new Map();
-    for (const [tagsSetName, opts] of Object.entries(customSets)) {
+    for (const [name, opts] of Object.entries(customSets)) {
         const source = propsObject[opts.source] || customTagsMap.get(opts.source);
 
         const specialTags = new Set(opts.only || opts.ignore);
@@ -92,7 +92,7 @@ function getComputedTagLine(settings = {}) {
                 }
             }
         }
-        customTagsMap.set(tagsSetName, result);
+        customTagsMap.set(name, result);
     }
 
     let tags = selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []).flat();
