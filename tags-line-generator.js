@@ -11,18 +11,20 @@ export class TagsLineGenerator {
         this.customSets   = settings.customSets   || {};
         this.replace      = new Map(settings.replace);
 
+        const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
         for (const opts of Object.values(this.customSets)) {
-            for (const mod of ["only", "ignore"]) {
-                if (opts[mod]) {
-                    opts[mod] = new TagsLineGenerator.WildcardTagMatcher(opts[mod]);
-                }
+            if (opts.ignore) {
+                opts.ignore = new WildcardTagMatcher(opts.ignore);
+            }
+            if (opts.only) {
+                opts.only = new WildcardTagMatcher(opts.only);
             }
         }
         if (settings.ignore) {
-            this.ignore = new TagsLineGenerator.WildcardTagMatcher(settings.ignore);
+            this.ignore = new WildcardTagMatcher(settings.ignore);
         }
         if (settings.only) {
-            this.only = new TagsLineGenerator.WildcardTagMatcher(settings.only);
+            this.only = new WildcardTagMatcher(settings.only);
         }
 
         if (this.bytesLimit > 0) {
