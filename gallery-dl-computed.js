@@ -31,11 +31,11 @@ const computedTagLineSetting = {
         },
         "tags__custom_medium": {
             "source": ["tags_medium"],
-            "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio"]
+            "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
         },
         "tags__custom_general": {
             "source": ["tags_general"],
-            "tagsLimit": 3
+            // "tagsLimit": 3
         }
     },
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
@@ -49,7 +49,7 @@ const computedTagLineSetting = {
         "tags_genre", "tags__custom_medium", "tags_meta"
     ],
     // "only": ["gwendolyn_tennyson", "violet_parr"],
-    "tagsLimit": 7
+    // "tagsLimit": 7
 };
 // -------------
 
