@@ -21,6 +21,9 @@ export class TagsLineGenerator {
         if (settings.ignore) {
             this.ignore = TagsLineGenerator._splitWildcardTagsSet(settings.ignore);
         }
+        if (settings.only) {
+            this.only = TagsLineGenerator._splitWildcardTagsSet(settings.only);
+        }
 
         if (this.bytesLimit > 0) {
             this.limitType = "bytes";
@@ -50,9 +53,17 @@ export class TagsLineGenerator {
         let currentLength = 0;
         const jL = this.calcLength(this.joiner);
         for (let tag of tags) {
+            if (this.only) {
+                const {specTagsSet, wildcardMatchers} = this.only;
+                const hasMatch = specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag));
+                if (!hasMatch) {
+                    continue;
+                }
+            } else
             if (this.ignore) {
                 const {specTagsSet, wildcardMatchers} = this.ignore;
-                if (specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag))) {
+                const hasMatch = specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag));
+                if (hasMatch) {
                     continue;
                 }
             }
@@ -80,18 +91,20 @@ export class TagsLineGenerator {
 
             let result = [];
             if (opts.only) {
-                const {specTagsSet, wildcardMatchers} = opts.only;
                 for (const tag of sourceTags) {
-                    if (!specTagsSet.has(tag) && !wildcardMatchers.some(matcher => matcher(tag))) {
+                    const {specTagsSet, wildcardMatchers} = opts.only;
+                    const hasMatch = specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag));
+                    if (!hasMatch) {
                         continue;
                     }
                     result.push(tag);
                 }
             } else
             if (opts.ignore) {
-                const {specTagsSet, wildcardMatchers} = opts.ignore;
                 for (const tag of sourceTags) {
-                    if (specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag))) {
+                    const {specTagsSet, wildcardMatchers} = opts.ignore;
+                    const hasMatch = specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag));
+                    if (hasMatch) {
                         continue;
                     }
                     result.push(tag);
@@ -99,6 +112,7 @@ export class TagsLineGenerator {
             } else {
                 result = sourceTags;
             }
+
             if (opts.tagsLimit) {
                 result = result.slice(0, opts.tagsLimit);
             }

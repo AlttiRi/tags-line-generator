@@ -49,7 +49,7 @@ const computedTagLineSetting = {
         "tags_genre", "tags__custom_medium", "tags_meta"
     ],
     // "only": ["gwendolyn_tennyson", "violet_parr"],
-    // "tagsLimit": 7
+    "tagsLimit": 7
 };
 // -------------
 
