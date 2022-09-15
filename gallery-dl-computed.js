@@ -61,8 +61,8 @@ const tagsLine = new TagsLineGenerator(computedTagLineSetting);
 propsObject.computedTagLine = tagsLine.computeLine(propsObject);
 
 
-
-const filenamePatter = "{id}—{computedTagLine}—{md5}.{extension}";
+//todo date
+const filenamePatter = "[{category}] {id}—{computedTagLine}—{md5}.{extension}";
 console.log(ANSI_CYAN(filenamePatter));
 
 
