@@ -58,11 +58,13 @@ const propsObject = {
 };
 
 const tagsLine = new TagsLineGenerator(computedTagLineSetting);
-propsObject.computedTagLine = tagsLine.computeLine(propsObject);
+Object.assign(propsObject, {
+    computedTagLine: tagsLine.computeLine(propsObject),
+    ...dateParts(propsObject.created_at * 1000),
+});
 
 
-//todo date
-const filenamePatter = "[{category}] {id}—{computedTagLine}—{md5}.{extension}";
+const filenamePatter = "[{category}] {id}—{YYYY}.{MM}.{DD}—{computedTagLine}—{md5}.{extension}";
 console.log(ANSI_CYAN(filenamePatter));
 
 
@@ -88,4 +90,12 @@ function renderTemplateString(template, props = propsObject) {
         return value;
     });
     return {hasUndefined, value};
+}
+
+function dateParts(date) {
+    const d = new Date(date);
+    const YYYY = d.getUTCFullYear();
+    const MM = (d.getUTCMonth() + 1).toString().padStart(2, "0");
+    const DD = d.getUTCDate().toString().padStart(2, "0");
+    return {YYYY, MM, DD}
 }
