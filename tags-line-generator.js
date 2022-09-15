@@ -1,25 +1,37 @@
 export class TagsLineGenerator {
     constructor(settings = {}) {
-        this.limit       = settings.limit       || 120;
-        /** @type {"chars"|"bytes"} */
-        this.limitType   = settings.limitType   || "chars";
+        this.charsLimit = settings.charsLimit  || 120;
+        this.bytesLimit = settings.bytesLimit  || 0;
+        this.tagsLimit  = settings.tagsLimit   || 0;
+
         this.joiner      = settings.joiner      || " ";
         this.deduplicate = settings.deduplicate || true;
 
         this.selectedSets = settings.selectedSets || [];
         this.customSets   = settings.customSets   || {};
-        this.ignore       = new Set(settings.ignore || []);
         this.replace      = new Map(settings.replace);
 
         for (const opts of Object.values(this.customSets)) {
             for (const mod of ["only", "ignore"]) {
                 if (opts[mod]) {
-                    opts[mod] = TagsLineGenerator._splitTagsSet(opts[mod]);
+                    opts[mod] = TagsLineGenerator._splitWildcardTagsSet(opts[mod]);
                 }
             }
         }
+        if (settings.ignore) {
+            this.ignore = TagsLineGenerator._splitWildcardTagsSet(settings.ignore);
+        }
 
-        this.length = TagsLineGenerator._getLengthFunc(this.limitType);
+        if (this.bytesLimit > 0) {
+            this.limitType = "bytes";
+            this.lengthLimit = this.bytesLimit;
+        } else {
+            this.limitType = "chars";
+            this.lengthLimit = this.charsLimit;
+        }
+        this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
+
+        //todo string input
     }
 
     computeLine(propsObject) {
@@ -34,20 +46,31 @@ export class TagsLineGenerator {
             tags = new Set(tags);
         }
 
-        let tagsLine = "";
+        const resultTags = [];
+        let currentLength = 0;
+        const jL = this.calcLength(this.joiner);
         for (let tag of tags) {
-            if (this.ignore.has(tag)) {
-                continue;
+            if (this.ignore) {
+                const {specTagsSet, wildcardMatchers} = this.ignore;
+                if (specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag))) {
+                    continue;
+                }
             }
             if (this.replace.has(tag)) {
                 tag = this.replace.get(tag);
             }
-            if (this.length(tagsLine + this.joiner + tag) <= this.limit) {
-                tagsLine = tagsLine.length ? tagsLine + this.joiner + tag : tag;
+            const tagLength = this.calcLength(tag);
+            const expectedLineLength = currentLength + tagLength + jL * resultTags.length;
+            if (expectedLineLength <= this.lengthLimit) {
+                resultTags.push(tag);
+                currentLength += tagLength;
+                if (this.tagsLimit === resultTags.length) {
+                    break;
+                }
             }
         }
 
-        return tagsLine;
+        return resultTags.join(this.joiner);
     }
 
     static _handleCustomTagsSets(propsObject, customSets) {
@@ -68,10 +91,7 @@ export class TagsLineGenerator {
             if (opts.ignore) {
                 const {specTagsSet, wildcardMatchers} = opts.ignore;
                 for (const tag of sourceTags) {
-                    if (specTagsSet.has(tag)) {
-                        continue;
-                    }
-                    if (wildcardMatchers.some(matcher => matcher(tag))) {
+                    if (specTagsSet.has(tag) || wildcardMatchers.some(matcher => matcher(tag))) {
                         continue;
                     }
                     result.push(tag);
@@ -79,15 +99,15 @@ export class TagsLineGenerator {
             } else {
                 result = sourceTags;
             }
-            if (opts.limit) {
-                result = result.slice(0, opts.limit);
+            if (opts.tagsLimit) {
+                result = result.slice(0, opts.tagsLimit);
             }
             customTagsMap.set(name, result);
         }
 
         return customTagsMap;
     }
-    static _splitTagsSet(tagsSet) {
+    static _splitWildcardTagsSet(tagsSet) {
         const wildcards = [];
         const tags = [];
         for (const tag of tagsSet) {
@@ -118,6 +138,7 @@ export class TagsLineGenerator {
             return text => text.startsWith(substring);
         }
     }
+    /** @param {"bytes"|"chars"} limitType */
     static _getLengthFunc(limitType) {
         if (limitType === "bytes") {
             const te = new TextEncoder();
