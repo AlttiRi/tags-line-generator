@@ -1,30 +1,39 @@
 export class TagsLineGenerator {
+    /** @typedef {Object<string, {
+     * source?: String|Array<String>,
+     * only?: String|Array<String>,
+     * ignore?: String|Array<String>,
+     * ignoreMatcher?: TagsLineGenerator.WildcardTagMatcher,
+     * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher,
+     * }>} CustomSets */
     constructor(settings = {}) {
-        this.charsLimit = settings.charsLimit  || 120;
-        this.bytesLimit = settings.bytesLimit  || 0;
-        this.tagsLimit  = settings.tagsLimit   || 0;
+        this.charsLimit = settings.charsLimit   || 120;
+        this.bytesLimit = settings.bytesLimit   || 0;
+        this.tagsLimit  = settings.tagsLimit    || 0;
 
         this.joiner      = settings.joiner      || " ";
+        this.splitter    = settings.splitter    || " ";
         this.deduplicate = settings.deduplicate || true;
 
-        this.selectedSets = settings.selectedSets || [];
-        this.customSets   = settings.customSets   || {};
+        this.selectedSets = this.toArray(settings.selectedSets);
+        /** @type {CustomSets} */
+        this.customSets   = settings.customSets || {};
         this.replace      = new Map(settings.replace);
 
         const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
         for (const opts of Object.values(this.customSets)) {
             if (opts.ignore) {
-                opts.ignore = new WildcardTagMatcher(opts.ignore);
+                opts.ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore));
             }
             if (opts.only) {
-                opts.only = new WildcardTagMatcher(opts.only);
+                opts.onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only));
             }
         }
         if (settings.ignore) {
-            this.ignore = new WildcardTagMatcher(settings.ignore);
+            this.ignoreMatcher = new WildcardTagMatcher(settings.ignore);
         }
         if (settings.only) {
-            this.only = new WildcardTagMatcher(settings.only);
+            this.onlyMatcher = new WildcardTagMatcher(settings.only);
         }
 
         if (this.bytesLimit > 0) {
@@ -39,9 +48,20 @@ export class TagsLineGenerator {
         //todo string input
     }
 
+    /** @param {String|Array<String>} value */
+    toArray(value) {
+        if (!value) {
+            return [];
+        }
+        if (Array.isArray(value)) {
+            return value;
+        }
+        return value.split(this.splitter);
+    }
+
     computeLine(propsObject) {
         /** @type {Map<String, String[]>} */
-        const customTagsMap = TagsLineGenerator._handleCustomTagsSets(propsObject, this.customSets);
+        const customTagsMap = this._handleCustomTagsSets(propsObject);
         /** @type {Array<String[]>} */
         const sets = this.selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []);
 
@@ -55,10 +75,10 @@ export class TagsLineGenerator {
         let currentLength = 0;
         const jL = this.calcLength(this.joiner);
         for (let tag of tags) {
-            if (this.only && !this.only.match(tag)) {
+            if (this.onlyMatcher && !this.onlyMatcher.match(tag)) {
                 continue;
             } else
-            if (this.ignore && this.ignore.match(tag)) {
+            if (this.ignoreMatcher && this.ignoreMatcher.match(tag)) {
                 continue;
             }
             if (this.replace.has(tag)) {
@@ -78,17 +98,17 @@ export class TagsLineGenerator {
         return resultTags.join(this.joiner);
     }
 
-    static _handleCustomTagsSets(propsObject, customSets) {
+    _handleCustomTagsSets(propsObject) {
         const customTagsMap = new Map();
-        for (const [name, opts] of Object.entries(customSets)) {
+        for (const [name, opts] of Object.entries(this.customSets)) {
             const sourceTags = propsObject[opts.source] || customTagsMap.get(opts.source);
 
             let result = [];
             for (const tag of sourceTags) {
-                if (opts.only && !opts.only.match(tag)) {
+                if (opts.only && !opts.onlyMatcher.match(tag)) {
                     continue;
                 } else
-                if (opts.ignore && opts.ignore.match(tag)) {
+                if (opts.ignore && opts.ignoreMatcher.match(tag)) {
                     continue;
                 }
                 result.push(tag);
@@ -102,6 +122,7 @@ export class TagsLineGenerator {
         return customTagsMap;
     }
     static WildcardTagMatcher = class {
+        /** @param {Array<String>} tagsSet */
         constructor(tagsSet) {
             const wildcards = [];
             const tags = [];
