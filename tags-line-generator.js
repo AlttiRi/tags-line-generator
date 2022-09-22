@@ -1,8 +1,8 @@
 export class TagsLineGenerator {
-    /** @typedef {Object<string, {
-     * source?: String|Array<String>,
-     * only?: String|Array<String>,
-     * ignore?: String|Array<String>,
+    /** @typedef {Object<String, {
+     * source?: String|String[],
+     * only?: String|String[],
+     * ignore?: String|String[],
      * ignoreMatcher?: TagsLineGenerator.WildcardTagMatcher,
      * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher,
      * }>} CustomSets */
@@ -16,11 +16,11 @@ export class TagsLineGenerator {
      * deduplicate?: boolean,
      *
      * customSets?: CustomSets,
-     * selectedSets?: string[],
+     * selectedSets?: String|String[],
      * replace?: Array<Array<String>>,
      *
-     * ignore?: string[],
-     * only?: string[],
+     * ignore?: String|String[],
+     * only?: String|String[],
      * }} ComputedTagLineSetting */
     /** @param {ComputedTagLineSetting} settings */
     constructor(settings = {}) {
@@ -48,13 +48,11 @@ export class TagsLineGenerator {
             }
         }
         if (settings.ignore) {
-            this.ignoreMatcher = new WildcardTagMatcher(settings.ignore);
+            this.ignoreMatcher = new WildcardTagMatcher(this.toArray(settings.ignore));
         }
         if (settings.only) {
-            this.onlyMatcher = new WildcardTagMatcher(settings.only);
+            this.onlyMatcher = new WildcardTagMatcher(this.toArray(settings.only));
         }
-
-        //todo string input
     }
 
     initCharLimiter() {
@@ -83,7 +81,9 @@ export class TagsLineGenerator {
         /** @type {Map<String, String[]>} */
         const customTagsMap = this._handleCustomTagsSets(propsObject);
         /** @type {Array<String[]>} */
-        const sets = this.selectedSets.map(name => propsObject[name] || customTagsMap.get(name) || []);
+        const sets = this.selectedSets.map(name => {
+            return this.toArray(propsObject[name] || customTagsMap.get(name));
+        });
 
         /** @type {Iterable<String>} */
         let tags = sets.flat();

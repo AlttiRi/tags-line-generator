@@ -42,8 +42,9 @@ const computedTagLineSetting = {
     // "only": ["gwendolyn_tennyson", "violet_parr"],
     // "tagsLimit": 7
 };
-
 const tagsLineGen = new TagsLineGenerator(computedTagLineSetting);
+
+
 Object.assign(propsObject, {
     computedTagLine: tagsLineGen.computeLine(propsObject),
     ...dateParts(propsObject.created_at * 1000),
