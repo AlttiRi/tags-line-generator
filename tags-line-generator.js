@@ -6,6 +6,23 @@ export class TagsLineGenerator {
      * ignoreMatcher?: TagsLineGenerator.WildcardTagMatcher,
      * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher,
      * }>} CustomSets */
+    /** @typedef {{
+     * charsLimit?: number,
+     * bytesLimit?: number,
+     * tagsLimit?: number,
+     *
+     * joiner?: string,
+     * splitter?: string,
+     * deduplicate?: boolean,
+     *
+     * customSets?: CustomSets,
+     * selectedSets?: string[],
+     * replace?: Array<Array<String>>,
+     *
+     * ignore?: string[],
+     * only?: string[],
+     * }} ComputedTagLineSetting */
+    /** @param {ComputedTagLineSetting} settings */
     constructor(settings = {}) {
         this.charsLimit = settings.charsLimit   || 120;
         this.bytesLimit = settings.bytesLimit   || 0;
@@ -15,9 +32,9 @@ export class TagsLineGenerator {
         this.splitter    = settings.splitter    || " ";
         this.deduplicate = settings.deduplicate || true;
 
-        this.selectedSets = this.toArray(settings.selectedSets);
-        /** @type {CustomSets} */
+        /** @type {CustomSets|Object} */
         this.customSets   = settings.customSets || {};
+        this.selectedSets = this.toArray(settings.selectedSets);
         this.replace      = new Map(settings.replace);
 
         const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
@@ -48,7 +65,7 @@ export class TagsLineGenerator {
         //todo string input
     }
 
-    /** @param {String|Array<String>} value */
+    /** @param {String|String[]} value */
     toArray(value) {
         if (!value) {
             return [];

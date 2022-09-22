@@ -1,24 +1,15 @@
-import {ANSI_CYAN, ANSI_RED_BOLD} from "@alttiri/util-node-js";
+import {ANSI_CYAN} from "@alttiri/util-node-js";
+import {TagsLineGenerator} from "./tags-line-generator.js";
+import {dateParts, renderTemplateString} from "./util.js";
 
-// import json1 from "./jsons/sankaku-29652683.json"  assert {type: "json"};
 import json1 from "./jsons/sankaku-31250632.json"  assert {type: "json"};
 import json2 from "./jsons/safebooru-5615470.json" assert {type: "json"};
-import {TagsLineGenerator} from "./tags-line-generator.js";
+import json3 from "./jsons/sankaku-29652683.json"  assert {type: "json"};
 
-// -------------
-// Assume it's in gallery-dl.conf
-/**
- * @type {{
- * customSets: {},
- * ignore: string[],
- * selectedSets: string[],
- * [limitType]: "chars"|"bytes",
- * [separator]: string,
- * [splitter]: string,
- * [joiner]: string,
- * [deduplicate]: boolean,
- * }}
- */
+
+const propsObject = json1;
+
+/** @type {ComputedTagLineSetting} */
 const computedTagLineSetting = {
     "customSets": {
         "tags__important": {
@@ -51,11 +42,6 @@ const computedTagLineSetting = {
     // "only": ["gwendolyn_tennyson", "violet_parr"],
     // "tagsLimit": 7
 };
-// -------------
-
-const propsObject = {
-    ...json1,
-};
 
 const tagsLine = new TagsLineGenerator(computedTagLineSetting);
 Object.assign(propsObject, {
@@ -67,35 +53,6 @@ Object.assign(propsObject, {
 const filenamePatter = "[{category}] {id}—{YYYY}.{MM}.{DD}—{computedTagLine}—{md5}.{extension}";
 console.log(ANSI_CYAN(filenamePatter));
 
-
-const {value: resolvedFilename} = renderTemplateString(filenamePatter);
-console.log(resolvedFilename);
-console.log(resolvedFilename.length);
-
-
-/**
- * @param template
- * @param props
- * @return {{hasUndefined: boolean, value: string}}
- */
-function renderTemplateString(template, props = propsObject) {
-    let hasUndefined = false;
-    const value = template.replaceAll(/{[^{}]+?}/g, (match, index, string) => {
-        const key = match.slice(1, -1);
-        const value = props[key];
-        if (value === undefined) {
-            console.log(ANSI_RED_BOLD(`[renderTemplateString] ${match} is undefined`));
-            hasUndefined = true;
-        }
-        return value;
-    });
-    return {hasUndefined, value};
-}
-
-function dateParts(date) {
-    const d = new Date(date);
-    const YYYY = d.getUTCFullYear();
-    const MM = (d.getUTCMonth() + 1).toString().padStart(2, "0");
-    const DD = d.getUTCDate().toString().padStart(2, "0");
-    return {YYYY, MM, DD}
-}
+const {value: filename} = renderTemplateString(filenamePatter, propsObject);
+console.log(filename);
+console.log(filename.length);
