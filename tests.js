@@ -6,7 +6,6 @@ import sankaku3  from "./jsons/sankaku-31113165.json"   assert {type: "json"};
 import pixiv     from "./jsons/pixiv-78254724.json"     assert {type: "json"};
 import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
 import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
-import * as assert from "assert";
 
 let tagsLineGen;
 
@@ -119,3 +118,54 @@ console.log(
     "light-skinned_female lips long_hair medium_breasts multiple_girls nail_polish neck orange_hair pale-skinned_female " +
     "pale_skin purple_eyes purple_hair red_hair short_hair teasing teeth"
 );
+
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+});
+console.log(
+    tagsLineGen.computeLine(safebooru)
+    === "xingzhi_lv original abandoned architecture broken_window bush day east_asian_architecture forest grass house lantern"
+);
+
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+    "ignore": ["original"]
+});
+console.log(
+    tagsLineGen.computeLine(safebooru)
+    === "xingzhi_lv abandoned architecture broken_window bush day east_asian_architecture forest grass house lantern nature path"
+);
+
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+    "only": ["original"]
+});
+console.log(
+    tagsLineGen.computeLine(safebooru)
+    === "original"
+);
+
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tag_string_artist tag_string_character",
+});
+console.log(
+    tagsLineGen.computeLine(sankaku3)
+    === "hagiwara_studio barkkung101 nami_(one_piece) nico_robin"
+);
+
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "  tag_string_character   tag_string_artist ",
+});
+console.log(
+    tagsLineGen.computeLine(sankaku3)
+    === "nami_(one_piece) nico_robin hagiwara_studio barkkung101"
+);
+
+
+
+
