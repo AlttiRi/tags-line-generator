@@ -43,9 +43,9 @@ const computedTagLineSetting = {
     // "tagsLimit": 7
 };
 
-const tagsLine = new TagsLineGenerator(computedTagLineSetting);
+const tagsLineGen = new TagsLineGenerator(computedTagLineSetting);
 Object.assign(propsObject, {
-    computedTagLine: tagsLine.computeLine(propsObject),
+    computedTagLine: tagsLineGen.computeLine(propsObject),
     ...dateParts(propsObject.created_at * 1000),
 });
 

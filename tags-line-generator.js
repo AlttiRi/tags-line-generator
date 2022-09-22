@@ -27,6 +27,7 @@ export class TagsLineGenerator {
         this.charsLimit = settings.charsLimit   || 120;
         this.bytesLimit = settings.bytesLimit   || 0;
         this.tagsLimit  = settings.tagsLimit    || 0;
+        this.initCharLimiter();
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
@@ -53,16 +54,18 @@ export class TagsLineGenerator {
             this.onlyMatcher = new WildcardTagMatcher(settings.only);
         }
 
+        //todo string input
+    }
+
+    initCharLimiter() {
         if (this.bytesLimit > 0) {
             this.limitType = "bytes";
             this.lengthLimit = this.bytesLimit;
         } else {
             this.limitType = "chars";
-            this.lengthLimit = this.charsLimit;
+            this.lengthLimit = this.charsLimit >= 0 ? this.charsLimit : Number.MAX_SAFE_INTEGER;
         }
         this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
-
-        //todo string input
     }
 
     /** @param {String|String[]} value */
