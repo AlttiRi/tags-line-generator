@@ -46,7 +46,7 @@ const tagsLineGen = new TagsLineGenerator(computedTagLineSetting);
 
 
 Object.assign(propsObject, {
-    computedTagLine: tagsLineGen.computeLine(propsObject),
+    computedTagLine: tagsLineGen.generateLine(propsObject),
     ...dateParts(propsObject.created_at * 1000),
 });
 

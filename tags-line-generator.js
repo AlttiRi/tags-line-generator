@@ -77,7 +77,7 @@ export class TagsLineGenerator {
         return value.split(this.splitter);
     }
 
-    computeLine(propsObject) {
+    generateLine(propsObject) {
         /** @type {Map<String, String[]>} */
         const customTagsMap = this._handleCustomTagsSets(propsObject);
         /** @type {Array<String[]>} */
