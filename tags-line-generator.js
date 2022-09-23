@@ -26,8 +26,8 @@ export class TagsLineGenerator {
     constructor(settings = {}) {
         this.charsLimit = settings.charsLimit   || 120;
         this.bytesLimit = settings.bytesLimit   || 0;
-        this.tagsLimit  = settings.tagsLimit    || 0;
         this.initCharLimiter();
+        this.tagsLimit  = settings.tagsLimit    || 0;
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
