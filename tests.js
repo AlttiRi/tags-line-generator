@@ -190,14 +190,42 @@ console.log(
 
 tagsLineGen = new TagsLineGenerator({
     "customSets": {
-        "tags__example": {
+        "tags__example1": {
             "source": ["tags_artist tag_string_general"],
             "tagsLimit": 4
         },
+        "tags__example2": {
+            "source": "tags_artist tag_string_general",
+            "tagsLimit": 2
+        }
     },
-    "selectedSets": "tags__example",
+    "selectedSets": "tags__example1 tags__example2",
+    "deduplicate": false
 });
 console.log(
     tagsLineGen.generateLine(sankaku3)
-    === "hagiwara_studio barkkung101 2girls abs"
+    === "hagiwara_studio barkkung101 2girls abs hagiwara_studio barkkung101"
 );
+
+tagsLineGen = new TagsLineGenerator({
+    "customSets": {
+        "tags__example1": {
+            "source": ["tags_artist", "tag_string_general"],
+            "tagsLimit": 4
+        },
+        "tags__example2": {
+            "source": ["tags_artist"]
+        }
+    },
+    "selectedSets": "tags__example1 tags__example2",
+    "deduplicate": false
+});
+console.log(
+    tagsLineGen.generateLine(sankaku1)
+    === "nikita_varb 1girl bare_shoulders between_breasts nikita_varb"
+);
+
+
+
+
+

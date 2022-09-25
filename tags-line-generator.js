@@ -1,4 +1,4 @@
-export class TagsLineGenerator {
+export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // lengthLimit
     /** @typedef {Object<String, {
      * source: String|String[],
      * only?: String|String[],
