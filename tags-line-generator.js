@@ -33,7 +33,7 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
-        this.splitString = settings.splitString  ?? true;
+        this.splitString = settings.splitString ?? true;
         this.deduplicate = settings.deduplicate ?? true;
 
         /** @type {CustomSets|Object} */
@@ -198,9 +198,5 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
         return function(string) {
             return string.length;
         }
-    }
-
-    static isString(value) { // Embed util function
-        return typeof value === "string" || value instanceof String;
     }
 }

@@ -31,6 +31,11 @@ const computedTagLineSetting = {
     "replace": [
         ["megane", "glasses"]
     ],
+    "onlyOne": [
+        ["third-party_edit", "edit"],
+        ["sound_edit", "edit"],
+        ["one_piece:_two_years_later", "one_piece"],
+    ],
     "selectedSets": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
