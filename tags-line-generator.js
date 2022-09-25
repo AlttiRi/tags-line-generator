@@ -15,7 +15,7 @@ export class TagsLineGenerator {
      * joiner?: string,
      * splitter?: string,
      * deduplicate?: boolean,
-     * splitArray?: boolean,
+     * splitString?: boolean,
      *
      * customSets?: CustomSets,
      * selectedSets?: String|String[],
@@ -33,7 +33,7 @@ export class TagsLineGenerator {
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
-        this.splitArray  = settings.splitArray  ?? true;
+        this.splitString = settings.splitString  ?? true;
         this.deduplicate = settings.deduplicate ?? true;
 
         /** @type {CustomSets|Object} */
@@ -77,7 +77,7 @@ export class TagsLineGenerator {
             return [];
         }
         if (Array.isArray(value)) {
-            if (!this.splitArray) {
+            if (!this.splitString) {
                 return value;
             }
             return value.map(value => value.split(this.splitter)).flat();

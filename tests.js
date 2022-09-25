@@ -44,7 +44,7 @@ tagsLineGen = new TagsLineGenerator({
     "selectedSets": ["tags"],
     "tagsLimit": 3,
     "joiner": ", ",
-    "splitArray": false // todo rename to splitString
+    "splitString": false
 });
 console.log(
     tagsLineGen.generateLine(pixiv)
