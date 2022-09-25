@@ -43,10 +43,12 @@ console.log(
 tagsLineGen = new TagsLineGenerator({
     "selectedSets": ["tags"],
     "tagsLimit": 3,
-    "joiner": ", "
+    "joiner": ", ",
+    "splitArray": false // todo rename to splitString
 });
 console.log(
-    tagsLineGen.generateLine(pixiv) === "blue, Arknights 10000+ bookmarks, Arknights"
+    tagsLineGen.generateLine(pixiv)
+    === "blue, Arknights 10000+ bookmarks, Arknights"
 );
 
 
@@ -167,5 +169,35 @@ console.log(
 );
 
 
+tagsLineGen = new TagsLineGenerator({
+    "customSets": {
+        "tags__general": {
+            "source": ["tag_string_general"],
+            "tagsLimit": 3
+        },
+        "tags__artist": {
+            "source": ["tag_string_artist"],
+            "tagsLimit": 1
+        },
+    },
+    "selectedSets": "tags__artist tags__general",
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "hagiwara_studio 2girls abs bangs"
+);
 
 
+tagsLineGen = new TagsLineGenerator({
+    "customSets": {
+        "tags__example": {
+            "source": ["tags_artist tag_string_general"],
+            "tagsLimit": 4
+        },
+    },
+    "selectedSets": "tags__example",
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "hagiwara_studio barkkung101 2girls abs"
+);

@@ -1,10 +1,11 @@
 export class TagsLineGenerator {
     /** @typedef {Object<String, {
-     * source?: String|String[],
+     * source: String|String[],
      * only?: String|String[],
      * ignore?: String|String[],
      * ignoreMatcher?: TagsLineGenerator.WildcardTagMatcher,
      * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher,
+     * tagsLimit?: number
      * }>} CustomSets */
     /** @typedef {{
      * charsLimit?: number,
@@ -32,8 +33,8 @@ export class TagsLineGenerator {
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
-        this.splitArray  = settings.splitArray  || true;
-        this.deduplicate = settings.deduplicate || true;
+        this.splitArray  = settings.splitArray  ?? true;
+        this.deduplicate = settings.deduplicate ?? true;
 
         /** @type {CustomSets|Object} */
         this.customSets   = settings.customSets || {};
@@ -42,6 +43,7 @@ export class TagsLineGenerator {
 
         const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
         for (const opts of Object.values(this.customSets)) {
+            opts.source = this.toArray(opts.source);
             if (opts.ignore) {
                 opts.ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore));
             }
@@ -49,6 +51,7 @@ export class TagsLineGenerator {
                 opts.onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only));
             }
         }
+
         if (settings.ignore) {
             this.ignoreMatcher = new WildcardTagMatcher(this.toArray(settings.ignore));
         }
@@ -57,7 +60,7 @@ export class TagsLineGenerator {
         }
     }
 
-    initCharLimiter() {
+    initCharLimiter() { // todo -1 for bytesLimit ???
         if (this.bytesLimit > 0) {
             this.limitType = "bytes";
             this.lengthLimit = this.bytesLimit;
@@ -126,7 +129,10 @@ export class TagsLineGenerator {
     _handleCustomTagsSets(propsObject) {
         const customTagsMap = new Map();
         for (const [name, opts] of Object.entries(this.customSets)) {
-            const sourceTags = propsObject[opts.source] || customTagsMap.get(opts.source);
+            /** @type {String[]} */
+            const sourceTags = opts.source.map(name => {
+                return this.toArray(propsObject[name] || customTagsMap.get(name));
+            }).flat();
 
             let result = [];
             for (const tag of sourceTags) {
@@ -192,5 +198,9 @@ export class TagsLineGenerator {
         return function(string) {
             return string.length;
         }
+    }
+
+    static isString(value) { // Embed util function
+        return typeof value === "string" || value instanceof String;
     }
 }
