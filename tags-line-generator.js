@@ -18,7 +18,7 @@ export class TagsLineGenerator {
      *
      * customSets?: CustomSets,
      * selectedSets?: String|String[],
-     * replace?: Array<Array<String>>,
+     * replace?: Array<[String, String]>,
      *
      * ignore?: String|String[],
      * only?: String|String[],
