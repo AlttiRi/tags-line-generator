@@ -226,6 +226,42 @@ console.log(
 );
 
 
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags_copyright",
+    onlyOne: []
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "one_piece deviantart one_piece:_two_years_later"
+);
 
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags_copyright",
+    "onlyOne": [[]]
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "one_piece deviantart one_piece:_two_years_later"
+);
 
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags_copyright",
+    "onlyOne": [
+        ["one_piece"]
+    ]
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "one_piece deviantart one_piece:_two_years_later"
+);
 
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags_copyright",
+    "onlyOne": [
+        ["one_piece:_two_years_later", "one_piece"]
+    ]
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "deviantart one_piece:_two_years_later"
+);

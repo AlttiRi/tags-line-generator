@@ -101,7 +101,9 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
             tags = new Set(tags);
         }
 
-        let resultTags = [];
+        tags = this._removeByOnlyOne(tags);
+
+        const resultTags = [];
         let currentLength = 0;
         const joinerLength = this.calcLength(this.joiner);
         for (let tag of tags) {
@@ -125,11 +127,10 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
             }
         }
 
-        resultTags = this._handleOnlyOne(resultTags);
         return resultTags.join(this.joiner);
     }
 
-    _handleOnlyOne(tags) {
+    _removeByOnlyOne(tags) {
         if (!this.onlyOne) {
             return tags;
         }
