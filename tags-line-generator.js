@@ -20,6 +20,7 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
      * customSets?: CustomSets,
      * selectedSets?: String|String[],
      * replace?: Array<[String, String]>,
+     * onlyOne?: Array<String[]>|null,
      *
      * ignore?: String|String[],
      * only?: String|String[],
@@ -40,6 +41,7 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
         this.customSets   = settings.customSets || {};
         this.selectedSets = this.toArray(settings.selectedSets);
         this.replace      = new Map(settings.replace);
+        this.onlyOne      = settings.onlyOne    || null;
 
         const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
         for (const opts of Object.values(this.customSets)) {
@@ -99,9 +101,9 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
             tags = new Set(tags);
         }
 
-        const resultTags = [];
+        let resultTags = [];
         let currentLength = 0;
-        const jL = this.calcLength(this.joiner);
+        const joinerLength = this.calcLength(this.joiner);
         for (let tag of tags) {
             if (this.onlyMatcher && !this.onlyMatcher.match(tag)) {
                 continue;
@@ -113,7 +115,7 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
                 tag = this.replace.get(tag);
             }
             const tagLength = this.calcLength(tag);
-            const expectedLineLength = currentLength + tagLength + jL * resultTags.length;
+            const expectedLineLength = currentLength + tagLength + joinerLength * resultTags.length;
             if (expectedLineLength <= this.lengthLimit) {
                 resultTags.push(tag);
                 currentLength += tagLength;
@@ -123,7 +125,30 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
             }
         }
 
+        resultTags = this._handleOnlyOne(resultTags);
         return resultTags.join(this.joiner);
+    }
+
+    _handleOnlyOne(tags) {
+        if (!this.onlyOne) {
+            return tags;
+        }
+        const set = new Set(tags);
+        for (const entryTags of this.onlyOne) {
+            let removeNext = false;
+            let to = entryTags.length - 1;
+            for (let i = 0; i < to; i++) {
+                if (set.has(entryTags[i])) {
+                    if (removeNext) {
+                        set.delete(entryTags[i]);
+                    } else {
+                        removeNext = true;
+                        to = entryTags.length;
+                    }
+                }
+            }
+        }
+        return [...set];
     }
 
     _handleCustomTagsSets(propsObject) {
