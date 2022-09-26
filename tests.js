@@ -265,3 +265,21 @@ console.log(
     tagsLineGen.generateLine(sankaku3)
     === "deviantart one_piece:_two_years_later"
 );
+
+
+tagsLineGen = new TagsLineGenerator({
+    "customSets": {
+        "tags__example": {
+            "source": "tag_string_general",
+            "only": "megane"
+        },
+    },
+    "selectedSets": "tags__example",
+    "replace": [
+        ["megane", "glasses"]
+    ]
+});
+console.log(
+    tagsLineGen.generateLine(sankaku3)
+    === "glasses"
+);
