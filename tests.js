@@ -266,6 +266,63 @@ console.log(
     === "deviantart one_piece:_two_years_later"
 );
 
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags",
+    "onlyOne": [
+        ["third-party_edit", "edit", "edited"],
+        ["sound_edit", "edit", "edited"]
+    ],
+});
+console.log(
+    tagsLineGen.generateLine({
+        "tags": "blue third-party_edit white edit red"
+    })
+    === "blue third-party_edit white red"
+);
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags",
+    "onlyOne": [
+        ["third-party_edit", "edit", "edited"],
+        ["sound_edit", "edit", "edited"]
+    ],
+});
+console.log(
+    tagsLineGen.generateLine({
+        "tags": "blue edited third-party_edit white edit red"
+    })
+    === "blue third-party_edit white red"
+);
+
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags",
+    "onlyOne": [
+        ["third-party_edit", "edit", "edited"],
+        ["sound_edit", "edit", "edited"]
+    ],
+});
+console.log(
+    tagsLineGen.generateLine({
+        "tags": "blue edited white edit red"
+    })
+    === "blue white edit red"
+);
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags",
+    "onlyOne": [
+        ["third-party_edit", "edit", "edited"],
+        ["sound_edit", "edit", "edited"]
+    ],
+});
+console.log(
+    tagsLineGen.generateLine({
+        "tags": "blue edited white red"
+    })
+    === "blue edited white red"
+);
+
 
 tagsLineGen = new TagsLineGenerator({
     "customSets": {
@@ -283,3 +340,5 @@ console.log(
     tagsLineGen.generateLine(sankaku3)
     === "glasses"
 );
+
+
