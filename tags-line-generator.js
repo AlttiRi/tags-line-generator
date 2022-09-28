@@ -26,7 +26,7 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
      * only?: String|String[],
      * }} ComputedTagLineSetting */
     /** @param {ComputedTagLineSetting} settings */
-    constructor(settings = {}) {
+    constructor(settings = {}) { //todo onlyIfNotExist
         this.charsLimit = settings.charsLimit   || 120;
         this.bytesLimit = settings.bytesLimit   || 0;
         this.initCharLimiter();
@@ -62,13 +62,16 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
         }
     }
 
-    initCharLimiter() { // todo -1 for bytesLimit ???
-        if (this.bytesLimit > 0) {
+    initCharLimiter() {
+        if (this.bytesLimit < 0 || this.charsLimit < 0) {
+            this.limitType = "unlimited";
+            this.lengthLimit = Number.MAX_SAFE_INTEGER;
+        } else if (this.bytesLimit) {
             this.limitType = "bytes";
             this.lengthLimit = this.bytesLimit;
         } else {
             this.limitType = "chars";
-            this.lengthLimit = this.charsLimit >= 0 ? this.charsLimit : Number.MAX_SAFE_INTEGER;
+            this.lengthLimit = this.charsLimit;
         }
         this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
     }
@@ -213,16 +216,23 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
             }
         }
     }
-    /** @param {"bytes"|"chars"} limitType */
+    /** @param {"bytes"|"chars"|"unlimited"} limitType */
     static _getLengthFunc(limitType) {
+        if (limitType === "chars") {
+            return function(string) {
+                return string.length;
+            }
+        } else
         if (limitType === "bytes") {
             const te = new TextEncoder();
             return function(string) {
                 return te.encode(string).length;
             }
-        }
-        return function(string) {
-            return string.length;
+        } else
+        if (limitType === "unlimited") {
+            return function() {
+                return 0;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-import {TagsLineGenerator} from "./tags-line-generator.js";
+import {TagsLineGenerator} from "../tags-line-generator.js";
 
 import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
 import sankaku2  from "./jsons/sankaku-31250632.json"   assert {type: "json"};
@@ -119,6 +119,25 @@ console.log(
     "female female_only freckles green_eyes grey_skin hairband hands indoors large_breasts light-skinned " +
     "light-skinned_female lips long_hair medium_breasts multiple_girls nail_polish neck orange_hair pale-skinned_female " +
     "pale_skin purple_eyes purple_hair red_hair short_hair teasing teeth"
+);
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags",
+    "bytesLimit": -1
+});
+console.log(
+    tagsLineGen.generateLine(sankaku2).length
+    === 609
+);
+
+tagsLineGen = new TagsLineGenerator({
+    "selectedSets": "tags",
+    "bytesLimit": -100,
+    "charsLimit": -100
+});
+console.log(
+    tagsLineGen.generateLine(sankaku2).length
+    === 609
 );
 
 

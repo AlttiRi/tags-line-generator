@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "dependencies": {
+  "devDependencies": {
     "@alttiri/util-node-js": "github:alttiri/util-node-js#semver:1.4.0"
   }
 }

@@ -1,5 +1,5 @@
 import {ANSI_CYAN} from "@alttiri/util-node-js";
-import {TagsLineGenerator} from "./tags-line-generator.js";
+import {TagsLineGenerator} from "../tags-line-generator.js";
 import {dateParts, renderTemplateString} from "./util.js";
 
 import json1 from "./jsons/sankaku-31250632.json" assert {type: "json"};
@@ -54,8 +54,9 @@ console.log(ANSI_CYAN(filenamePatter));
 for (const json of [json1, json2, json3]) {
     const propsObject = json;
     Object.assign(propsObject, {
+        ...json,
+        ...dateParts(json.created_at * 1000),
         computedTagLine: tagsLineGen.generateLine(propsObject),
-        ...dateParts(propsObject.created_at * 1000),
     });
 
     const {value: filename} = renderTemplateString(filenamePatter, propsObject);
