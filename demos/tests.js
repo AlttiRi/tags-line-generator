@@ -10,7 +10,7 @@ import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
 
 let i = 0;
 let tagsLineGen;
-/** @param {{genSettings, propsObject, expected}} opts */
+/** @param {{genSettings?: TagsLineGenSetting, propsObject, expected}} opts */
 function t({genSettings, propsObject, expected}) {
     i++;
     const pad = " ".repeat(2 - i.toString().length);
@@ -287,7 +287,7 @@ t({
 t({
     genSettings: {
         "selectedSets": "tags_copyright",
-        onlyOne: []
+        "onlyOne": []
     },
     propsObject: sankaku3,
     expected: "one_piece deviantart one_piece:_two_years_later"
@@ -380,4 +380,85 @@ t({
 });
 
 
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "bytesLimit": 10,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "風景"
+});
 
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "charsLimit": 10,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "にしてみた, 風景"
+});
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "lengthLimit": 10,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "にしてみた, 風景"
+});
+
+
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "bytesLimit": 20,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "にしてみた"
+});
+
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "charsLimit": 20,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "にしてみた, 風景, 自然, 建物"
+});
+
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "bytesLimit": 30,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "にしてみた, 風景"
+});
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "lengthLimit": 30,
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
+    },
+    expected: "にしてみた, 風景, 自然, 建物, 街並み, 背景"
+});

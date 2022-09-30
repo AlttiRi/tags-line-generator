@@ -25,8 +25,8 @@ export class TagsLineGenerator {
      *
      * ignore?: String|String[],
      * only?: String|String[],
-     * }} ComputedTagLineSetting */
-    /** @param {ComputedTagLineSetting} settings */
+     * }} TagsLineGenSetting */
+    /** @param {TagsLineGenSetting} settings */
     constructor(settings = {}) {
         this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
                         || settings.lengthLimit || settings["length-limit"] || 120;
