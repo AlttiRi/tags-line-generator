@@ -1,4 +1,4 @@
-import {ANSI_BLUE, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
+import {ANSI_BLUE, ANSI_CYAN, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 import {TagsLineGenerator} from "../tags-line-generator.js";
 
 import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
@@ -24,8 +24,13 @@ function t({genSettings, propsObject, expected}) {
         console.log(ANSI_BLUE(i), pad, result);
     } else {
         const eq = result === expected;
-        const colorFunc = eq ? ANSI_GREEN_BOLD : ANSI_RED_BOLD;
-        console.log(colorFunc(i), pad, eq);
+        if (eq) {
+            console.log(ANSI_GREEN_BOLD(i), pad, "passed");
+        } else {
+            console.log(ANSI_RED_BOLD(i));
+            console.log(ANSI_CYAN(expected));
+            console.log(result);
+        }
     }
 }
 

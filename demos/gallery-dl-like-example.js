@@ -7,7 +7,7 @@ import json2 from "./jsons/sankaku-29652683.json" assert {type: "json"};
 import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 
 
-/** @type {ComputedTagLineSetting} */
+/** @type {TagsLineGenSetting} */
 const computedTagLineSetting = {
     "custom-sets": {
         "tags__important": {
