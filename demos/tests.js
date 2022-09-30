@@ -1,4 +1,5 @@
 import {TagsLineGenerator} from "../tags-line-generator.js";
+import {ANSI_BLUE, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 
 import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
 import sankaku2  from "./jsons/sankaku-31250632.json"   assert {type: "json"};
@@ -6,7 +7,6 @@ import sankaku3  from "./jsons/sankaku-31113165.json"   assert {type: "json"};
 import pixiv     from "./jsons/pixiv-78254724.json"     assert {type: "json"};
 import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
 import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
-import {ANSI_BLUE, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 
 
 let i = 0;
