@@ -60,6 +60,15 @@ t({
     expected: "Metal_Gear Metal_Gear_Solid_V Quiet"
 });
 
+t({
+    genSettings: {
+        "selected-sets": ["tags"],
+        "tagsLimit": 3
+    },
+    propsObject: paheal,
+    expected: "Metal_Gear Metal_Gear_Solid_V Quiet"
+});
+
 
 t({
     genSettings: {

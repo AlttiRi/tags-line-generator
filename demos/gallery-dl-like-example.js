@@ -9,7 +9,7 @@ import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 
 /** @type {ComputedTagLineSetting} */
 const computedTagLineSetting = {
-    "customSets": {
+    "custom-sets": {
         "tags__important": {
             "source": ["tags"],
             "only": ["third-party_edit", "sound_edit"],
@@ -24,26 +24,26 @@ const computedTagLineSetting = {
         },
         "tags__custom_general": {
             "source": ["tags_general"],
-            // "tagsLimit": 3
+            // "tags-limit": 3
         }
     },
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
     "replace": [
         ["megane", "glasses"]
     ],
-    "onlyOne": [
+    "only-one": [
         ["third-party_edit", "edit"],
         ["sound_edit", "edit"],
         ["one_piece:_two_years_later", "one_piece"],
     ],
-    "selectedSets": [
+    "selected-sets": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
         "tags__custom_general",
         "tags_genre", "tags__custom_medium", "tags_meta"
     ],
     // "only": ["gwendolyn_tennyson", "violet_parr"],
-    // "tagsLimit": 7
+    // "tags-limit": 7
 };
 const tagsLineGen = new TagsLineGenerator(computedTagLineSetting);
 

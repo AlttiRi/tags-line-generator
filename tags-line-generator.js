@@ -1,4 +1,4 @@
-export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // lengthLimit
+export class TagsLineGenerator {
     /** @typedef {Object<String, {
      * source: String|String[],
      * only?: String|String[],
@@ -9,6 +9,7 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
      * }>} CustomSets */
     /** @typedef {{
      * charsLimit?: number,
+     * lengthLimit?: number,
      * bytesLimit?: number,
      * tagsLimit?: number,
      *
@@ -26,22 +27,23 @@ export class TagsLineGenerator { // todo onlyOne: [str, str] // no camelcase // 
      * only?: String|String[],
      * }} ComputedTagLineSetting */
     /** @param {ComputedTagLineSetting} settings */
-    constructor(settings = {}) { //todo onlyIfNotExist
-        this.charsLimit = settings.charsLimit   || 120;
-        this.bytesLimit = settings.bytesLimit   || 0;
+    constructor(settings = {}) {
+        this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
+                        || settings.lengthLimit || settings["length-limit"] || 120;
+        this.bytesLimit  = settings.bytesLimit  || settings["bytes-limit"]  || 0;
         this.initCharLimiter();
-        this.tagsLimit  = settings.tagsLimit    || 0;
+        this.tagsLimit   = settings.tagsLimit   || settings["tags-limit"]   || 0;
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
-        this.splitString = settings.splitString ?? true;
+        this.splitString = settings.splitString ?? settings["split-string"] ?? true;
         this.deduplicate = settings.deduplicate ?? true;
 
         /** @type {CustomSets|Object} */
-        this.customSets   = settings.customSets || {};
-        this.selectedSets = this.toArray(settings.selectedSets);
+        this.customSets   = settings.customSets || settings["custom-sets"]  || {};
+        this.selectedSets = this.toArray(settings.selectedSets || settings["selected-sets"]);
         this.replace      = new Map(settings.replace);
-        this.onlyOne      = settings.onlyOne    || null;
+        this.onlyOne      = settings.onlyOne    || settings["only-one"]     || null;
 
         const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
         for (const opts of Object.values(this.customSets)) {
