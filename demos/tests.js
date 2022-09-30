@@ -1,5 +1,5 @@
-import {TagsLineGenerator} from "../tags-line-generator.js";
 import {ANSI_BLUE, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
+import {TagsLineGenerator} from "../tags-line-generator.js";
 
 import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
 import sankaku2  from "./jsons/sankaku-31250632.json"   assert {type: "json"};
