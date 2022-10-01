@@ -64,34 +64,6 @@ export class TagsLineGenerator {
         }
     }
 
-    initCharLimiter() {
-        if (this.bytesLimit < 0 || this.charsLimit < 0) {
-            this.limitType = "unlimited";
-            this.lengthLimit = Number.MAX_SAFE_INTEGER;
-        } else if (this.bytesLimit) {
-            this.limitType = "bytes";
-            this.lengthLimit = this.bytesLimit;
-        } else {
-            this.limitType = "chars";
-            this.lengthLimit = this.charsLimit;
-        }
-        this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
-    }
-
-    /** @param {String|String[]} value */
-    toArray(value) {
-        if (!value) {
-            return [];
-        }
-        if (Array.isArray(value)) {
-            if (!this.splitString) {
-                return value;
-            }
-            return value.map(value => value.split(this.splitter)).flat();
-        }
-        return value.split(this.splitter);
-    }
-
     generateLine(propsObject) {
         /** @type {Map<String, String[]>} */
         const customTagsMap = this._handleCustomTagsSets(propsObject);
@@ -106,7 +78,7 @@ export class TagsLineGenerator {
             tags = new Set(tags);
         }
 
-        tags = this._removeByOnlyOne(tags);
+        tags = this._removeByOnlyOneRule(tags);
 
         const resultTags = [];
         let currentLength = 0;
@@ -135,7 +107,38 @@ export class TagsLineGenerator {
         return resultTags.join(this.joiner);
     }
 
-    _removeByOnlyOne(tags) {
+    /** @private */
+    initCharLimiter() {
+        if (this.bytesLimit < 0 || this.charsLimit < 0) {
+            this.limitType = "unlimited";
+            this.lengthLimit = Number.MAX_SAFE_INTEGER;
+        } else if (this.bytesLimit) {
+            this.limitType = "bytes";
+            this.lengthLimit = this.bytesLimit;
+        } else {
+            this.limitType = "chars";
+            this.lengthLimit = this.charsLimit;
+        }
+        this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
+    }
+
+    /** @private
+     *  @param {String|String[]} value  */
+    toArray(value) {
+        if (!value) {
+            return [];
+        }
+        if (Array.isArray(value)) {
+            if (!this.splitString) {
+                return value;
+            }
+            return value.map(value => value.split(this.splitter)).flat();
+        }
+        return value.split(this.splitter);
+    }
+
+    /** @private */
+    _removeByOnlyOneRule(tags) {
         if (!this.onlyOne) {
             return tags;
         }
@@ -157,6 +160,7 @@ export class TagsLineGenerator {
         return [...set];
     }
 
+    /** @private */
     _handleCustomTagsSets(propsObject) {
         const customTagsMap = new Map();
         for (const [name, opts] of Object.entries(this.customSets)) {
@@ -183,6 +187,8 @@ export class TagsLineGenerator {
 
         return customTagsMap;
     }
+
+    /** @private */
     static WildcardTagMatcher = class {
         /** @param {Array<String>} tagsSet */
         constructor(tagsSet) {
@@ -218,7 +224,9 @@ export class TagsLineGenerator {
             }
         }
     }
-    /** @param {"bytes"|"chars"|"unlimited"} limitType */
+
+    /** @private
+     *  @param {"bytes"|"chars"|"unlimited"} limitType  */
     static _getLengthFunc(limitType) {
         if (limitType === "chars") {
             return function(string) {
