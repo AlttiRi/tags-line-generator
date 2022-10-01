@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "type": "module",
+  "main": "tags-line-generator.js",
   "devDependencies": {
     "@alttiri/util-node-js": "github:alttiri/util-node-js#semver:1.5.1",
     "@alttiri/util-js": "github:alttiri/util-js#semver:1.2.0"
