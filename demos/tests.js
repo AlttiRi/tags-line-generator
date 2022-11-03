@@ -579,3 +579,54 @@ t({
     },
     expected: "user_1 tag1 tag2 tag3"
 });
+
+
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "replace": [
+
+        ]
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4"
+    },
+    expected: "tag1 tag2 tag3 tag4"
+});
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "replace": [
+            []
+        ]
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4"
+    },
+    expected: "tag1 tag2 tag3 tag4"
+});
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "replace": [
+            ["tag1", "tag_1"]
+        ]
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4"
+    },
+    expected: "tag_1 tag2 tag3 tag4"
+});
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "replace": [
+            ["tag1", "tag_1"],
+            ["tag3", "tag_3"],
+        ]
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4"
+    },
+    expected: "tag_1 tag2 tag_3 tag4"
+});
