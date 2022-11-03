@@ -10,10 +10,16 @@ import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
 
 
 let i = 0;
+/** @type {TagsLineGenerator} */
 let tagsLineGen;
+/** @type {Number[]} */
+const runOnly = [];
 /** @param {{genSettings?: TagsLineGenSetting, propsObject, expected}} opts */
 function t({genSettings, propsObject, expected}) {
     i++;
+    if (runOnly.length && !runOnly.includes(i)) {
+        return;
+    }
     const pad = " ".repeat(2 - i.toString().length);
     if (genSettings) {
         tagsLineGen = new TagsLineGenerator(genSettings);
