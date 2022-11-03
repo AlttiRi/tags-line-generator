@@ -476,3 +476,106 @@ t({
     },
     expected: "にしてみた, 風景, 自然, 建物, 街並み, 背景"
 });
+
+// Using of non tag key as a tag
+// "uploader" key must have no space character
+t({
+    genSettings: {
+        "customSets": {
+            "spec-uploader-tag": {
+                "source": "uploader",
+                "only": "user1"
+            }
+        },
+        "selectedSets": "spec-uploader-tag tags",
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4",
+        "uploader": "user1"
+    },
+    expected: "user1 tag1 tag2 tag3 tag4"
+});
+// With the other "uploader" key value
+t({
+    genSettings: {
+        "customSets": {
+            "spec-uploader-tag": {
+                "source": "uploader",
+                "only": "user1"
+            }
+        },
+        "selectedSets": "spec-uploader-tag tags",
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4",
+        "uploader": "user2"
+    },
+    expected: "tag1 tag2 tag3 tag4"
+});
+
+// Use top level `"splitString": false`
+t({
+    genSettings: {
+        "splitString": false,
+        "customSets": {
+            "spec-uploader-tag": {
+                "source": ["uploader"],
+                "only": ["user 1"]
+            }
+        },
+        "replace": [
+            ["user 1", "user_1"]
+        ],
+        "ignore": ["tag4"],
+        "selectedSets": ["spec-uploader-tag", "tags"]
+    },
+    propsObject: {
+        "tags": ["tag1", "tag2", "tag3", "tag4"],
+        "uploader": ["user 1"]
+    },
+    expected: "user_1 tag1 tag2 tag3"
+});
+
+// Use `"splitString": false` only in "customSets"
+t({
+    genSettings: {
+        "customSets": {
+            "spec-uploader-tag": {
+                "source": ["uploader"],
+                "only": ["user 1"],
+                "splitString": false
+            }
+        },
+        "replace": [
+            ["user 1", "user_1"]
+        ],
+        "ignore": ["tag4"],
+        "selectedSets": ["spec-uploader-tag", "tags"]
+    },
+    propsObject: {
+        "tags": ["tag1", "tag2", "tag3", "tag4"],
+        "uploader": ["user 1"]
+    },
+    expected: "user_1 tag1 tag2 tag3"
+});
+t({
+    genSettings: {
+        "customSets": {
+            "spec-uploader-tag": {
+                "source": ["uploader"],
+                "only": ["user 1"],
+                "splitString": false
+            }
+        },
+        "replace": [
+            ["user 1", "user_1"]
+        ],
+        "ignore": "tag4",
+        "selectedSets": "spec-uploader-tag tags"
+    },
+    propsObject: {
+        "tags": "tag1 tag2 tag3 tag4",
+        "uploader": "user 1"
+    },
+    expected: "user_1 tag1 tag2 tag3"
+});

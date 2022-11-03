@@ -28,6 +28,8 @@ export class TagsLineGenerator {
      * }} TagsLineGenSetting */
     /** @param {TagsLineGenSetting} settings */
     constructor(settings = {}) {
+        // todo default source
+        // todo lowercase
         this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
                         || settings.lengthLimit || settings["length-limit"] || 120;
         this.bytesLimit  = settings.bytesLimit  || settings["bytes-limit"]  || 0;
@@ -49,10 +51,10 @@ export class TagsLineGenerator {
         for (const opts of Object.values(this.customSets)) {
             opts.source = this.toArray(opts.source);
             if (opts.ignore) {
-                opts.ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore));
+                opts.ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts.splitString));
             }
             if (opts.only) {
-                opts.onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only));
+                opts.onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts.splitString));
             }
         }
 
@@ -69,7 +71,10 @@ export class TagsLineGenerator {
         const customTagsMap = this._handleCustomTagsSets(propsObject);
         /** @type {Array<String[]>} */
         const sets = this.selectedSets.map(name => {
-            return this.toArray(propsObject[name] || customTagsMap.get(name));
+            if (propsObject[name] !== undefined) {
+                return this.toArray(propsObject[name]);
+            }
+            return customTagsMap.get(name);
         });
 
         /** @type {Iterable<String>} */
@@ -123,16 +128,26 @@ export class TagsLineGenerator {
     }
 
     /** @private
-     *  @param {String|String[]} value  */
-    toArray(value) {
+     *  @param {String|String[]} value
+     *  @param {Boolean} splitString
+     *  @return {String[]}*/
+    toArray(value, splitString = this.splitString) {
+        return this._toArray(value, splitString).filter(e => Boolean(e));
+    }
+    /** @private
+     *  @return {String[]} */
+    _toArray(value, splitString) {
         if (!value) {
             return [];
         }
-        if (Array.isArray(value)) {
-            if (!this.splitString) {
-                return value;
+        if (!splitString) {
+            if (TagsLineGenerator.isString(value)) {
+                return [value];
             }
-            return value.map(value => value.split(this.splitter)).flat();
+            return value;
+        }
+        if (Array.isArray(value)) {
+            return value.map(value => value.split(this.splitter)).flat(); // todo use splitter of customSets
         }
         return value.split(this.splitter);
     }
@@ -166,7 +181,7 @@ export class TagsLineGenerator {
         for (const [name, opts] of Object.entries(this.customSets)) {
             /** @type {String[]} */
             const sourceTags = opts.source.map(name => {
-                return this.toArray(propsObject[name] || customTagsMap.get(name));
+                return this.toArray(propsObject[name] || customTagsMap.get(name), opts.splitString);
             }).flat();
 
             let result = [];
@@ -244,5 +259,10 @@ export class TagsLineGenerator {
                 return 0;
             }
         }
+    }
+
+    /** @private */
+    static isString(str) {
+        return typeof str === "string" || str instanceof String;
     }
 }
