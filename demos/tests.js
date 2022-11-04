@@ -21,7 +21,7 @@ function t({genSettings, propsObject, expected}) {
         return;
     }
     const pad = " ".repeat(2 - i.toString().length);
-    if (genSettings) {
+    if (genSettings !== undefined) {
         tagsLineGen = new TagsLineGenerator(genSettings);
     }
 
@@ -629,4 +629,117 @@ t({
         "tags": "tag1 tag2 tag3 tag4"
     },
     expected: "tag_1 tag2 tag_3 tag4"
+});
+
+
+t({
+    genSettings: {
+        "selectedSets": "not_exist_tags1 tags"
+    },
+    propsObject: sankaku2,
+    expected: "teen_titans ben_10 the_incredibles raven_(dc) gwendolyn_tennyson violet_parr redmoa high_resolution english animated 3d"
+});
+t({
+    genSettings: {
+        "selectedSets": "not_exist_tags1 tags not_exist_tags2"
+    },
+    propsObject: sankaku2,
+    expected: "teen_titans ben_10 the_incredibles raven_(dc) gwendolyn_tennyson violet_parr redmoa high_resolution english animated 3d"
+});
+
+[
+{
+    "selectedSets": "not_exist_tags1"
+}, {
+    "selectedSets": "not_exist_tags1 not_exist_tags2"
+}, {
+    "selectedSets": "  not_exist_tags1   not_exist_tags2  "
+}, {
+    "selectedSets": ["", "not_exist_tags1"]
+}, {
+    "selectedSets": ["  ", " "]
+}, {
+    "selectedSets": ""
+}, {
+    "selectedSets": ["", ""]
+}, {
+    "selectedSets": []
+}, {
+    // [empty]
+}
+].forEach(genSettings => {
+    t({
+        genSettings,
+        propsObject: sankaku2,
+        expected: ""
+    });
+});
+
+
+
+const propsDemoObject1 = {
+    "category": "example",
+    "extension": "jpg",
+    "filename": "7ad864fb2d2bc8bcd2cec9bec094e0fe",
+    "id": 12345,
+    "md5": "7ad864fb2d2bc8bcd2cec9bec094e0fe",
+    "created_at": "2013-10-07T12:07:25.000-00:00",
+    "uploader": "anonymous",
+    "tag_string": "1girl brown_eyes brown_hair chair closed_mouth curly_hair dress extremely_high_resolution female grey_dress leonardo_da_vinci long_dress long_hair long_sleeves looking_at_viewer mona_lisa original sitting smile solo upper_body",
+    "tag_string_artist": "leonardo_da_vinci",
+    "tag_string_character": "mona_lisa",
+    "tag_string_copyright": "original",
+    "tag_string_general": "1girl brown_hair chair closed_mouth curly_hair dress female grey_dress long_dress long_hair long_sleeves looking_at_viewer sitting smile solo upper_body brown_eyes",
+    "tag_string_meta": "extremely_high_resolution"
+};
+
+t({
+    genSettings: {
+        "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa original 1girl brown_hair chair closed_mouth curly_hair dress female grey_dress long_dress"
+});
+
+t({
+    genSettings: {
+        "selectedSets": "tag_string_artist tag_string_character",
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa"
+});
+t({
+    genSettings: {
+        "selected-sets": "tag_string_artist tag_string_character",
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa"
+});
+t({
+    genSettings: {
+        "selectedSets": ["tag_string_artist", "tag_string_character"],
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa"
+});
+t({
+    genSettings: {
+        "selectedSets": ["tag_string_artist tag_string_character", "tag_string_meta"],
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
+});
+t({
+    genSettings: {
+        "selectedSets": ["  tag_string_artist  tag_string_character  ", "  tag_string_meta  "],
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
+});
+t({
+    genSettings: {
+        "selectedSets": ["  tag_string_artist  tag_string_character    tag_string_meta  "],
+    },
+    propsObject: propsDemoObject1,
+    expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
 });
