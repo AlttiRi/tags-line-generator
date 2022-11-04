@@ -74,7 +74,7 @@ export class TagsLineGenerator {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
             }
-            return customTagsMap.get(name);
+            return customTagsMap.get(name) || [];
         });
 
         /** @type {Iterable<String>} */
