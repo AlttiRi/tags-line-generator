@@ -69,5 +69,50 @@ It's recommended to reuse the same `TagsLineGenerator` instance due to optimisat
 
 ---
 
+...
 
+## todo: more complicated examples and describe API
 
+...
+
+---
+
+The bonus config example:
+```json
+{
+    "custom-sets": {
+        "tags__important": {
+            "source": ["tags"],
+            "only": ["third-party_edit", "sound_edit"]
+        },
+        "tags__important_medium": {
+            "source": ["tags_medium"],
+            "only": ["3d"]
+        },
+        "tags__custom_medium": {
+            "source": ["tags_medium"],
+            "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
+        },
+        "tags__custom_general": {
+            "source": ["tags_general"]
+        }
+    },
+    "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
+    "replace": [
+        ["megane", "glasses"]
+    ],
+    "only-one": [
+        ["third-party_edit", "edit"],
+        ["sound_edit", "edit"],
+        ["one_piece:_two_years_later", "one_piece"]
+    ],
+    "selected-sets": [
+        "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
+        "tags__important_medium",
+        "tags__custom_general",
+        "tags_genre", "tags__custom_medium", "tags_meta"
+    ]
+}
+```
+
+### todo: describe that it does
