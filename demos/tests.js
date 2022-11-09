@@ -18,11 +18,12 @@ function getLineNum(stackDeep = 2) {
     return match?.[0] || "";
 }
 
-let i = 0;
-/** @type {TagsLineGenerator} */
-let tagsLineGen;
 /** @type {Number[]} */
 const runOnly = [];
+const printNotPassedTestLineRef = true;
+/** @type {TagsLineGenerator} */
+let tagsLineGen;
+let i = 0;
 /** @param {{genSettings?: TagsLineGenSetting, propsObject, expected}} opts */
 function t({genSettings, propsObject, expected}) {
     const lineNum = getLineNum();
@@ -44,11 +45,12 @@ function t({genSettings, propsObject, expected}) {
     } else {
         const eq = result === expected;
         if (eq) {
-            console.log(ANSI_GREEN_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, "passed");
+            console.log(ANSI_GREEN_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_GREEN_BOLD("passed"));
         } else {
-            console.log(ANSI_RED_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2);
-            console.log(ANSI_CYAN(expected));
-            console.log(result);
+            console.log(ANSI_RED_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_RED_BOLD("failed"));
+            console.log(ANSI_GRAY("expected:"), ANSI_CYAN(expected));
+            console.log(ANSI_GRAY("result  :"), result);
+            printNotPassedTestLineRef && console.log(`file:///./tests.js:${lineNum}`);
         }
     }
 }
