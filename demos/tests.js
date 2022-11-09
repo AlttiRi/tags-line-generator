@@ -18,6 +18,21 @@ function getLineNum(stackDeep = 2) {
     return match?.[0] || "";
 }
 
+let passedTestCount = 0;
+let failedTestCount = 0;
+function printTestResume() {
+    console.log(ANSI_GRAY("---------------"));
+    const COLOR_PASS = passedTestCount ? ANSI_GREEN_BOLD : ANSI_GRAY;
+    const COLOR_FAIL = failedTestCount ? ANSI_RED_BOLD : ANSI_GRAY;
+    console.log(COLOR_PASS(passedTestCount.toString().padStart(8) + " passed"));
+    console.log(COLOR_FAIL(failedTestCount.toString().padStart(8) + " failed"));
+}
+let timerId = null;
+function delayPrintTestResume() {
+    clearTimeout(timerId)
+    timerId = setTimeout(printTestResume, 50);
+}
+
 /** @type {Number[]} */
 const runOnly = [];
 const printNotPassedTestLineRef = true;
@@ -46,13 +61,16 @@ function t({genSettings, propsObject, expected}) {
         const eq = result === expected;
         if (eq) {
             console.log(ANSI_GREEN_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_GREEN_BOLD("passed"));
+            passedTestCount++;
         } else {
             console.log(ANSI_RED_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_RED_BOLD("failed"));
             console.log(ANSI_GRAY("expected:"), ANSI_CYAN(expected));
             console.log(ANSI_GRAY("result  :"), result);
             printNotPassedTestLineRef && console.log(`file:///./tests.js:${lineNum}`);
+            failedTestCount++;
         }
     }
+    delayPrintTestResume();
 }
 
 
