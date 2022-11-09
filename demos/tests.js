@@ -782,11 +782,11 @@ t({
 // Keep "Animated" tag only if the extension is not "mp4", or "webm", or "gif".
 const genSettingsOptionalAnimated = {
     "customSets": {
-        "all-tags-except-one": {
+        "__main_tags": {
             "source": "tags",
             "ignore": "Animated"
         },
-        "ext-ani-tag": {
+        "__extra_tags": {
             "source": "extension tags",
             "only": "mp4 webm gif Animated"
         }
@@ -795,21 +795,56 @@ const genSettingsOptionalAnimated = {
         ["mp4", "webm", "gif", "Animated"]
     ],
     "ignore": "mp4 webm gif",
-    "selectedSets": "all-tags-except-one ext-ani-tag",
+    "selectedSets": "__main_tags __extra_tags",
 };
 t({
     genSettings: genSettingsOptionalAnimated,
     propsObject: {
-        "tags": "Animated 3D Overwatch Tracer",
+        "tags": "Animated 3D Overwatch Source_Filmmaker Tracer",
         "extension": "mp4"
     },
-    expected: "3D Overwatch Tracer"
+    expected: "3D Overwatch Source_Filmmaker Tracer"
 });
 t({
     genSettings: genSettingsOptionalAnimated,
     propsObject: {
-        "tags": "Animated 3D Overwatch Tracer",
+        "tags": "3D Animated Overwatch Source_Filmmaker Tracer",
         "extension": "png"
     },
-    expected: "3D Overwatch Tracer Animated"
+    expected: "3D Overwatch Source_Filmmaker Tracer Animated"
+});
+
+// Additionally let's move the "Source_Filmmaker" tag to the end
+const genSettingsOptionalAnimatedWithSource_Filmmaker = {
+    "customSets": {
+        "__main_tags": {
+            "source": "tags",
+            "ignore": "Animated Source_Filmmaker"
+        },
+        "__extra_tags": {
+            "source": "extension tags",
+            "only": "mp4 webm gif Animated Source_Filmmaker"
+        }
+    },
+    "onlyOne": [
+        ["mp4", "webm", "gif", "Animated"]
+    ],
+    "ignore": "mp4 webm gif",
+    "selectedSets": "__main_tags __extra_tags",
+};
+t({
+    genSettings: genSettingsOptionalAnimatedWithSource_Filmmaker,
+    propsObject: {
+        "tags": "Animated 3D Overwatch Source_Filmmaker Tracer",
+        "extension": "mp4"
+    },
+    expected: "3D Overwatch Tracer Source_Filmmaker"
+});
+t({
+    genSettings: genSettingsOptionalAnimatedWithSource_Filmmaker,
+    propsObject: {
+        "tags": "3D Animated Overwatch Source_Filmmaker Tracer",
+        "extension": "png"
+    },
+    expected: "3D Overwatch Tracer Animated Source_Filmmaker"
 });
