@@ -64,8 +64,8 @@ function t({genSettings, propsObject, expected}) {
             passedTestCount++;
         } else {
             console.log(ANSI_RED_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_RED_BOLD("failed"));
-            console.log(ANSI_GRAY("expected:"), ANSI_CYAN(expected));
-            console.log(ANSI_GRAY("result  :"), result);
+            console.log(ANSI_GRAY("expect: "), ANSI_CYAN(expected));
+            console.log(ANSI_GRAY("result: "), result);
             printNotPassedTestLineRef && console.log(`file:///./tests.js:${lineNum}`);
             failedTestCount++;
         }
