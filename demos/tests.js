@@ -1,4 +1,4 @@
-import {ANSI_BLUE, ANSI_CYAN, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
+import {ANSI_BLUE, ANSI_CYAN, ANSI_GRAY, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
 import {TagsLineGenerator} from "../tags-line-generator.js";
 
 import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
@@ -9,6 +9,15 @@ import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
 import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
 
 
+function getLineNum(stackDeep = 2) {
+    const errorLines = new Error().stack.split("\n");
+    if (errorLines[0] === "Error") {
+        errorLines.shift();
+    }
+    const match = errorLines[stackDeep]?.match(/\d+(?=:\d+$)/);
+    return match?.[0] || "";
+}
+
 let i = 0;
 /** @type {TagsLineGenerator} */
 let tagsLineGen;
@@ -16,24 +25,28 @@ let tagsLineGen;
 const runOnly = [];
 /** @param {{genSettings?: TagsLineGenSetting, propsObject, expected}} opts */
 function t({genSettings, propsObject, expected}) {
+    const lineNum = getLineNum();
+
     i++;
     if (runOnly.length && !runOnly.includes(i)) {
         return;
     }
-    const pad = " ".repeat(2 - i.toString().length);
+    const pad1 = " ".repeat(2 - i.toString().length);
+    const pad2 = " ".repeat(3 - lineNum.toString().length);
+
     if (genSettings !== undefined) {
         tagsLineGen = new TagsLineGenerator(genSettings);
     }
 
     const result = tagsLineGen.generateLine(propsObject);
     if (expected === undefined) {
-        console.log(ANSI_BLUE(i), pad, result);
+        console.log(ANSI_BLUE(i), pad1, ANSI_GRAY(lineNum), pad2, result);
     } else {
         const eq = result === expected;
         if (eq) {
-            console.log(ANSI_GREEN_BOLD(i), pad, "passed");
+            console.log(ANSI_GREEN_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, "passed");
         } else {
-            console.log(ANSI_RED_BOLD(i));
+            console.log(ANSI_RED_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2);
             console.log(ANSI_CYAN(expected));
             console.log(result);
         }
