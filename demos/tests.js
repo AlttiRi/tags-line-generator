@@ -743,3 +743,40 @@ t({
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
 });
+
+
+// The advanced usage:
+// Keep "Animated" tag only if the extension is not "mp4", or "webm", or "gif".
+const genSettingsOptionalAnimated = {
+    "customSets": {
+        "all-tags-except-one": {
+            "source": "tags",
+            "ignore": "Animated"
+        },
+        "ext-ani-tag": {
+            "source": "extension tags",
+            "only": "mp4 webm gif Animated"
+        }
+    },
+    "onlyOne": [
+        ["mp4", "webm", "gif", "Animated"]
+    ],
+    "ignore": "mp4 webm gif",
+    "selectedSets": "all-tags-except-one ext-ani-tag",
+};
+t({
+    genSettings: genSettingsOptionalAnimated,
+    propsObject: {
+        "tags": "Animated 3D Overwatch Tracer",
+        "extension": "mp4"
+    },
+    expected: "3D Overwatch Tracer"
+});
+t({
+    genSettings: genSettingsOptionalAnimated,
+    propsObject: {
+        "tags": "Animated 3D Overwatch Tracer",
+        "extension": "png"
+    },
+    expected: "3D Overwatch Tracer Animated"
+});

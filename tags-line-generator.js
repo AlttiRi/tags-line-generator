@@ -3,9 +3,10 @@ export class TagsLineGenerator {
      * source: String|String[],
      * only?: String|String[],
      * ignore?: String|String[],
+     * splitString?: boolean,
+     * tagsLimit?: number,
      * ignoreMatcher?: TagsLineGenerator.WildcardTagMatcher,
-     * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher,
-     * tagsLimit?: number
+     * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher
      * }>} CustomSets */
     /** @typedef {{
      * charsLimit?: number,
@@ -49,12 +50,12 @@ export class TagsLineGenerator {
 
         const WildcardTagMatcher = TagsLineGenerator.WildcardTagMatcher;
         for (const opts of Object.values(this.customSets)) {
-            opts.source = this.toArray(opts.source);
+            opts.source = this.toArray(opts.source, opts); // todo: rename to sources?
             if (opts.ignore) {
-                opts.ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts.splitString));
+                opts.ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
             }
             if (opts.only) {
-                opts.onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts.splitString));
+                opts.onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
             }
         }
 
@@ -129,9 +130,10 @@ export class TagsLineGenerator {
 
     /** @private
      *  @param {String|String[]} value
-     *  @param {Boolean} splitString
+     *  @param {{splitString?: boolean}} [opt]
      *  @return {String[]}*/
-    toArray(value, splitString = this.splitString) {
+    toArray(value, opt) {
+        const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
         return this._toArray(value, splitString).filter(e => Boolean(e));
     }
     /** @private
@@ -181,7 +183,7 @@ export class TagsLineGenerator {
         for (const [name, opts] of Object.entries(this.customSets)) {
             /** @type {String[]} */
             const sourceTags = opts.source.map(name => {
-                return this.toArray(propsObject[name] || customTagsMap.get(name), opts.splitString);
+                return this.toArray(propsObject[name] || customTagsMap.get(name), opts);
             }).flat();
 
             let result = [];
