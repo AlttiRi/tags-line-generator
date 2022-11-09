@@ -23,6 +23,34 @@ t({
 
 t({
     genSettings: {
+        "selectedSets": ["tags"],
+        "ignore": ["animated", "webm", "mp4"]
+    },
+    propsObject: paheal,
+    expected: "Metal_Gear Metal_Gear_Solid_V Quiet Vg_erotica"
+});
+
+t({
+    genSettings: {
+        "selectedSets": ["tags"],
+        "ignore": "animated webm mp4"
+    },
+    propsObject: paheal,
+    expected: "Metal_Gear Metal_Gear_Solid_V Quiet Vg_erotica"
+});
+
+t({
+    genSettings: {
+        "selectedSets": "tags",
+        "ignore": "animated webm mp4"
+    },
+    propsObject: paheal,
+    expected: "Metal_Gear Metal_Gear_Solid_V Quiet Vg_erotica"
+});
+
+
+t({
+    genSettings: {
         "selectedSets": ["tag_string"],
         "tagsLimit": 3
     },

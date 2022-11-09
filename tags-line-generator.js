@@ -1,4 +1,5 @@
 export class TagsLineGenerator {
+    static __version__ = "1.0.0-2022.11.10";
     /** @typedef {Object<String, {
      * source: String|String[],
      * only?: String|String[],
