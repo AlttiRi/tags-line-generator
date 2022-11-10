@@ -12,7 +12,7 @@ const computedTagLineSetting = {
     "custom-sets": {
         "tags__important": {
             "source": ["tags"],
-            "only": ["third-party_edit", "sound_edit"],
+            "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"],
         },
         "tags__important_medium": {
             "source": ["tags_medium"],
