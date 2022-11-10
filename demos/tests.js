@@ -810,3 +810,66 @@ t({
     },
     expected: "3D Overwatch Tracer Animated Source_Filmmaker"
 });
+
+
+t({
+    genSettings: {
+        "customSets": {
+            "__custom_tags_1": {
+                "source": "tags",
+                "splitter": ", "
+            }
+        },
+        "selectedSets": "__custom_tags_1",
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": "tag 1, tag 2, tag 3, tag 4"
+    },
+    expected: "tag 1, tag 2, tag 3, tag 4"
+});
+
+t({
+    genSettings: {
+        "customSets": {
+            "__custom_tags_1": {
+                "source": "tags",
+                "splitter": ", ",
+                "ignore": "tag 1"
+            },
+            "__custom_tags_2": {
+                "source": "tags",
+                "splitter": ", ",
+                "only": "tag 1"
+            }
+        },
+        "selectedSets": "__custom_tags_1 __custom_tags_2",
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": "tag 1, tag 2, tag 3, tag 4"
+    },
+    expected: "tag 2, tag 3, tag 4, tag 1"
+});
+
+t({
+    genSettings: {
+        "splitter": ", ",
+        "customSets": {
+            "__custom_tags_1": {
+                "source": "tags",
+                "ignore": "tag 1"
+            },
+            "__custom_tags_2": {
+                "source": "tags",
+                "only": "tag 1"
+            }
+        },
+        "selectedSets": "__custom_tags_1, __custom_tags_2",
+        "joiner": ", "
+    },
+    propsObject: {
+        "tags": "tag 1, tag 2, tag 3, tag 4"
+    },
+    expected: "tag 2, tag 3, tag 4, tag 1"
+});

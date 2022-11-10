@@ -1,10 +1,11 @@
 export class TagsLineGenerator {
-    static __version__ = "1.0.0-2022.11.10";
+    static __version__ = "1.0.1-2022.11.10";
     /** @typedef {Object<String, {
      * source: String|String[],
      * only?: String|String[],
      * ignore?: String|String[],
      * splitString?: boolean,
+     * splitter?: String,
      * tagsLimit?: number,
      * ignoreMatcher?: TagsLineGenerator.WildcardTagMatcher,
      * onlyMatcher?: TagsLineGenerator.WildcardTagMatcher
@@ -132,14 +133,16 @@ export class TagsLineGenerator {
     /** @private
      *  @param {String|String[]} value
      *  @param {{splitString?: boolean}} [opt]
-     *  @return {String[]}*/
+     *  @param {{splitter?: string}} [opt]
+     *  @return {String[]} */
     toArray(value, opt) {
         const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
-        return this._toArray(value, splitString).filter(e => Boolean(e));
+        const splitter    = (opt?.splitter ?? this.splitter);
+        return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
     }
     /** @private
      *  @return {String[]} */
-    _toArray(value, splitString) {
+    static _toArray(value, splitString, splitter) {
         if (!value) {
             return [];
         }
@@ -150,9 +153,9 @@ export class TagsLineGenerator {
             return value;
         }
         if (Array.isArray(value)) {
-            return value.map(value => value.split(this.splitter)).flat(); // todo use splitter of customSets
+            return value.map(value => value.split(splitter)).flat();
         }
-        return value.split(this.splitter);
+        return value.split(splitter);
     }
 
     /** @private */
