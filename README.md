@@ -89,7 +89,7 @@ The bonus config example:
             "source": ["tags_medium"],
             "only": ["3d"]
         },
-        "tags__custom_medium": {
+        "tags__filtered_medium": {
             "source": ["tags_medium"],
             "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
         },
@@ -104,14 +104,15 @@ The bonus config example:
     "only-one": [
         ["third-party_edit", "edit"],
         ["sound_edit", "edit"],
-        ["one_piece:_two_years_later", "one_piece"]
+        ["one_piece:_two_years_later", "one_piece"],
     ],
     "selected-sets": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
         "tags__custom_general",
-        "tags_genre", "tags__custom_medium", "tags_meta"
-    ]
+        "tags_genre", "tags__filtered_medium", "tags_meta"
+    ],
+    "length-limit": 110
 }
 ```
 

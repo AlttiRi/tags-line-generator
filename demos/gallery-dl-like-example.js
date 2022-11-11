@@ -18,7 +18,7 @@ const computedTagLineSetting = {
             "source": ["tags_medium"],
             "only": ["3d"]
         },
-        "tags__custom_medium": {
+        "tags__filtered_medium": {
             "source": ["tags_medium"],
             "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
         },
@@ -40,9 +40,10 @@ const computedTagLineSetting = {
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
         "tags__custom_general",
-        "tags_genre", "tags__custom_medium", "tags_meta"
+        "tags_genre", "tags__filtered_medium", "tags_meta"
     ],
     // "only": ["gwendolyn_tennyson", "violet_parr"],
+    "length-limit": 110,
     // "tags-limit": 7
 };
 const tagsLineGen = new TagsLineGenerator(computedTagLineSetting);
