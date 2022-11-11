@@ -104,7 +104,7 @@ The bonus config example:
     "only-one": [
         ["third-party_edit", "edit"],
         ["sound_edit", "edit"],
-        ["one_piece:_two_years_later", "one_piece"],
+        ["one_piece:_two_years_later", "one_piece"]
     ],
     "selected-sets": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
