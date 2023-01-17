@@ -29,16 +29,14 @@ function delayPrintTestResume() {
     timerId = setTimeout(printTestResume, 50);
 }
 
-/** @type {Number[]} */
-const runOnly = [];
 const printNotPassedTestLineRef = true;
 let num = 0;
-/** @param {{result, expected, stackDeep?}} opts */
-export function t({result, expected, stackDeep}) {
+/** @param {{result, expected, stackDeep?: number, testOnly?: number[]}} opts */
+export function t({result, expected, stackDeep, testOnly}) {
     const {filename, line: lineNum} = getLineNum(2 + (stackDeep || 0));
 
     num++;
-    if (runOnly.length && !runOnly.includes(num)) {
+    if (testOnly?.length && !testOnly.includes(num)) {
         return;
     }
     const pad1 = " ".repeat(2 - num.toString().length);
