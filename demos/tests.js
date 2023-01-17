@@ -1,4 +1,4 @@
-import {t} from "./tags-line-gen-tester.js";
+import {t as test} from "./tester.js";
 
 import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
 import sankaku2  from "./jsons/sankaku-31250632.json"   assert {type: "json"};
@@ -6,6 +6,20 @@ import sankaku3  from "./jsons/sankaku-31113165.json"   assert {type: "json"};
 import pixiv     from "./jsons/pixiv-78254724.json"     assert {type: "json"};
 import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
 import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
+
+import {TagsLineGenerator} from "../tags-line-generator.js";
+
+
+/** @type {TagsLineGenerator} */
+let tagsLineGen;
+/** @param {{genSettings?: TagsLineGenSetting, propsObject}} opts */
+function t({genSettings, propsObject, expected}) {
+    if (genSettings !== undefined) {
+        tagsLineGen = new TagsLineGenerator(genSettings);
+    }
+    const result = tagsLineGen.generateLine(propsObject);
+    test({result, expected, stackDeep: 1});
+}
 
 
 t({

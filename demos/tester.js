@@ -1,13 +1,17 @@
 import {ANSI_BLUE, ANSI_CYAN, ANSI_GRAY, ANSI_GREEN_BOLD, ANSI_RED_BOLD} from "@alttiri/util-node-js";
-import {TagsLineGenerator} from "../tags-line-generator.js";
 
+/**
+ * @param {number} stackDeep
+ * @return {{filename?: string, line?: string, column?: string}}
+ */
 function getLineNum(stackDeep = 2) {
     const errorLines = new Error().stack.split("\n");
     if (errorLines[0] === "Error") {
         errorLines.shift();
     }
-    const match = errorLines[stackDeep]?.match(/\d+(?=:\d+$)/);
-    return match?.[0] || "";
+    const fileLine = errorLines[stackDeep]?.split("/").pop();
+    const {filename, line, column} = fileLine?.match(/(?<filename>.+):(?<line>\d+):(?<column>\d+)/)?.groups || {};
+    return {filename, line, column};
 }
 
 let passedTestCount = 0;
@@ -28,37 +32,30 @@ function delayPrintTestResume() {
 /** @type {Number[]} */
 const runOnly = [];
 const printNotPassedTestLineRef = true;
-/** @type {TagsLineGenerator} */
-let tagsLineGen;
-let i = 0;
-/** @param {{genSettings?: TagsLineGenSetting, propsObject, expected}} opts */
-export function t({genSettings, propsObject, expected}) {
-    const lineNum = getLineNum();
+let num = 0;
+/** @param {{result, expected, stackDeep?}} opts */
+export function t({result, expected, stackDeep}) {
+    const {filename, line: lineNum} = getLineNum(2 + (stackDeep || 0));
 
-    i++;
-    if (runOnly.length && !runOnly.includes(i)) {
+    num++;
+    if (runOnly.length && !runOnly.includes(num)) {
         return;
     }
-    const pad1 = " ".repeat(2 - i.toString().length);
+    const pad1 = " ".repeat(2 - num.toString().length);
     const pad2 = " ".repeat(3 - lineNum.toString().length);
 
-    if (genSettings !== undefined) {
-        tagsLineGen = new TagsLineGenerator(genSettings);
-    }
-
-    const result = tagsLineGen.generateLine(propsObject);
     if (expected === undefined) {
-        console.log(ANSI_BLUE(i), pad1, ANSI_GRAY(lineNum), pad2, result);
+        console.log(ANSI_BLUE(num), pad1, ANSI_GRAY(lineNum), pad2, result);
     } else {
         const eq = result === expected;
         if (eq) {
-            console.log(ANSI_GREEN_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_GREEN_BOLD("passed"));
+            console.log(ANSI_GREEN_BOLD(num), pad1, ANSI_GRAY(lineNum), pad2, ANSI_GREEN_BOLD("passed"));
             passedTestCount++;
         } else {
-            console.log(ANSI_RED_BOLD(i), pad1, ANSI_GRAY(lineNum), pad2, ANSI_RED_BOLD("failed"));
+            console.log(ANSI_RED_BOLD(num), pad1, ANSI_GRAY(lineNum), pad2, ANSI_RED_BOLD("failed"));
             console.log(ANSI_GRAY("expect: "), ANSI_CYAN(expected));
             console.log(ANSI_GRAY("result: "), result);
-            printNotPassedTestLineRef && console.log(`file:///./tests.js:${lineNum}`);
+            printNotPassedTestLineRef && console.log(`file:///./${filename}:${lineNum}`); // Expects work dir === file location
             failedTestCount++;
         }
     }
