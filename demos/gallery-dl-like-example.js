@@ -1,5 +1,5 @@
 import {ANSI_CYAN} from "@alttiri/util-node-js";
-import {TagsLineGenerator} from "../tags-line-generator.js";
+import {TagsLineGenerator} from "../src/tags-line-generator.js";
 import {dateParts, renderTemplateString} from "./util.js";
 
 import json1 from "./jsons/sankaku-31250632.json" assert {type: "json"};
