@@ -27,8 +27,6 @@ export class TagsLineGenerator {
     private readonly calcLength: LengthFunc;
 
     constructor(settings: TagsLineGenSetting = {}) {
-        // todo default source
-        // todo lowercase
         this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
                         || settings.lengthLimit || settings["length-limit"] || 120;
         this.bytesLimit  = settings.bytesLimit  || settings["bytes-limit"]  || 0;

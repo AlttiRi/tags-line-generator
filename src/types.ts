@@ -48,7 +48,7 @@ export type CustomSets = {
 
 /** @private */
 export interface SetsOptionsExt extends SetsOptions {
-    source: string[], // todo: rename to sources?
+    source: string[],
     ignoreMatcher?: WildcardTagMatcher,
     onlyMatcher?:   WildcardTagMatcher,
 }
