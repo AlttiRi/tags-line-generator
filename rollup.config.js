@@ -1,5 +1,6 @@
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
+import packageJson from "./package.json" assert {type: "json"};
 
 
 /** @type {import("rollup").RollupOptions[]} */
@@ -37,6 +38,7 @@ const options = [{
         format: "iife",
         name: "TagsLineGenerator",
         exports: "default",
+        banner: `/*! TLG v${packageJson.version} */`
     },
     plugins: [
         typescript({

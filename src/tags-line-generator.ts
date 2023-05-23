@@ -7,10 +7,7 @@ import {
 } from "./types.js";
 
 
-const version = "2.0.1-2023.5.23";
-
 export class TagsLineGenerator {
-    static readonly __version__ = version;
     private readonly charsLimit: number;
     private readonly bytesLimit: number;
     private readonly tagsLimit:  number;

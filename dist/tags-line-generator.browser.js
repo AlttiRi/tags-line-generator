@@ -1,3 +1,4 @@
+/*! TLG v2.0.2-2023.5.23 */
 var TagsLineGenerator = (function () {
     'use strict';
 
@@ -41,7 +42,6 @@ var TagsLineGenerator = (function () {
         }
     }
 
-    const version = "2.0.1-2023.5.23";
     class TagsLineGenerator {
         constructor(settings = {}) {
             // todo default source
@@ -223,7 +223,6 @@ var TagsLineGenerator = (function () {
             return typeof value === "string" || value instanceof String;
         }
     }
-    TagsLineGenerator.__version__ = version;
 
     return TagsLineGenerator;
 
