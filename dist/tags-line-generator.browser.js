@@ -1,7 +1,6 @@
 var TagsLineGenerator = (function () {
     'use strict';
 
-    const version = "2.0.0-2023.5.21";
     class WildcardTagMatcher {
         constructor(tagsSet) {
             const wildcards = [];
@@ -41,6 +40,8 @@ var TagsLineGenerator = (function () {
             throw new Error("Invalid input string: " + wildcard);
         }
     }
+
+    const version = "2.0.1-2023.5.23";
     class TagsLineGenerator {
         constructor(settings = {}) {
             // todo default source

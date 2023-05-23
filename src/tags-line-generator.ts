@@ -1,115 +1,13 @@
-const version = "2.0.0-2023.5.21";
-
-export type SetsOptions = {
-    source:  string | string[],
-    only?:   string | string[],
-    ignore?: string | string[],
-    splitString?: boolean,
-    splitter?:    string,
-    tagsLimit?:   number,
-};
-export type CustomSets = {
-    [key: string]: SetsOptions
-};
-
-interface SetsOptionsExt extends SetsOptions {
-    source: string[], // todo: rename to sources?
-    ignoreMatcher?: WildcardTagMatcher,
-    onlyMatcher?:   WildcardTagMatcher,
-}
-type CustomSetsExt = {
-    [key: string]: SetsOptionsExt
-};
-
-/**
- * The property object can have `any` properties,
- * but the selected keys (sources for `selectedSets`) must be `string`, or `string[]`.
- */
-export type PropsObject = {
-    [key: string]: any /*string | string[]*/,
-};
-
-export type TagsLineGenSetting = {
-    /**
-     * test
-     */
-    charsLimit?:  number, "chars-limit"?:  number,
-    lengthLimit?: number, "length-limit"?: number,
-    bytesLimit?:  number, "bytes-limit"?:  number,
-    tagsLimit?:   number, "tags-limit"?:   number,
-
-    joiner?:   string,
-    splitter?: string,
-    deduplicate?:   boolean,
-    splitString?:   boolean, "split-string"?:   boolean,
-    caseSensitive?: boolean, "case-sensitive"?: boolean,
-
-    customSets?: CustomSets,           "custom-sets"?: CustomSets,
-    selectedSets?: string | string[],  "selected-sets"?: string | string[],
-    replace?: Array<[string, string]>,
-    onlyOne?: Array<string[]> | null,  "only-one"?: Array<string[]> | null,
-
-    ignore?: string | string[],
-    only?:   string | string[],
-};
+import {WildcardTagMatcher} from "./wildcard-tag-matcher.js";
+import {
+    CustomSets, CustomSetsExt,
+    LengthFunc, LimitType, ToArrayOpt,
+    SetsOptions, SetsOptionsExt,
+    PropsObject, TagsLineGenSetting,
+} from "./types.js";
 
 
-type Wildcard = `*${string}` | `${string}*` | `*${string}*`;
-type WildcardMatcher = (text: string) => boolean;
-
-class WildcardTagMatcher {
-    private specTagsSet: Set<string>;
-    private wildcardMatchers: WildcardMatcher[];
-    constructor(tagsSet: string[]) {
-        const wildcards: Wildcard[] = [];
-        const tags: string[] = [];
-        for (const tag of tagsSet) {
-            if (WildcardTagMatcher._isWildcard(tag)) {
-                wildcards.push(tag);
-            } else {
-                tags.push(tag);
-            }
-        }
-        this.wildcardMatchers = [...new Set(wildcards)].map(wildcardTag => {
-            return WildcardTagMatcher._getWildcardMatcher(wildcardTag);
-        });
-        this.specTagsSet = new Set(tags);
-    }
-
-    match(tag: string) {
-        return this.specTagsSet.has(tag) || this.wildcardMatchers.some(matcher => matcher(tag));
-    }
-
-    static _isWildcard(value: string): value is Wildcard { // Simplified implementation
-        return value.startsWith("*") || value.endsWith("*");
-    }
-
-    static _getWildcardMatcher(wildcard: Wildcard): WildcardMatcher { // Simplified implementation
-        if (wildcard.startsWith("*") && wildcard.endsWith("*")) {
-            const substring = wildcard.slice(1, -1);
-            return (text: string) => text.includes(substring);
-        }
-        if (wildcard.startsWith("*")) {
-            const substring = wildcard.slice(1);
-            return (text: string) => text.endsWith(substring);
-        }
-        if (wildcard.endsWith("*")) {
-            const substring = wildcard.slice(0, -1);
-            return (text: string) => text.startsWith(substring);
-        }
-        throw new Error("Invalid input string: " + wildcard);
-    }
-}
-
-
-type LimitType = "bytes" | "chars" | "unlimited";
-type LengthFunc = (text: string) => number;
-
-type ToArrayOpt = {
-    splitString?: boolean, "split-string"?: boolean,
-    splitter?: string
-}
-
+const version = "2.0.1-2023.5.23";
 
 export class TagsLineGenerator {
     static readonly __version__ = version;

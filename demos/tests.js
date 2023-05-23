@@ -7,7 +7,7 @@ import pixiv     from "./jsons/pixiv-78254724.json"     assert {type: "json"};
 import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
 import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
 
-import {TagsLineGenerator} from "../src/tags-line-generator.js";
+import {TagsLineGenerator} from "../src/main.js";
 /** @typedef {import("../src/tags-line-generator").TagsLineGenSetting} TagsLineGenSetting */
 /** @typedef {import("../src/tags-line-generator").PropsObject} PropsObject */
 

@@ -1,23 +1,23 @@
 {
   "name": "tags-line-generator",
-  "version": "2.0.0",
+  "version": "2.0.1-2023.5.23",
   "license": "MIT",
   "type": "module",
   "main": "./dist/tags-line-generator.js",
   "devDependencies": {
     "@alttiri/util-node-js": "1.6.0",
-    "rollup": "3.22.0",
-    "@rollup/plugin-typescript": "11.1.1"
+    "@rollup/plugin-typescript": "11.1.1",
+    "rollup-plugin-dts": "5.3.0",
+    "rollup": "3.23.0"
   },
   "scripts": {
-    "compile": "tsc",
-    "compile-watch": "tsc -w",
+    "compile": "tsc --build",
+    "compile-watch": "tsc --build -w",
     "clean": "tsc --build --clean",
 
     "test": "node --no-warnings ./demos/tests.js",
     "test-gdl": "node --no-warnings ./demos/gallery-dl-like-example.js",
 
-    "build": "rollup --config rollup.config.js",
-    "build-browser": "rollup --config rollup.config.browser.js"
+    "build": "rollup --config rollup.config.js"
   }
 }
