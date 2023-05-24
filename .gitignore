@@ -4,3 +4,4 @@
 /src/*.js.map
 /dist/*
 !/dist/*.browser.js
+/todo.txt
