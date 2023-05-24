@@ -169,12 +169,13 @@ export class TagsLineGenerator {
 
     private createSetsOptionsExt(opts: SetsOptions): SetsOptionsExt {
         let ignoreMatcher, onlyMatcher;
+        if (opts.only) {
+            onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
+        } else
         if (opts.ignore) {
             ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
         }
-        if (opts.only) {
-            onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
-        }
+
         return {
             ...opts,
             source: this.toArray(opts.source, opts),

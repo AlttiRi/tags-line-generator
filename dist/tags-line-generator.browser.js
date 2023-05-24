@@ -1,4 +1,4 @@
-/*! TLG v2.0.6-2023.5.24 */
+/*! TLG v2.0.7-2023.5.24 */
 var TagsLineGenerator = (function () {
     'use strict';
 
@@ -175,11 +175,11 @@ var TagsLineGenerator = (function () {
         }
         createSetsOptionsExt(opts) {
             let ignoreMatcher, onlyMatcher;
-            if (opts.ignore) {
-                ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
-            }
             if (opts.only) {
                 onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
+            }
+            else if (opts.ignore) {
+                ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
             }
             return {
                 ...opts,
