@@ -1,6 +1,10 @@
-/*! TLG v2.0.3-2023.5.23 */
+/*! TLG v2.0.4-2023.5.24 */
 var TagsLineGenerator = (function () {
     'use strict';
+
+    function isString(value) {
+        return typeof value === "string" || value instanceof String;
+    }
 
     class WildcardTagMatcher {
         constructor(tagsSet) {
@@ -60,7 +64,7 @@ var TagsLineGenerator = (function () {
                 this.limitType = "chars";
                 this.lengthLimit = this.charsLimit;
             }
-            this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
+            this.calcLength = TagsLineGenerator.getLengthFunc(this.limitType);
             this.joiner = settings.joiner || " ";
             this.splitter = settings.splitter || " ";
             this.splitString = settings.splitString ?? settings["split-string"] ?? true;
@@ -79,7 +83,7 @@ var TagsLineGenerator = (function () {
             }
         }
         generateLine(propsObject) {
-            const customTagsMap = this._handleCustomTagsSets(propsObject);
+            const customTagsMap = this.handleCustomTagsSets(propsObject);
             const sets = this.selectedSets.map(name => {
                 if (propsObject[name] !== undefined) {
                     return this.toArray(propsObject[name]);
@@ -90,7 +94,7 @@ var TagsLineGenerator = (function () {
             if (this.deduplicate) {
                 tags = new Set(tags);
             }
-            tags = this._removeByOnlyOneRule(tags);
+            tags = this.removeByOnlyOneRule(tags);
             const resultTags = [];
             let currentLength = 0;
             const joinerLength = this.calcLength(this.joiner);
@@ -149,7 +153,7 @@ var TagsLineGenerator = (function () {
                 return [];
             }
             if (!splitString) {
-                if (TagsLineGenerator.isString(value)) {
+                if (isString(value)) {
                     return [value];
                 }
                 return value;
@@ -159,7 +163,7 @@ var TagsLineGenerator = (function () {
             }
             return value.split(splitter);
         }
-        _removeByOnlyOneRule(tags) {
+        removeByOnlyOneRule(tags) {
             if (!this.onlyOne) {
                 return tags;
             }
@@ -181,7 +185,7 @@ var TagsLineGenerator = (function () {
             }
             return [...set];
         }
-        _handleCustomTagsSets(propsObject) {
+        handleCustomTagsSets(propsObject) {
             const customTagsMap = new Map();
             for (const [name, opts] of Object.entries(this.customSetsExt)) {
                 const sourceTags = opts.source.map((name) => {
@@ -204,7 +208,7 @@ var TagsLineGenerator = (function () {
             }
             return customTagsMap;
         }
-        static _getLengthFunc(limitType) {
+        static getLengthFunc(limitType) {
             if (limitType === "chars") {
                 return (string) => string.length;
             }
@@ -216,9 +220,6 @@ var TagsLineGenerator = (function () {
                 return (_) => 0;
             }
             throw new Error("Wrong LimitType");
-        }
-        static isString(value) {
-            return typeof value === "string" || value instanceof String;
         }
     }
 

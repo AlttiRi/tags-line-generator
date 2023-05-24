@@ -1,3 +1,4 @@
+import {isString} from "./util.js";
 import {WildcardTagMatcher} from "./wildcard-tag-matcher.js";
 import {
     CustomSets, CustomSetsExt,
@@ -42,7 +43,7 @@ export class TagsLineGenerator {
             this.limitType = "chars";
             this.lengthLimit = this.charsLimit;
         }
-        this.calcLength = TagsLineGenerator._getLengthFunc(this.limitType);
+        this.calcLength = TagsLineGenerator.getLengthFunc(this.limitType);
 
         this.joiner      = settings.joiner      || " ";
         this.splitter    = settings.splitter    || " ";
@@ -67,7 +68,7 @@ export class TagsLineGenerator {
     }
 
     generateLine(propsObject: PropsObject) {
-        const customTagsMap = this._handleCustomTagsSets(propsObject);
+        const customTagsMap = this.handleCustomTagsSets(propsObject);
         const sets: Array<string[]> = this.selectedSets.map(name => {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
@@ -80,7 +81,7 @@ export class TagsLineGenerator {
             tags = new Set(tags);
         }
 
-        tags = this._removeByOnlyOneRule(tags);
+        tags = this.removeByOnlyOneRule(tags);
 
         const resultTags = [];
         let currentLength = 0;
@@ -145,7 +146,7 @@ export class TagsLineGenerator {
             return [];
         }
         if (!splitString) {
-            if (TagsLineGenerator.isString(value)) {
+            if (isString(value)) {
                 return [value];
             }
             return value;
@@ -156,7 +157,7 @@ export class TagsLineGenerator {
         return value.split(splitter);
     }
 
-    private _removeByOnlyOneRule(tags: Iterable<string>): Iterable<string> {
+    private removeByOnlyOneRule(tags: Iterable<string>): Iterable<string> {
         if (!this.onlyOne) {
             return tags;
         }
@@ -178,7 +179,7 @@ export class TagsLineGenerator {
         return [...set];
     }
 
-    private _handleCustomTagsSets(propsObject: PropsObject): Map<string, string[]> {
+    private handleCustomTagsSets(propsObject: PropsObject): Map<string, string[]> {
         const customTagsMap: Map<string, string[]> = new Map();
         for (const [name, opts] of Object.entries(this.customSetsExt)) {
             const sourceTags: string[] = opts.source.map((name: string) => {
@@ -204,7 +205,7 @@ export class TagsLineGenerator {
         return customTagsMap;
     }
 
-    private static _getLengthFunc(limitType: LimitType): LengthFunc {
+    private static getLengthFunc(limitType: LimitType): LengthFunc {
         if (limitType === "chars") {
             return (string: string) => string.length;
         } else
@@ -216,10 +217,6 @@ export class TagsLineGenerator {
             return (_: string) => 0;
         }
         throw new Error("Wrong LimitType");
-    }
-
-    private static isString(value: unknown): value is string {
-        return typeof value === "string" || value instanceof String;
     }
 }
 
