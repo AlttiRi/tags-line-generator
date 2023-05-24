@@ -1,4 +1,4 @@
-/*! TLG v2.0.4-2023.5.24 */
+/*! TLG v2.0.5-2023.5.24 */
 var TagsLineGenerator = (function () {
     'use strict';
 
@@ -75,11 +75,11 @@ var TagsLineGenerator = (function () {
             this.onlyOne = settings.onlyOne || settings["only-one"] || null;
             const customSets = settings.customSets || settings["custom-sets"] || {};
             this.customSetsExt = this.extendCustomSets(customSets);
-            if (settings.ignore) {
-                this.ignoreMatcher = new WildcardTagMatcher(this.toArray(settings.ignore));
-            }
             if (settings.only) {
                 this.onlyMatcher = new WildcardTagMatcher(this.toArray(settings.only));
+            }
+            else if (settings.ignore) {
+                this.ignoreMatcher = new WildcardTagMatcher(this.toArray(settings.ignore));
             }
         }
         generateLine(propsObject) {

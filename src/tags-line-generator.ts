@@ -59,11 +59,11 @@ export class TagsLineGenerator {
         const customSets  = settings.customSets || settings["custom-sets"]  || {};
         this.customSetsExt = this.extendCustomSets(customSets);
 
-        if (settings.ignore) {
-            this.ignoreMatcher = new WildcardTagMatcher(this.toArray(settings.ignore));
-        }
         if (settings.only) {
             this.onlyMatcher = new WildcardTagMatcher(this.toArray(settings.only));
+        } else
+        if (settings.ignore) {
+            this.ignoreMatcher = new WildcardTagMatcher(this.toArray(settings.ignore));
         }
     }
 
