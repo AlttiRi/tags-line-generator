@@ -1,4 +1,4 @@
-/*! TLG v2.0.5-2023.5.24 */
+/*! TLG v2.0.6-2023.5.24 */
 var TagsLineGenerator = (function () {
     'use strict';
 
@@ -83,7 +83,7 @@ var TagsLineGenerator = (function () {
             }
         }
         generateLine(propsObject) {
-            const customTagsMap = this.handleCustomTagsSets(propsObject);
+            const customTagsMap = this.getCustomTagsSets(propsObject);
             const sets = this.selectedSets.map(name => {
                 if (propsObject[name] !== undefined) {
                     return this.toArray(propsObject[name]);
@@ -121,48 +121,6 @@ var TagsLineGenerator = (function () {
             }
             return resultTags.join(this.joiner);
         }
-        createSetsOptionsExt(opts) {
-            let ignoreMatcher, onlyMatcher;
-            if (opts.ignore) {
-                ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
-            }
-            if (opts.only) {
-                onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
-            }
-            return {
-                ...opts,
-                source: this.toArray(opts.source, opts),
-                ...(ignoreMatcher ? { ignoreMatcher } : {}),
-                ...(onlyMatcher ? { onlyMatcher } : {}),
-            };
-        }
-        extendCustomSets(customSets) {
-            const customSetsExt = {};
-            for (const [key, opts] of Object.entries(customSets)) {
-                customSetsExt[key] = this.createSetsOptionsExt(opts);
-            }
-            return customSetsExt;
-        }
-        toArray(value, opt) {
-            const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
-            const splitter = (opt?.splitter ?? this.splitter);
-            return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
-        }
-        static _toArray(value, splitString, splitter) {
-            if (!value) {
-                return [];
-            }
-            if (!splitString) {
-                if (isString(value)) {
-                    return [value];
-                }
-                return value;
-            }
-            if (Array.isArray(value)) {
-                return value.map(value => value.split(splitter)).flat();
-            }
-            return value.split(splitter);
-        }
         removeByOnlyOneRule(tags) {
             if (!this.onlyOne) {
                 return tags;
@@ -185,13 +143,13 @@ var TagsLineGenerator = (function () {
             }
             return [...set];
         }
-        handleCustomTagsSets(propsObject) {
+        getCustomTagsSets(propsObject) {
             const customTagsMap = new Map();
             for (const [name, opts] of Object.entries(this.customSetsExt)) {
                 const sourceTags = opts.source.map((name) => {
                     return this.toArray(propsObject[name] || customTagsMap.get(name), opts);
                 }).flat();
-                let result = [];
+                let tags = [];
                 for (const tag of sourceTags) {
                     if (opts.onlyMatcher && !opts.onlyMatcher.match(tag)) {
                         continue;
@@ -199,14 +157,56 @@ var TagsLineGenerator = (function () {
                     else if (opts.ignoreMatcher && opts.ignoreMatcher.match(tag)) {
                         continue;
                     }
-                    result.push(tag);
+                    tags.push(tag);
                 }
                 if (opts.tagsLimit) {
-                    result = result.slice(0, opts.tagsLimit);
+                    tags = tags.slice(0, opts.tagsLimit);
                 }
-                customTagsMap.set(name, result);
+                customTagsMap.set(name, tags);
             }
             return customTagsMap;
+        }
+        extendCustomSets(customSets) {
+            const customSetsExt = {};
+            for (const [key, opts] of Object.entries(customSets)) {
+                customSetsExt[key] = this.createSetsOptionsExt(opts);
+            }
+            return customSetsExt;
+        }
+        createSetsOptionsExt(opts) {
+            let ignoreMatcher, onlyMatcher;
+            if (opts.ignore) {
+                ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
+            }
+            if (opts.only) {
+                onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
+            }
+            return {
+                ...opts,
+                source: this.toArray(opts.source, opts),
+                ...(ignoreMatcher ? { ignoreMatcher } : {}),
+                ...(onlyMatcher ? { onlyMatcher } : {}),
+            };
+        }
+        toArray(value, opt) {
+            const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
+            const splitter = (opt?.splitter ?? this.splitter);
+            return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
+        }
+        static _toArray(value, splitString, splitter) {
+            if (!value) {
+                return [];
+            }
+            if (!splitString) {
+                if (isString(value)) {
+                    return [value];
+                }
+                return value;
+            }
+            if (Array.isArray(value)) {
+                return value.map(value => value.split(splitter)).flat();
+            }
+            return value.split(splitter);
         }
         static getLengthFunc(limitType) {
             if (limitType === "chars") {

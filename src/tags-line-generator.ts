@@ -68,7 +68,7 @@ export class TagsLineGenerator {
     }
 
     generateLine(propsObject: PropsObject) {
-        const customTagsMap = this.handleCustomTagsSets(propsObject);
+        const customTagsMap: Map<string, string[]> = this.getCustomTagsSets(propsObject);
         const sets: Array<string[]> = this.selectedSets.map(name => {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
@@ -111,52 +111,6 @@ export class TagsLineGenerator {
         return resultTags.join(this.joiner);
     }
 
-    private createSetsOptionsExt(opts: SetsOptions): SetsOptionsExt {
-        let ignoreMatcher, onlyMatcher;
-        if (opts.ignore) {
-            ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
-        }
-        if (opts.only) {
-            onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
-        }
-        return {
-            ...opts,
-            source: this.toArray(opts.source, opts),
-            ...(ignoreMatcher ? {ignoreMatcher} : {}),
-            ...(onlyMatcher   ? {onlyMatcher}   : {}),
-        };
-    }
-
-    private extendCustomSets(customSets: CustomSets): CustomSetsExt {
-        const customSetsExt: CustomSetsExt = {};
-        for (const [key, opts] of Object.entries(customSets)) {
-            customSetsExt[key] = this.createSetsOptionsExt(opts);
-        }
-        return customSetsExt;
-    }
-
-    private toArray(value?: string | string[], opt?: ToArrayOpt): string[] {
-        const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
-        const splitter    = (opt?.splitter ?? this.splitter);
-        return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
-    }
-
-    private static _toArray(value: string | string[] | undefined, splitString: boolean, splitter: string): string[] {
-        if (!value) {
-            return [];
-        }
-        if (!splitString) {
-            if (isString(value)) {
-                return [value];
-            }
-            return value;
-        }
-        if (Array.isArray(value)) {
-            return value.map(value => value.split(splitter)).flat();
-        }
-        return value.split(splitter);
-    }
-
     private removeByOnlyOneRule(tags: Iterable<string>): Iterable<string> {
         if (!this.onlyOne) {
             return tags;
@@ -179,14 +133,14 @@ export class TagsLineGenerator {
         return [...set];
     }
 
-    private handleCustomTagsSets(propsObject: PropsObject): Map<string, string[]> {
+    private getCustomTagsSets(propsObject: PropsObject): Map<string, string[]> {
         const customTagsMap: Map<string, string[]> = new Map();
         for (const [name, opts] of Object.entries(this.customSetsExt)) {
             const sourceTags: string[] = opts.source.map((name: string) => {
                 return this.toArray(propsObject[name] || customTagsMap.get(name), opts);
             }).flat();
 
-            let result: string[] = [];
+            let tags: string[] = [];
             for (const tag of sourceTags) {
                 if (opts.onlyMatcher && !opts.onlyMatcher.match(tag)) {
                     continue;
@@ -194,15 +148,61 @@ export class TagsLineGenerator {
                 if (opts.ignoreMatcher && opts.ignoreMatcher.match(tag)) {
                     continue;
                 }
-                result.push(tag);
+                tags.push(tag);
             }
             if (opts.tagsLimit) {
-                result = result.slice(0, opts.tagsLimit);
+                tags = tags.slice(0, opts.tagsLimit);
             }
-            customTagsMap.set(name, result);
+            customTagsMap.set(name, tags);
         }
 
         return customTagsMap;
+    }
+
+    private extendCustomSets(customSets: CustomSets): CustomSetsExt {
+        const customSetsExt: CustomSetsExt = {};
+        for (const [key, opts] of Object.entries(customSets)) {
+            customSetsExt[key] = this.createSetsOptionsExt(opts);
+        }
+        return customSetsExt;
+    }
+
+    private createSetsOptionsExt(opts: SetsOptions): SetsOptionsExt {
+        let ignoreMatcher, onlyMatcher;
+        if (opts.ignore) {
+            ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
+        }
+        if (opts.only) {
+            onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));
+        }
+        return {
+            ...opts,
+            source: this.toArray(opts.source, opts),
+            ...(ignoreMatcher ? {ignoreMatcher} : {}),
+            ...(onlyMatcher   ? {onlyMatcher}   : {}),
+        };
+    }
+
+    private toArray(value?: string | string[], opt?: ToArrayOpt): string[] {
+        const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
+        const splitter    = (opt?.splitter ?? this.splitter);
+        return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
+    }
+
+    private static _toArray(value: string | string[] | undefined, splitString: boolean, splitter: string): string[] {
+        if (!value) {
+            return [];
+        }
+        if (!splitString) {
+            if (isString(value)) {
+                return [value];
+            }
+            return value;
+        }
+        if (Array.isArray(value)) {
+            return value.map(value => value.split(splitter)).flat();
+        }
+        return value.split(splitter);
     }
 
     private static getLengthFunc(limitType: LimitType): LengthFunc {

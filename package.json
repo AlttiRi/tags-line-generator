@@ -1,6 +1,6 @@
 {
   "name": "tags-line-generator",
-  "version": "2.0.5-2023.5.24",
+  "version": "2.0.6-2023.5.24",
   "license": "MIT",
   "type": "module",
   "main": "./dist/tags-line-generator.js",
