@@ -1,31 +1,32 @@
 import {isString} from "./util.js";
 import {WildcardTagMatcher} from "./wildcard-tag-matcher.js";
 import {
-    CustomSets, CustomSetsExt,
+    CustomPropsOptionsObject, CustomPropsOptionsObjectExt,
+    CustomPropOptions, CustomPropOptionsExt,
     LengthFunc, LimitType, ToArrayOpt,
-    SetsOptions, SetsOptionsExt,
-    PropsObject, TagsLineGenSetting,
+    TagsLineGenSetting, PropsObject, CustomPropsObject,
+    Tag, TagList, TagLine, PropName,
 } from "./types.js";
 
 
 export class TagsLineGenerator {
-    private readonly charsLimit: number;
-    private readonly bytesLimit: number;
-    private readonly tagsLimit:  number;
+    private readonly charsLimit:  number;
+    private readonly bytesLimit:  number;
+    private readonly tagsLimit:   number;
+    private readonly lengthLimit: number;
+    private readonly limitType:  LimitType;
+    private readonly calcLength: LengthFunc;
     private readonly joiner:   string;
     private readonly splitter: string;
     private readonly splitString:   boolean;
     private readonly deduplicate:   boolean;
     private readonly caseSensitive: boolean;
-    private readonly customSetsExt: CustomSetsExt;
-    private readonly selectedSets: string[];
-    private readonly replace: Map<string, string>;
-    private readonly onlyOne: Array<string[]> | null;
+    private readonly customPropsOptionsObjectExt: CustomPropsOptionsObjectExt;
+    private readonly selectedSets: PropName[];
+    private readonly replace: Map<Tag, Tag>;
+    private readonly onlyOne: Array<TagList> | null;
     private readonly ignoreMatcher?: WildcardTagMatcher;
     private readonly onlyMatcher?:   WildcardTagMatcher;
-    private readonly lengthLimit: number;
-    private readonly limitType:  LimitType;
-    private readonly calcLength: LengthFunc;
 
     constructor(settings: TagsLineGenSetting = {}) {
         this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
@@ -57,7 +58,7 @@ export class TagsLineGenerator {
         this.onlyOne      = settings.onlyOne    || settings["only-one"]     || null;
 
         const customSets  = settings.customSets || settings["custom-sets"]  || {};
-        this.customSetsExt = this.extendCustomSets(customSets);
+        this.customPropsOptionsObjectExt = this.extendCustomSets(customSets);
 
         if (settings.only) {
             this.onlyMatcher = new WildcardTagMatcher(this.toArray(settings.only));
@@ -67,18 +68,18 @@ export class TagsLineGenerator {
         }
     }
 
-    generateLine(propsObject: PropsObject) {
-        const customTagsMap: Map<string, string[]> = this.getCustomTagsSets(propsObject);
-        const sets: Array<string[]> = this.selectedSets.map(name => {
+    generateLine(propsObject: PropsObject): TagLine {
+        const customPropsObject = this.getCustomPropsObject(propsObject);
+        const tagSources: Array<TagList> = this.selectedSets.map(name => {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
             }
-            return customTagsMap.get(name) || [];
+            return customPropsObject[name] || [];
         });
 
-        let tags: Iterable<string> = sets.flat();
+        let tags: TagList = tagSources.flat();
         if (this.deduplicate) {
-            tags = new Set(tags);
+            tags = [...new Set(tags)];
         }
 
         tags = this.removeByOnlyOneRule(tags);
@@ -93,7 +94,7 @@ export class TagsLineGenerator {
             if (this.ignoreMatcher && this.ignoreMatcher.match(tag)) {
                 continue;
             }
-            const replacer: string | undefined = this.replace.get(tag);
+            const replacer: Tag | undefined = this.replace.get(tag);
             if (replacer) {
                 tag = replacer;
             }
@@ -111,7 +112,7 @@ export class TagsLineGenerator {
         return resultTags.join(this.joiner);
     }
 
-    private removeByOnlyOneRule(tags: Iterable<string>): Iterable<string> {
+    private removeByOnlyOneRule(tags: TagList): TagList {
         if (!this.onlyOne) {
             return tags;
         }
@@ -133,41 +134,41 @@ export class TagsLineGenerator {
         return [...set];
     }
 
-    private getCustomTagsSets(propsObject: PropsObject): Map<string, string[]> {
-        const customTagsMap: Map<string, string[]> = new Map();
-        for (const [name, opts] of Object.entries(this.customSetsExt)) {
-            const sourceTags: string[] = opts.source.map((name: string) => {
-                return this.toArray(propsObject[name] || customTagsMap.get(name), opts);
-            }).flat();
+    private getCustomPropsObject(propsObject: PropsObject): CustomPropsObject {
+        const customPropsObject: CustomPropsObject = {};
+        for (const [propName, opts] of Object.entries(this.customPropsOptionsObjectExt)) {
+            let tags: TagList = opts.source
+                .flatMap((name: PropName) => {
+                    return this.toArray(propsObject[name] || customPropsObject[name], opts);
+                })
+                .filter((tag: Tag) => {
+                    if (opts.onlyMatcher && !opts.onlyMatcher.match(tag)) {
+                        return false;
+                    } else
+                    if (opts.ignoreMatcher && opts.ignoreMatcher.match(tag)) {
+                        return false;
+                    }
+                    return true;
+                });
 
-            let tags: string[] = [];
-            for (const tag of sourceTags) {
-                if (opts.onlyMatcher && !opts.onlyMatcher.match(tag)) {
-                    continue;
-                } else
-                if (opts.ignoreMatcher && opts.ignoreMatcher.match(tag)) {
-                    continue;
-                }
-                tags.push(tag);
-            }
             if (opts.tagsLimit) {
                 tags = tags.slice(0, opts.tagsLimit);
             }
-            customTagsMap.set(name, tags);
+            customPropsObject[propName] = tags;
         }
 
-        return customTagsMap;
+        return customPropsObject;
     }
 
-    private extendCustomSets(customSets: CustomSets): CustomSetsExt {
-        const customSetsExt: CustomSetsExt = {};
-        for (const [key, opts] of Object.entries(customSets)) {
-            customSetsExt[key] = this.createSetsOptionsExt(opts);
+    private extendCustomSets(customSets: CustomPropsOptionsObject): CustomPropsOptionsObjectExt {
+        const customSetsExt: CustomPropsOptionsObjectExt = {};
+        for (const [propName, opts] of Object.entries(customSets)) {
+            customSetsExt[propName] = this.createSetsOptionsExt(opts);
         }
         return customSetsExt;
     }
 
-    private createSetsOptionsExt(opts: SetsOptions): SetsOptionsExt {
+    private createSetsOptionsExt(opts: CustomPropOptions): CustomPropOptionsExt {
         let ignoreMatcher, onlyMatcher;
         if (opts.only) {
             onlyMatcher = new WildcardTagMatcher(this.toArray(opts.only, opts));

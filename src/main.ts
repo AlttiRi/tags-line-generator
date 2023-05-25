@@ -5,7 +5,7 @@ export {
 export type {
     PropsObject,
     TagsLineGenSetting,
-    SetsOptions,
-    CustomSets,
+    CustomPropOptions,
+    CustomPropsObject,
 } from "./types.js";
 
