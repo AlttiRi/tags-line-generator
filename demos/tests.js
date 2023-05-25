@@ -33,7 +33,7 @@ function t({genSettings, propsObject, expected}) {
 
 t({
     genSettings: {
-        "selectedSets": ["tags"],
+        "props": ["tags"],
     },
     propsObject: sankaku1,
     expected: "who_framed_roger_rabbit jessica_rabbit nikita_varb high_resolution very_high_resolution large_filesize paid_reward 1girl"
@@ -46,7 +46,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": ["tags"],
+        "props": ["tags"],
         "ignore": ["animated", "webm", "mp4"]
     },
     propsObject: paheal,
@@ -55,7 +55,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": ["tags"],
+        "props": ["tags"],
         "ignore": "animated webm mp4"
     },
     propsObject: paheal,
@@ -64,7 +64,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "ignore": "animated webm mp4"
     },
     propsObject: paheal,
@@ -74,7 +74,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": ["tag_string"],
+        "props": ["tag_string"],
         "tagsLimit": 3
     },
     propsObject: sankaku1,
@@ -85,16 +85,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": ["tags"],
-        "tagsLimit": 3
-    },
-    propsObject: paheal,
-    expected: "Metal_Gear Metal_Gear_Solid_V Quiet"
-});
-
-t({
-    genSettings: {
-        "selected-sets": ["tags"],
+        "props": ["tags"],
         "tagsLimit": 3
     },
     propsObject: paheal,
@@ -104,10 +95,10 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": ["tags"],
+        "props": ["tags"],
         "tagsLimit": 3,
         "joiner": ", ",
-        "splitString": false
+        "split": false
     },
     propsObject: pixiv,
     expected: "blue, Arknights 10000+ bookmarks, Arknights"
@@ -116,7 +107,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character",
+        "props": "tag_string_artist tag_string_character",
     },
     propsObject: sankaku2,
     expected: "redmoa raven_(dc) gwendolyn_tennyson violet_parr"
@@ -129,7 +120,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character",
+        "props": "tag_string_artist tag_string_character",
         "charsLimit": 40
     },
     propsObject: sankaku2,
@@ -143,7 +134,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "charsLimit": 5
     },
     propsObject: sankaku2,
@@ -157,7 +148,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "charsLimit": 1
     },
     propsObject: sankaku2,
@@ -167,7 +158,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "charsLimit": 0 // or null === default (120)
     },
     propsObject: sankaku2,
@@ -184,7 +175,7 @@ const tags1 =
     "pale_skin purple_eyes purple_hair red_hair short_hair teasing teeth";
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "charsLimit": -1
     },
     propsObject: sankaku2,
@@ -193,7 +184,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "bytesLimit": -1
     },
     propsObject: sankaku2,
@@ -202,7 +193,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "bytesLimit": -100,
         "charsLimit": -100
     },
@@ -213,7 +204,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+        "props": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
     },
     propsObject: safebooru,
     expected: "xingzhi_lv original abandoned architecture broken_window bush day east_asian_architecture forest grass house lantern"
@@ -222,7 +213,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+        "props": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
         "ignore": ["original"]
     },
     propsObject: safebooru,
@@ -232,7 +223,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+        "props": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
         "only": ["original"]
     },
     propsObject: safebooru,
@@ -242,7 +233,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character",
+        "props": "tag_string_artist tag_string_character",
     },
     propsObject: sankaku3,
     expected: "hagiwara_studio barkkung101 nami_(one_piece) nico_robin"
@@ -251,7 +242,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "  tag_string_character   tag_string_artist ",
+        "props": "  tag_string_character   tag_string_artist ",
     },
     propsObject: sankaku3,
     expected: "nami_(one_piece) nico_robin hagiwara_studio barkkung101"
@@ -260,17 +251,17 @@ t({
 
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "tags__general": {
-                "source": ["tag_string_general"],
+                "sources": ["tag_string_general"],
                 "tagsLimit": 3
             },
             "tags__artist": {
-                "source": ["tag_string_artist"],
+                "sources": ["tag_string_artist"],
                 "tagsLimit": 1
             },
         },
-        "selectedSets": "tags__artist tags__general",
+        "props": "tags__artist tags__general",
     },
     propsObject: sankaku3,
     expected: "hagiwara_studio 2girls abs bangs"
@@ -279,18 +270,18 @@ t({
 
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "tags__example1": {
-                "source": ["tags_artist tag_string_general"],
+                "sources": ["tags_artist tag_string_general"],
                 "tagsLimit": 4
             },
             "tags__example2": {
-                "source": "tags_artist tag_string_general",
+                "sources": "tags_artist tag_string_general",
                 "tagsLimit": 2
             }
         },
-        "selectedSets": "tags__example1 tags__example2",
-        "deduplicate": false
+        "props": "tags__example1 tags__example2",
+        "dedup": false
     },
     propsObject: sankaku3,
     expected: "hagiwara_studio barkkung101 2girls abs hagiwara_studio barkkung101"
@@ -299,17 +290,17 @@ t({
 
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "tags__example1": {
-                "source": ["tags_artist", "tag_string_general"],
+                "sources": ["tags_artist", "tag_string_general"],
                 "tagsLimit": 4
             },
             "tags__example2": {
-                "source": ["tags_artist"]
+                "sources": ["tags_artist"]
             }
         },
-        "selectedSets": "tags__example1 tags__example2",
-        "deduplicate": false
+        "props": "tags__example1 tags__example2",
+        "dedup": false
     },
     propsObject: sankaku1,
     expected: "nikita_varb 1girl bare_shoulders between_breasts nikita_varb"
@@ -318,7 +309,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags_copyright",
+        "props": "tags_copyright",
         "onlyOne": []
     },
     propsObject: sankaku3,
@@ -327,7 +318,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags_copyright",
+        "props": "tags_copyright",
         "onlyOne": [[]]
     },
     propsObject: sankaku3,
@@ -336,7 +327,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags_copyright",
+        "props": "tags_copyright",
         "onlyOne": [
             ["one_piece"]
         ]
@@ -347,7 +338,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags_copyright",
+        "props": "tags_copyright",
         "onlyOne": [
             ["one_piece:_two_years_later", "one_piece"]
         ]
@@ -359,7 +350,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "onlyOne": [
             ["third-party_edit", "edit", "edited"],
             ["sound_edit", "edit", "edited"]
@@ -396,13 +387,13 @@ t({
 
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "tags__example": {
-                "source": "tag_string_general",
+                "sources": "tag_string_general",
                 "only": "megane"
             },
         },
-        "selectedSets": "tags__example",
+        "props": "tags__example",
         "replace": [
             ["megane", "glasses"]
         ]
@@ -414,7 +405,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "bytesLimit": 10,
         "joiner": ", "
     },
@@ -426,7 +417,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "charsLimit": 10,
         "joiner": ", "
     },
@@ -437,7 +428,7 @@ t({
 });
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "lengthLimit": 10,
         "joiner": ", "
     },
@@ -450,7 +441,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "bytesLimit": 20,
         "joiner": ", "
     },
@@ -462,7 +453,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "charsLimit": 20,
         "joiner": ", "
     },
@@ -474,7 +465,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "bytesLimit": 30,
         "joiner": ", "
     },
@@ -485,7 +476,7 @@ t({
 });
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "lengthLimit": 30,
         "joiner": ", "
     },
@@ -499,13 +490,13 @@ t({
 // "uploader" key must have no space character
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "spec-uploader-tag": {
-                "source": "uploader",
+                "sources": "uploader",
                 "only": "user1"
             }
         },
-        "selectedSets": "spec-uploader-tag tags",
+        "props": "spec-uploader-tag tags",
     },
     propsObject: {
         "tags": "tag1 tag2 tag3 tag4",
@@ -516,13 +507,13 @@ t({
 // With the other "uploader" key value
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "spec-uploader-tag": {
-                "source": "uploader",
+                "sources": "uploader",
                 "only": "user1"
             }
         },
-        "selectedSets": "spec-uploader-tag tags",
+        "props": "spec-uploader-tag tags",
     },
     propsObject: {
         "tags": "tag1 tag2 tag3 tag4",
@@ -531,13 +522,13 @@ t({
     expected: "tag1 tag2 tag3 tag4"
 });
 
-// Use top level `"splitString": false`
+// Use top level `"split": false`
 t({
     genSettings: {
-        "splitString": false,
-        "customSets": {
+        "split": false,
+        "custom": {
             "spec-uploader-tag": {
-                "source": ["uploader"],
+                "sources": ["uploader"],
                 "only": ["user 1"]
             }
         },
@@ -545,7 +536,7 @@ t({
             ["user 1", "user_1"]
         ],
         "ignore": ["tag4"],
-        "selectedSets": ["spec-uploader-tag", "tags"]
+        "props": ["spec-uploader-tag", "tags"]
     },
     propsObject: {
         "tags": ["tag1", "tag2", "tag3", "tag4"],
@@ -554,21 +545,21 @@ t({
     expected: "user_1 tag1 tag2 tag3"
 });
 
-// Use `"splitString": false` only in "customSets"
+// Use `"split": false` only in "custom"
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "spec-uploader-tag": {
-                "source": ["uploader"],
+                "sources": ["uploader"],
                 "only": ["user 1"],
-                "splitString": false
+                "split": false
             }
         },
         "replace": [
             ["user 1", "user_1"]
         ],
         "ignore": ["tag4"],
-        "selectedSets": ["spec-uploader-tag", "tags"]
+        "props": ["spec-uploader-tag", "tags"]
     },
     propsObject: {
         "tags": ["tag1", "tag2", "tag3", "tag4"],
@@ -578,18 +569,18 @@ t({
 });
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "spec-uploader-tag": {
-                "source": ["uploader"],
+                "sources": ["uploader"],
                 "only": ["user 1"],
-                "splitString": false
+                "split": false
             }
         },
         "replace": [
             ["user 1", "user_1"]
         ],
         "ignore": "tag4",
-        "selectedSets": "spec-uploader-tag tags"
+        "props": "spec-uploader-tag tags"
     },
     propsObject: {
         "tags": "tag1 tag2 tag3 tag4",
@@ -601,7 +592,7 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "replace": [
 
         ]
@@ -613,7 +604,7 @@ t({
 });
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "replace": [
             []
         ]
@@ -625,7 +616,7 @@ t({
 });
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "replace": [
             ["tag1", "tag_1"]
         ]
@@ -637,7 +628,7 @@ t({
 });
 t({
     genSettings: {
-        "selectedSets": "tags",
+        "props": "tags",
         "replace": [
             ["tag1", "tag_1"],
             ["tag3", "tag_3"],
@@ -652,14 +643,14 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "not_exist_tags1 tags"
+        "props": "not_exist_tags1 tags"
     },
     propsObject: sankaku2,
     expected: "teen_titans ben_10 the_incredibles raven_(dc) gwendolyn_tennyson violet_parr redmoa high_resolution english animated 3d"
 });
 t({
     genSettings: {
-        "selectedSets": "not_exist_tags1 tags not_exist_tags2"
+        "props": "not_exist_tags1 tags not_exist_tags2"
     },
     propsObject: sankaku2,
     expected: "teen_titans ben_10 the_incredibles raven_(dc) gwendolyn_tennyson violet_parr redmoa high_resolution english animated 3d"
@@ -667,21 +658,21 @@ t({
 
 [
 {
-    "selectedSets": "not_exist_tags1"
+    "props": "not_exist_tags1"
 }, {
-    "selectedSets": "not_exist_tags1 not_exist_tags2"
+    "props": "not_exist_tags1 not_exist_tags2"
 }, {
-    "selectedSets": "  not_exist_tags1   not_exist_tags2  "
+    "props": "  not_exist_tags1   not_exist_tags2  "
 }, {
-    "selectedSets": ["", "not_exist_tags1"]
+    "props": ["", "not_exist_tags1"]
 }, {
-    "selectedSets": ["  ", " "]
+    "props": ["  ", " "]
 }, {
-    "selectedSets": ""
+    "props": ""
 }, {
-    "selectedSets": ["", ""]
+    "props": ["", ""]
 }, {
-    "selectedSets": []
+    "props": []
 }, {
     // [empty]
 }
@@ -713,7 +704,7 @@ const propsDemoObject1 = {
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
+        "props": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta",
     },
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa original 1girl brown_hair chair closed_mouth curly_hair dress female grey_dress long_dress"
@@ -721,42 +712,35 @@ t({
 
 t({
     genSettings: {
-        "selectedSets": "tag_string_artist tag_string_character",
+        "props": "tag_string_artist tag_string_character",
     },
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa"
 });
 t({
     genSettings: {
-        "selected-sets": "tag_string_artist tag_string_character",
+        "props": ["tag_string_artist", "tag_string_character"],
     },
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa"
 });
 t({
     genSettings: {
-        "selectedSets": ["tag_string_artist", "tag_string_character"],
-    },
-    propsObject: propsDemoObject1,
-    expected: "leonardo_da_vinci mona_lisa"
-});
-t({
-    genSettings: {
-        "selectedSets": ["tag_string_artist tag_string_character", "tag_string_meta"],
+        "props": ["tag_string_artist tag_string_character", "tag_string_meta"],
     },
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
 });
 t({
     genSettings: {
-        "selectedSets": ["  tag_string_artist  tag_string_character  ", "  tag_string_meta  "],
+        "props": ["  tag_string_artist  tag_string_character  ", "  tag_string_meta  "],
     },
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
 });
 t({
     genSettings: {
-        "selectedSets": ["  tag_string_artist  tag_string_character    tag_string_meta  "],
+        "props": ["  tag_string_artist  tag_string_character    tag_string_meta  "],
     },
     propsObject: propsDemoObject1,
     expected: "leonardo_da_vinci mona_lisa extremely_high_resolution"
@@ -766,13 +750,13 @@ t({
 // The advanced usage:
 // Keep "Animated" tag only if the extension is not "mp4", or "webm", or "gif".
 const genSettingsOptionalAnimated = {
-    "customSets": {
+    "custom": {
         "__main_tags": {
-            "source": "tags",
+            "sources": "tags",
             "ignore": "Animated"
         },
         "__extra_tags": {
-            "source": "extension tags",
+            "sources": "extension tags",
             "only": "mp4 webm gif Animated"
         }
     },
@@ -780,7 +764,7 @@ const genSettingsOptionalAnimated = {
         ["mp4", "webm", "gif", "Animated"]
     ],
     "ignore": "mp4 webm gif",
-    "selectedSets": "__main_tags __extra_tags",
+    "props": "__main_tags __extra_tags",
 };
 t({
     genSettings: genSettingsOptionalAnimated,
@@ -801,13 +785,13 @@ t({
 
 // Additionally let's move the "Source_Filmmaker" tag to the end
 const genSettingsOptionalAnimatedWithSource_Filmmaker = {
-    "customSets": {
+    "custom": {
         "__main_tags": {
-            "source": "tags",
+            "sources": "tags",
             "ignore": "Animated Source_Filmmaker"
         },
         "__extra_tags": {
-            "source": "extension tags",
+            "sources": "extension tags",
             "only": "mp4 webm gif Animated Source_Filmmaker"
         }
     },
@@ -815,7 +799,7 @@ const genSettingsOptionalAnimatedWithSource_Filmmaker = {
         ["mp4", "webm", "gif", "Animated"]
     ],
     "ignore": "mp4 webm gif",
-    "selectedSets": "__main_tags __extra_tags",
+    "props": "__main_tags __extra_tags",
 };
 t({
     genSettings: genSettingsOptionalAnimatedWithSource_Filmmaker,
@@ -837,13 +821,13 @@ t({
 
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "__custom_tags_1": {
-                "source": "tags",
+                "sources": "tags",
                 "splitter": ", "
             }
         },
-        "selectedSets": "__custom_tags_1",
+        "props": "__custom_tags_1",
         "joiner": ", "
     },
     propsObject: {
@@ -854,19 +838,19 @@ t({
 
 t({
     genSettings: {
-        "customSets": {
+        "custom": {
             "__custom_tags_1": {
-                "source": "tags",
+                "sources": "tags",
                 "splitter": ", ",
                 "ignore": "tag 1"
             },
             "__custom_tags_2": {
-                "source": "tags",
+                "sources": "tags",
                 "splitter": ", ",
                 "only": "tag 1"
             }
         },
-        "selectedSets": "__custom_tags_1 __custom_tags_2",
+        "props": "__custom_tags_1 __custom_tags_2",
         "joiner": ", "
     },
     propsObject: {
@@ -878,17 +862,17 @@ t({
 t({
     genSettings: {
         "splitter": ", ",
-        "customSets": {
+        "custom": {
             "__custom_tags_1": {
-                "source": "tags",
+                "sources": "tags",
                 "ignore": "tag 1"
             },
             "__custom_tags_2": {
-                "source": "tags",
+                "sources": "tags",
                 "only": "tag 1"
             }
         },
-        "selectedSets": "__custom_tags_1, __custom_tags_2",
+        "props": "__custom_tags_1, __custom_tags_2",
         "joiner": ", "
     },
     propsObject: {
@@ -896,3 +880,18 @@ t({
     },
     expected: "tag 2, tag 3, tag 4, tag 1"
 });
+
+// caseSens
+// t({
+//     genSettings: {
+//         "caseSens": false,
+//         "only": "tracer",
+//         "props": "tags",
+//     },
+//     propsObject: {
+//         "tags": "3D Animated Overwatch Source_Filmmaker Tracer"
+//     },
+//     expected: "tracer"
+// });
+
+

@@ -28,7 +28,7 @@ export class TagsLineGenerator {
     private readonly ignoreMatcher?: WildcardTagMatcher;
     private readonly onlyMatcher?:   WildcardTagMatcher;
 
-    constructor(settings: TagsLineGenSetting = {}) {
+    constructor(settings: TagsLineGenSetting) {
         this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
                         || settings.lengthLimit || settings["length-limit"] || 120;
         this.bytesLimit  = settings.bytesLimit  || settings["bytes-limit"]  || 0;
@@ -46,18 +46,18 @@ export class TagsLineGenerator {
         }
         this.calcLength = TagsLineGenerator.getLengthFunc(this.limitType);
 
-        this.joiner      = settings.joiner      || " ";
-        this.splitter    = settings.splitter    || " ";
-        this.splitString = settings.splitString ?? settings["split-string"] ?? true;
-        this.deduplicate = settings.deduplicate ?? true;
+        this.joiner      = settings.joiner   || " ";
+        this.splitter    = settings.splitter || " ";
+        this.splitString = settings.split ?? true;
+        this.deduplicate = settings.dedup ?? true;
 
-        this.caseSensitive = settings.caseSensitive || settings["case-sensitive"] || false;
+        this.caseSensitive = settings.caseSens || settings["case-sens"] || false;
 
-        this.selectedSets = this.toArray(settings.selectedSets || settings["selected-sets"]);
+        this.selectedSets = this.toArray(settings.props);
         this.replace      = new Map(settings.replace);
-        this.onlyOne      = settings.onlyOne    || settings["only-one"]     || null;
+        this.onlyOne      = settings.onlyOne || settings["only-one"] || null;
 
-        const customSets  = settings.customSets || settings["custom-sets"]  || {};
+        const customSets  = settings.custom || {};
         this.customPropsOptionsObjectExt = this.extendCustomSets(customSets);
 
         if (settings.only) {
@@ -179,14 +179,14 @@ export class TagsLineGenerator {
 
         return {
             ...opts,
-            source: this.toArray(opts.source, opts),
+            source: this.toArray(opts.sources, opts),
             ...(ignoreMatcher ? {ignoreMatcher} : {}),
             ...(onlyMatcher   ? {onlyMatcher}   : {}),
         };
     }
 
     private toArray(value?: string | string[], opt?: ToArrayOpt): string[] {
-        const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
+        const splitString = (opt?.split ?? this.splitString);
         const splitter    = (opt?.splitter ?? this.splitter);
         return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
     }

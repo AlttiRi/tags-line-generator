@@ -29,6 +29,9 @@ export type CustomPropsObject = {
 };
 
 export type TagsLineGenSetting = {
+    props: PropName | PropName[],
+    custom?: CustomPropsOptionsObject,
+
     charsLimit?:  number, "chars-limit"?:  number,
     lengthLimit?: number, "length-limit"?: number,
     bytesLimit?:  number, "bytes-limit"?:  number,
@@ -36,25 +39,23 @@ export type TagsLineGenSetting = {
 
     joiner?:   string,
     splitter?: string,
-    deduplicate?:   boolean,
-    splitString?:   boolean, "split-string"?:   boolean,
-    caseSensitive?: boolean, "case-sensitive"?: boolean,
+    dedup?: boolean,
+    split?: boolean,
+    caseSens?: boolean, "case-sens"?: boolean,
 
-    customSets?: CustomPropsOptionsObject, "custom-sets"?: CustomPropsOptionsObject,
-    selectedSets?: PropName | PropName[],  "selected-sets"?: PropName | PropName[],
     replace?: Array<[Tag, Tag]>,
     onlyOne?: Array<TagList> | null, "only-one"?: Array<TagList> | null,
 
-    ignore?: TagLine | TagList,
     only?:   TagLine | TagList,
+    ignore?: TagLine | TagList,
 };
 
 
 export type CustomPropOptions = {
-    source:  PropName | PropName[],
+    sources:  PropName | PropName[],
     only?:   TagLine | TagList,
     ignore?: TagLine | TagList,
-    splitString?: boolean,
+    split?: boolean,
     splitter?:    string,
     tagsLimit?:   number,
 };
@@ -79,6 +80,6 @@ export type LimitType = "bytes" | "chars" | "unlimited";
 export type LengthFunc = (text: string) => number;
 /** @private */
 export type ToArrayOpt = {
-    splitString?: boolean, "split-string"?: boolean,
+    split?: boolean,
     splitter?: string
 }

@@ -9,7 +9,7 @@ import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 
 /** @type {TagsLineGenSetting} */
 const computedTagLineSetting = {
-    "custom-sets": {
+    "custom": {
         "tags__important": {
             "source": ["tags"],
             "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"],
@@ -36,7 +36,7 @@ const computedTagLineSetting = {
         ["sound_edit", "edit"],
         ["one_piece:_two_years_later", "one_piece"],
     ],
-    "selected-sets": [
+    "props": [
         "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
         "tags__important_medium",
         "tags__custom_general",
