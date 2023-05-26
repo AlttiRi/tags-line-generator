@@ -15,14 +15,14 @@ export class TagsLineGenerator {
     private readonly tagsLimit:   number;
     private readonly lengthLimit: number;
     private readonly limitType:  LimitType;
-    private readonly calcLength: LengthFunc;
+    private readonly len: LengthFunc;
     private readonly joiner:   string;
     private readonly splitter: string;
-    private readonly splitString:   boolean;
-    private readonly deduplicate:   boolean;
-    private readonly caseSensitive: boolean;
+    private readonly split:   boolean;
+    private readonly dedup:   boolean;
+    private readonly caseSens: boolean;
     private readonly customPropsOptionsObjectExt: CustomPropsOptionsObjectExt;
-    private readonly selectedSets: PropName[];
+    private readonly props: PropName[];
     private readonly replace: Map<Tag, Tag>;
     private readonly onlyOne: Array<TagList> | null;
     private readonly ignoreMatcher?: WildcardTagMatcher;
@@ -44,21 +44,21 @@ export class TagsLineGenerator {
             this.limitType = "chars";
             this.lengthLimit = this.charsLimit;
         }
-        this.calcLength = TagsLineGenerator.getLengthFunc(this.limitType);
+        this.len = TagsLineGenerator.getLengthFunc(this.limitType);
 
-        this.joiner      = settings.joiner   || " ";
-        this.splitter    = settings.splitter || " ";
-        this.splitString = settings.split ?? true;
-        this.deduplicate = settings.dedup ?? true;
+        this.joiner   = settings.joiner   || " ";
+        this.splitter = settings.splitter || " ";
+        this.split = settings.split ?? true;
+        this.dedup = settings.dedup ?? true;
 
-        this.caseSensitive = settings.caseSens || settings["case-sens"] || false;
+        this.caseSens = settings.caseSens || settings["case-sens"] || false;
 
-        this.selectedSets = this.toArray(settings.props);
-        this.replace      = new Map(settings.replace);
-        this.onlyOne      = settings.onlyOne || settings["only-one"] || null;
+        this.props   = this.toArray(settings.props);
+        this.replace = new Map(settings.replace);
+        this.onlyOne = settings.onlyOne || settings["only-one"] || null;
 
-        const customSets  = settings.custom || {};
-        this.customPropsOptionsObjectExt = this.extendCustomSets(customSets);
+        const customProps = settings.custom || {};
+        this.customPropsOptionsObjectExt = this.extendCustomSets(customProps);
 
         if (settings.only) {
             this.onlyMatcher = new WildcardTagMatcher(this.toArray(settings.only));
@@ -70,7 +70,7 @@ export class TagsLineGenerator {
 
     generateLine(propsObject: PropsObject): TagLine {
         const customPropsObject = this.getCustomPropsObject(propsObject);
-        const tagSources: Array<TagList> = this.selectedSets.map(name => {
+        const tagSources: Array<TagList> = this.props.map(name => {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
             }
@@ -78,7 +78,7 @@ export class TagsLineGenerator {
         });
 
         let tags: TagList = tagSources.flat();
-        if (this.deduplicate) {
+        if (this.dedup) {
             tags = [...new Set(tags)];
         }
 
@@ -86,7 +86,7 @@ export class TagsLineGenerator {
 
         const resultTags = [];
         let currentLength = 0;
-        const joinerLength = this.calcLength(this.joiner);
+        const joinerLength = this.len(this.joiner);
         for (let tag of tags) {
             if (this.onlyMatcher && !this.onlyMatcher.match(tag)) {
                 continue;
@@ -98,7 +98,7 @@ export class TagsLineGenerator {
             if (replacer) {
                 tag = replacer;
             }
-            const tagLength = this.calcLength(tag);
+            const tagLength = this.len(tag);
             const expectedLineLength = currentLength + tagLength + joinerLength * resultTags.length;
             if (expectedLineLength <= this.lengthLimit) {
                 resultTags.push(tag);
@@ -186,16 +186,16 @@ export class TagsLineGenerator {
     }
 
     private toArray(value?: string | string[], opt?: ToArrayOpt): string[] {
-        const splitString = (opt?.split ?? this.splitString);
-        const splitter    = (opt?.splitter ?? this.splitter);
-        return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
+        const split    = opt?.split ?? this.split;
+        const splitter = opt?.splitter ?? this.splitter;
+        return TagsLineGenerator._toArray(value, split, splitter).filter(e => Boolean(e));
     }
 
-    private static _toArray(value: string | string[] | undefined, splitString: boolean, splitter: string): string[] {
+    private static _toArray(value: string | string[] | undefined, split: boolean, splitter: string): string[] {
         if (!value) {
             return [];
         }
-        if (!splitString) {
+        if (!split) {
             if (isString(value)) {
                 return [value];
             }
