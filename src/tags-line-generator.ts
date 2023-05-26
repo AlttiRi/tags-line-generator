@@ -138,9 +138,8 @@ export class TagsLineGenerator {
                     return true;
                 });
 
-            const tagLimit = opts.tagLimit || opts["tag-limit"];
-            if (tagLimit) {
-                tags = tags.slice(0, tagLimit);
+            if (opts.tagLimit && opts.tagLimit > 0) {
+                tags = tags.slice(0, opts.tagLimit);
             }
             customPropsObject[propName] = tags;
         }
@@ -164,10 +163,11 @@ export class TagsLineGenerator {
         if (opts.ignore) {
             ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
         }
-
+        const tagLimit = opts.tagLimit || opts["tag-limit"];
         return {
             ...opts,
             source: this.toArray(opts.sources, opts),
+            ...(tagLimit !== undefined ? {tagLimit} : {}),
             ...(ignoreMatcher ? {ignoreMatcher} : {}),
             ...(onlyMatcher   ? {onlyMatcher}   : {}),
         };
@@ -209,4 +209,3 @@ export class TagsLineGenerator {
         throw new Error("Wrong LimitType");
     }
 }
-

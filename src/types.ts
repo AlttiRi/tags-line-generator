@@ -59,7 +59,7 @@ export type CustomPropOptions = {
     tagLimit?: number, "tag-limit"?: number,
 };
 /** @private */
-export interface CustomPropOptionsExt extends CustomPropOptions {
+export interface CustomPropOptionsExt extends Omit<CustomPropOptions, "tag-limit"> {
     source: TagList,
     ignoreMatcher?: WildcardTagMatcher,
     onlyMatcher?:   WildcardTagMatcher,
