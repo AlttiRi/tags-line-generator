@@ -490,6 +490,22 @@ t({
     expected: "にしてみた, 風景, 自然, 建物, 街並み, 背景"
 });
 
+t({
+    genSettings: {
+        "props": "tags",
+        "joiner": ", ",
+     // "splitter": " ", // by default
+    },
+    propsObject: {
+        "tags": [
+            "にしてみた 風景",
+            "自然 建物 街並み 背景",
+            "original illustration"
+        ]
+    },
+    expected: "にしてみた, 風景, 自然, 建物, 街並み, 背景, original, illustration"
+});
+
 // Using of non tag key as a tag
 // "uploader" key must have no space character
 t({

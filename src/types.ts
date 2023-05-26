@@ -14,6 +14,17 @@ export type TagListMixed = Array<Tag | TagLine>;
 
 /** `PropName` is the key of `PropsObject` is containing `TagLine`, or `TagList` */
 export type PropName = string;
+/** `PropNameList` is a string of one or more `PropName`s separated by a separator (a space by default)*/
+export type PropNameLine = `${PropName}`;
+/** `PropNameList` is an array of `PropName`s */
+export type PropNameList = PropName[];
+/**
+ * It's similar to `TagListMixed`. Use with `split: true`.
+ * @example
+ * const a1: PropNameListMixed = ["a", "b", "c d e"];
+ * const a2: PropName[] = ["a", "b", "c", "d", "e"];
+ */
+export type PropNameListMixed = Array<PropName | PropNameLine>;
 
 /**
  * The property object can have `any` properties,
@@ -34,7 +45,7 @@ export type CustomPropsObject = {
 };
 
 export type TagsLineGenSetting = {
-    props: PropName | PropName[],
+    props: PropName | PropNameList | PropNameListMixed,
     customProps?: CustomPropsOptionsObject, "custom-props"?: CustomPropsOptionsObject,
 
     tagLimit?: number, "tag-limit"?: number,
