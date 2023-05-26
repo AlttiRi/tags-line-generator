@@ -15,7 +15,7 @@ export type PropName = string;
  * but the selected keys (sources for `selectedSets`) must be `string` (`TagLine`), or `string[]` (`TagList`).
  */
 export type PropsObject = {
-    [key: PropName]: any | TagLine | TagList,
+    [key in PropName]: any | TagLine | TagList
 };
 
 /**
@@ -25,17 +25,16 @@ export type PropsObject = {
  * @private
  */
 export type CustomPropsObject = {
-    [key: PropName]: TagList,
+    [key in PropName]: TagList
 };
 
 export type TagsLineGenSetting = {
     props: PropName | PropName[],
     custom?: CustomPropsOptionsObject,
 
-    charsLimit?:  number, "chars-limit"?:  number,
-    lengthLimit?: number, "length-limit"?: number,
-    bytesLimit?:  number, "bytes-limit"?:  number,
-    tagsLimit?:   number, "tags-limit"?:   number,
+    tagLimit?: number, "tag-limit"?: number,
+    lenLimit?: number, "len-limit"?: number,
+    limitType?: LimitType, "limit-type"?: LimitType,
 
     joiner?:   string,
     splitter?: string,
@@ -52,12 +51,12 @@ export type TagsLineGenSetting = {
 
 
 export type CustomPropOptions = {
-    sources:  PropName | PropName[],
+    sources: PropName | PropName[],
     only?:   TagLine | TagList,
     ignore?: TagLine | TagList,
     split?: boolean,
-    splitter?:    string,
-    tagsLimit?:   number,
+    splitter?: string,
+    tagLimit?: number, "tag-limit"?: number,
 };
 /** @private */
 export interface CustomPropOptionsExt extends CustomPropOptions {
@@ -66,18 +65,19 @@ export interface CustomPropOptionsExt extends CustomPropOptions {
     onlyMatcher?:   WildcardTagMatcher,
 }
 
-export type CustomPropsOptionsObject = {
-    [key: PropName]: CustomPropOptions
-};
+export type CustomPropsOptionsObject = Record<PropName, CustomPropOptions>;
 /** @private */
-export type CustomPropsOptionsObjectExt = {
-    [key: PropName]: CustomPropOptionsExt
-};
+export type CustomPropsOptionsObjectExt = Record<PropName, CustomPropOptionsExt>;
 
 /** @private */
-export type LimitType = "bytes" | "chars" | "unlimited";
+export type LimitType = "byte" | "char";
 /** @private */
 export type LengthFunc = (text: string) => number;
+/** @private */
+export type getLengthFuncResult = {
+    length: LengthFunc,
+    lengthLimit?: number,
+};
 /** @private */
 export type ToArrayOpt = {
     split?: boolean,

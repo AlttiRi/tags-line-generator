@@ -75,7 +75,7 @@ t({
 t({
     genSettings: {
         "props": ["tag_string"],
-        "tagsLimit": 3
+        "tagLimit": 3
     },
     propsObject: sankaku1,
     expected: "who_framed_roger_rabbit jessica_rabbit nikita_varb"
@@ -86,7 +86,7 @@ t({
 t({
     genSettings: {
         "props": ["tags"],
-        "tagsLimit": 3
+        "tagLimit": 3
     },
     propsObject: paheal,
     expected: "Metal_Gear Metal_Gear_Solid_V Quiet"
@@ -96,7 +96,7 @@ t({
 t({
     genSettings: {
         "props": ["tags"],
-        "tagsLimit": 3,
+        "tagLimit": 3,
         "joiner": ", ",
         "split": false
     },
@@ -121,7 +121,7 @@ t({
 t({
     genSettings: {
         "props": "tag_string_artist tag_string_character",
-        "charsLimit": 40
+        "lenLimit": 40
     },
     propsObject: sankaku2,
     expected: "redmoa raven_(dc) gwendolyn_tennyson"
@@ -135,7 +135,7 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "charsLimit": 5
+        "lenLimit": 5
     },
     propsObject: sankaku2,
     expected: "3d hd"
@@ -149,7 +149,7 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "charsLimit": 1
+        "lenLimit": 1,
     },
     propsObject: sankaku2,
     expected: ""
@@ -159,7 +159,7 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "charsLimit": 0 // or null === default (120)
+        "lenLimit": 0 // or null === default (120)
     },
     propsObject: sankaku2,
     expected: "teen_titans ben_10 the_incredibles raven_(dc) gwendolyn_tennyson violet_parr redmoa high_resolution english animated 3d"
@@ -176,7 +176,7 @@ const tags1 =
 t({
     genSettings: {
         "props": "tags",
-        "charsLimit": -1
+        "lenLimit": -1,
     },
     propsObject: sankaku2,
     expected: tags1
@@ -185,7 +185,8 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "bytesLimit": -1
+        "lenLimit": -1,
+        "limitType": "byte",
     },
     propsObject: sankaku2,
     expected: tags1
@@ -194,8 +195,8 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "bytesLimit": -100,
-        "charsLimit": -100
+        "len-limit": -100,
+        "limit-type": "char"
     },
     propsObject: sankaku2,
     expected: tags1
@@ -254,11 +255,11 @@ t({
         "custom": {
             "tags__general": {
                 "sources": ["tag_string_general"],
-                "tagsLimit": 3
+                "tagLimit": 3
             },
             "tags__artist": {
                 "sources": ["tag_string_artist"],
-                "tagsLimit": 1
+                "tagLimit": 1
             },
         },
         "props": "tags__artist tags__general",
@@ -273,11 +274,11 @@ t({
         "custom": {
             "tags__example1": {
                 "sources": ["tags_artist tag_string_general"],
-                "tagsLimit": 4
+                "tag-limit": 4
             },
             "tags__example2": {
                 "sources": "tags_artist tag_string_general",
-                "tagsLimit": 2
+                "tag-limit": 2
             }
         },
         "props": "tags__example1 tags__example2",
@@ -293,7 +294,7 @@ t({
         "custom": {
             "tags__example1": {
                 "sources": ["tags_artist", "tag_string_general"],
-                "tagsLimit": 4
+                "tag-limit": 4
             },
             "tags__example2": {
                 "sources": ["tags_artist"]
@@ -406,8 +407,9 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "bytesLimit": 10,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 10,
+        "limitType": "byte"
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
@@ -418,8 +420,8 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "charsLimit": 10,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 10,
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
@@ -429,8 +431,8 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "lengthLimit": 10,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 10,
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
@@ -442,8 +444,9 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "bytesLimit": 20,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 20,
+        "limitType": "byte",
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
@@ -454,8 +457,8 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "charsLimit": 20,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 20,
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
@@ -466,8 +469,9 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "bytesLimit": 30,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 30,
+        "limitType": "byte",
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]
@@ -477,8 +481,8 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "lengthLimit": 30,
-        "joiner": ", "
+        "joiner": ", ",
+        "lenLimit": 30,
     },
     propsObject: {
         "tags": ["にしてみた", "風景", "自然", "建物", "街並み", "背景", "original", "illustration"]

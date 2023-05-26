@@ -5,16 +5,13 @@ import {
     CustomPropOptions, CustomPropOptionsExt,
     LengthFunc, LimitType, ToArrayOpt,
     TagsLineGenSetting, PropsObject, CustomPropsObject,
-    Tag, TagList, TagLine, PropName,
+    Tag, TagList, TagLine, PropName, getLengthFuncResult,
 } from "./types.js";
 
 
 export class TagsLineGenerator {
-    private readonly charsLimit:  number;
-    private readonly bytesLimit:  number;
-    private readonly tagsLimit:   number;
-    private readonly lengthLimit: number;
-    private readonly limitType:  LimitType;
+    private readonly tagLimit: number;
+    private readonly lenLimit: number;
     private readonly len: LengthFunc;
     private readonly joiner:   string;
     private readonly splitter: string;
@@ -29,22 +26,12 @@ export class TagsLineGenerator {
     private readonly onlyMatcher?:   WildcardTagMatcher;
 
     constructor(settings: TagsLineGenSetting) {
-        this.charsLimit  = settings.charsLimit  || settings["chars-limit"]
-                        || settings.lengthLimit || settings["length-limit"] || 120;
-        this.bytesLimit  = settings.bytesLimit  || settings["bytes-limit"]  || 0;
-        this.tagsLimit   = settings.tagsLimit   || settings["tags-limit"]   || 0;
-
-        if (this.bytesLimit < 0 || this.charsLimit < 0) {
-            this.limitType = "unlimited";
-            this.lengthLimit = Number.MAX_SAFE_INTEGER;
-        } else if (this.bytesLimit) {
-            this.limitType = "bytes";
-            this.lengthLimit = this.bytesLimit;
-        } else {
-            this.limitType = "chars";
-            this.lengthLimit = this.charsLimit;
-        }
-        this.len = TagsLineGenerator.getLengthFunc(this.limitType);
+        this.tagLimit   = settings.tagLimit  || settings["tag-limit"]  || 0;
+        const lenLimit  = settings.lenLimit  || settings["len-limit"]  || 120;
+        const limitType = settings.limitType || settings["limit-type"] || "char";
+        const {length, lengthLimit = lenLimit} = TagsLineGenerator.getLengthFunc(lenLimit, limitType);
+        this.len = length;
+        this.lenLimit = lengthLimit;
 
         this.joiner   = settings.joiner   || " ";
         this.splitter = settings.splitter || " ";
@@ -100,10 +87,10 @@ export class TagsLineGenerator {
             }
             const tagLength = this.len(tag);
             const expectedLineLength = currentLength + tagLength + joinerLength * resultTags.length;
-            if (expectedLineLength <= this.lengthLimit) {
+            if (expectedLineLength <= this.lenLimit) {
                 resultTags.push(tag);
                 currentLength += tagLength;
-                if (this.tagsLimit === resultTags.length) {
+                if (this.tagLimit === resultTags.length) {
                     break;
                 }
             }
@@ -151,8 +138,9 @@ export class TagsLineGenerator {
                     return true;
                 });
 
-            if (opts.tagsLimit) {
-                tags = tags.slice(0, opts.tagsLimit);
+            const tagLimit = opts.tagLimit || opts["tag-limit"];
+            if (tagLimit) {
+                tags = tags.slice(0, tagLimit);
             }
             customPropsObject[propName] = tags;
         }
@@ -207,16 +195,16 @@ export class TagsLineGenerator {
         return value.split(splitter);
     }
 
-    private static getLengthFunc(limitType: LimitType): LengthFunc {
-        if (limitType === "chars") {
-            return (string: string) => string.length;
+    private static getLengthFunc(lenLimit: number, limitType: LimitType): getLengthFuncResult {
+        if (lenLimit <= 0) {
+            return {length: (_: string) => 0, lengthLimit: Number.MAX_SAFE_INTEGER};
+        }
+        if (limitType === "char") {
+            return {length: (string: string) => string.length};
         } else
-        if (limitType === "bytes") {
+        if (limitType === "byte") {
             const te = new TextEncoder();
-            return (string: string) => te.encode(string).length;
-        } else
-        if (limitType === "unlimited") {
-            return (_: string) => 0;
+            return {length: (string: string) => te.encode(string).length};
         }
         throw new Error("Wrong LimitType");
     }

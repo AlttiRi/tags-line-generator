@@ -6,25 +6,27 @@ import json1 from "./jsons/sankaku-31250632.json" assert {type: "json"};
 import json2 from "./jsons/sankaku-29652683.json" assert {type: "json"};
 import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 
+/** @typedef {import("../src/tags-line-generator").TagsLineGenSetting} TagsLineGenSetting */
+
 
 /** @type {TagsLineGenSetting} */
 const computedTagLineSetting = {
     "custom": {
         "tags__important": {
-            "source": ["tags"],
+            "sources": ["tags"],
             "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"],
         },
         "tags__important_medium": {
-            "source": ["tags_medium"],
+            "sources": ["tags_medium"],
             "only": ["3d"]
         },
         "tags__filtered_medium": {
-            "source": ["tags_medium"],
+            "sources": ["tags_medium"],
             "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
         },
         "tags__custom_general": {
-            "source": ["tags_general"],
-            // "tags-limit": 3
+            "sources": ["tags_general"],
+            // "tag-limit": 2
         }
     },
     "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
@@ -43,8 +45,8 @@ const computedTagLineSetting = {
         "tags_genre", "tags__filtered_medium", "tags_meta"
     ],
     // "only": ["gwendolyn_tennyson", "violet_parr"],
-    "length-limit": 110,
-    // "tags-limit": 7
+    "len-limit": 110,
+    // "tag-limit": 7
 };
 const tagsLineGen = new TagsLineGenerator(computedTagLineSetting);
 
