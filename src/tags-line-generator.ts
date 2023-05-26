@@ -5,7 +5,7 @@ import {
     CustomPropOptions, CustomPropOptionsExt,
     LengthFunc, LimitType, ToArrayOpt,
     TagsLineGenSetting, PropsObject, CustomPropsObject,
-    Tag, TagList, TagLine, PropName, getLengthFuncResult,
+    Tag, TagList, TagLine, PropName, getLengthFuncResult, TagListMixed,
 } from "./types.js";
 
 
@@ -173,7 +173,7 @@ export class TagsLineGenerator {
         };
     }
 
-    private toArray(value?: string | string[], opt?: ToArrayOpt): string[] {
+    private toArray(value?: TagList | TagLine | TagListMixed, opt?: ToArrayOpt): TagList {
         const split    = opt?.split ?? this.split;
         const splitter = opt?.splitter ?? this.splitter;
         return TagsLineGenerator._toArray(value, split, splitter).filter(e => Boolean(e));

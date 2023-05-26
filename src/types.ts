@@ -6,16 +6,21 @@ export type Tag = string;
 export type TagLine = `${Tag}`;
 /** `TagList` is an array of `Tag`s */
 export type TagList = Tag[];
+/**
+ * `TagListMixed` is an array of `Tag`s or/and `TagLine`s.
+ * The `split` option of `TagsLineGenSetting`/`CustomPropsOptionsObject` must be set to `true` for the correct work.
+ */
+export type TagListMixed = Array<Tag | TagLine>;
 
 /** `PropName` is the key of `PropsObject` is containing `TagLine`, or `TagList` */
 export type PropName = string;
 
 /**
  * The property object can have `any` properties,
- * but the selected keys (sources for `selectedSets`) must be `string` (`TagLine`), or `string[]` (`TagList`).
+ * but the selected keys (sources for `selectedSets`) must be `string` (`TagLine`), or `string[]` (`TagList`), `TagListMixed`.
  */
 export type PropsObject = {
-    [key in PropName]: any | TagLine | TagList
+    [key in PropName]: any | TagLine | TagList | TagListMixed
 };
 
 /**
@@ -45,15 +50,15 @@ export type TagsLineGenSetting = {
     replace?: Array<[Tag, Tag]>,
     onlyOne?: Array<TagList> | null, "only-one"?: Array<TagList> | null,
 
-    only?:   TagLine | TagList,
-    ignore?: TagLine | TagList,
+    only?:   TagLine | TagList | TagListMixed,
+    ignore?: TagLine | TagList | TagListMixed,
 };
 
 
 export type CustomPropOptions = {
     sources: PropName | PropName[],
-    only?:   TagLine | TagList,
-    ignore?: TagLine | TagList,
+    only?:   TagLine | TagList | TagListMixed,
+    ignore?: TagLine | TagList | TagListMixed,
     split?: boolean,
     splitter?: string,
     tagLimit?: number, "tag-limit"?: number,
