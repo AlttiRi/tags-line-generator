@@ -252,7 +252,7 @@ t({
 
 t({
     genSettings: {
-        "custom": {
+        "customProps": {
             "tags__general": {
                 "sources": ["tag_string_general"],
                 "tagLimit": 3
@@ -271,7 +271,7 @@ t({
 
 t({
     genSettings: {
-        "custom": {
+        "custom-props": {
             "tags__example1": {
                 "sources": ["tags_artist tag_string_general"],
                 "tag-limit": 4
@@ -291,7 +291,7 @@ t({
 
 t({
     genSettings: {
-        "custom": {
+        "custom-props": {
             "tags__example1": {
                 "sources": ["tags_artist", "tag_string_general"],
                 "tag-limit": 4
@@ -352,7 +352,7 @@ t({
 t({
     genSettings: {
         "props": "tags",
-        "onlyOne": [
+        "only-one": [
             ["third-party_edit", "edit", "edited"],
             ["sound_edit", "edit", "edited"]
         ],
@@ -388,7 +388,7 @@ t({
 
 t({
     genSettings: {
-        "custom": {
+        "customProps": {
             "tags__example": {
                 "sources": "tag_string_general",
                 "only": "megane"
@@ -494,7 +494,7 @@ t({
 // "uploader" key must have no space character
 t({
     genSettings: {
-        "custom": {
+        "custom-props": {
             "spec-uploader-tag": {
                 "sources": "uploader",
                 "only": "user1"
@@ -511,7 +511,7 @@ t({
 // With the other "uploader" key value
 t({
     genSettings: {
-        "custom": {
+        "custom-props": {
             "spec-uploader-tag": {
                 "sources": "uploader",
                 "only": "user1"
@@ -530,7 +530,7 @@ t({
 t({
     genSettings: {
         "split": false,
-        "custom": {
+        "custom-props": {
             "spec-uploader-tag": {
                 "sources": ["uploader"],
                 "only": ["user 1"]
@@ -552,7 +552,7 @@ t({
 // Use `"split": false` only in "custom"
 t({
     genSettings: {
-        "custom": {
+        "custom-props": {
             "spec-uploader-tag": {
                 "sources": ["uploader"],
                 "only": ["user 1"],
@@ -573,7 +573,7 @@ t({
 });
 t({
     genSettings: {
-        "custom": {
+        "custom-props": {
             "spec-uploader-tag": {
                 "sources": ["uploader"],
                 "only": ["user 1"],
@@ -754,7 +754,7 @@ t({
 // The advanced usage:
 // Keep "Animated" tag only if the extension is not "mp4", or "webm", or "gif".
 const genSettingsOptionalAnimated = {
-    "custom": {
+    "customProps": {
         "__main_tags": {
             "sources": "tags",
             "ignore": "Animated"
@@ -789,7 +789,7 @@ t({
 
 // Additionally let's move the "Source_Filmmaker" tag to the end
 const genSettingsOptionalAnimatedWithSource_Filmmaker = {
-    "custom": {
+    "customProps": {
         "__main_tags": {
             "sources": "tags",
             "ignore": "Animated Source_Filmmaker"
@@ -825,7 +825,7 @@ t({
 
 t({
     genSettings: {
-        "custom": {
+        "customProps": {
             "__custom_tags_1": {
                 "sources": "tags",
                 "splitter": ", "
@@ -842,7 +842,7 @@ t({
 
 t({
     genSettings: {
-        "custom": {
+        "customProps": {
             "__custom_tags_1": {
                 "sources": "tags",
                 "splitter": ", ",
@@ -866,7 +866,7 @@ t({
 t({
     genSettings: {
         "splitter": ", ",
-        "custom": {
+        "customProps": {
             "__custom_tags_1": {
                 "sources": "tags",
                 "ignore": "tag 1"

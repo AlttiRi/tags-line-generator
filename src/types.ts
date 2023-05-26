@@ -30,7 +30,7 @@ export type CustomPropsObject = {
 
 export type TagsLineGenSetting = {
     props: PropName | PropName[],
-    custom?: CustomPropsOptionsObject,
+    customProps?: CustomPropsOptionsObject, "custom-props"?: CustomPropsOptionsObject,
 
     tagLimit?: number, "tag-limit"?: number,
     lenLimit?: number, "len-limit"?: number,

@@ -44,7 +44,7 @@ export class TagsLineGenerator {
         this.replace = new Map(settings.replace);
         this.onlyOne = settings.onlyOne || settings["only-one"] || null;
 
-        const customProps = settings.custom || {};
+        const customProps = settings.customProps || settings["custom-props"] || {};
         this.customPropsOptionsObjectExt = this.extendCustomSets(customProps);
 
         if (settings.only) {

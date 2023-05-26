@@ -11,7 +11,7 @@ import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 
 /** @type {TagsLineGenSetting} */
 const computedTagLineSetting = {
-    "custom": {
+    "custom-props": {
         "tags__important": {
             "sources": ["tags"],
             "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"],
