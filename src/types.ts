@@ -39,7 +39,7 @@ export type WordCollection<T extends string> = WordLine<T> | WordList<T> | WordL
 
 /**
  * The property object can have `any` properties,
- * but the selected keys (sources for `selectedSets`) must be `string` (`TagLine`), or `string[]` (`TagList`), `TagListMixed`.
+ * but the selected keys (sources for `selectedSets`) must be `WordCollection` (`string` or `string[]`).
  */
 export type PropsObject = {
     [key in PropName]: any | WordCollection<PropName>
