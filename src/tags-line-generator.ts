@@ -3,9 +3,9 @@ import {WildcardTagMatcher} from "./wildcard-tag-matcher.js";
 import {
     CustomPropsOptionsObject, CustomPropsOptionsObjectExt,
     CustomPropOptions, CustomPropOptionsExt,
-    LengthFunc, LimitType, ToArrayOpt,
+    LengthFunc, getLengthFuncResult, LimitType, ToArrayOpt,
     TagsLineGenSetting, PropsObject, CustomPropsObject,
-    Tag, TagList, TagLine, PropName, getLengthFuncResult,
+    Tag, PropName, WordLine, WordList, WordCollection,
 } from "./types.js";
 
 
@@ -21,7 +21,7 @@ export class TagsLineGenerator {
     private readonly customPropsOptionsObjectExt: CustomPropsOptionsObjectExt;
     private readonly props: PropName[];
     private readonly replace: Map<Tag, Tag>;
-    private readonly onlyOne: Array<TagList> | null;
+    private readonly onlyOne: Array<WordList<Tag>> | null;
     private readonly ignoreMatcher?: WildcardTagMatcher;
     private readonly onlyMatcher?:   WildcardTagMatcher;
 
@@ -55,16 +55,16 @@ export class TagsLineGenerator {
         }
     }
 
-    generateLine(propsObject: PropsObject): TagLine {
+    generateLine(propsObject: PropsObject): WordLine<Tag> {
         const customPropsObject = this.getCustomPropsObject(propsObject);
-        const tagSources: Array<TagList> = this.props.map(name => {
+        const tagSources: Array<WordList<Tag>> = this.props.map(name => {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
             }
             return customPropsObject[name] || [];
         });
 
-        let tags: TagList = tagSources.flat();
+        let tags: WordList<Tag> = tagSources.flat();
         if (this.dedup) {
             tags = [...new Set(tags)];
         }
@@ -99,7 +99,7 @@ export class TagsLineGenerator {
         return resultTags.join(this.joiner);
     }
 
-    private removeByOnlyOneRule(tags: TagList): TagList {
+    private removeByOnlyOneRule(tags: WordList<Tag>): WordList<Tag> {
         if (!this.onlyOne) {
             return tags;
         }
@@ -124,7 +124,7 @@ export class TagsLineGenerator {
     private getCustomPropsObject(propsObject: PropsObject): CustomPropsObject {
         const customPropsObject: CustomPropsObject = {};
         for (const [propName, opts] of Object.entries(this.customPropsOptionsObjectExt)) {
-            let tags: TagList = opts.source
+            let tags: WordList<Tag> = opts.sources
                 .flatMap((name: PropName) => {
                     return this.toArray(propsObject[name] || customPropsObject[name], opts);
                 })
@@ -166,7 +166,7 @@ export class TagsLineGenerator {
         const tagLimit = opts.tagLimit || opts["tag-limit"];
         return {
             ...opts,
-            source: this.toArray(opts.sources, opts),
+            sources: this.toArray(opts.sources, opts),
             ...(tagLimit !== undefined ? {tagLimit} : {}),
             ...(ignoreMatcher ? {ignoreMatcher} : {}),
             ...(onlyMatcher   ? {onlyMatcher}   : {}),
@@ -179,8 +179,8 @@ export class TagsLineGenerator {
         return TagsLineGenerator._toArray(value, split, splitter).filter(e => Boolean(e));
     }
 
-    private static _toArray(value: string | string[] | undefined, split: boolean, splitter: string): string[] {
-        if (!value) {
+    private static _toArray(value: WordCollection<string> | undefined, split: boolean, splitter: string): WordList<string> {
+        if (!value) { // "" | undefined
             return [];
         }
         if (!split) {

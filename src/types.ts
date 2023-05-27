@@ -1,37 +1,48 @@
 import {WildcardTagMatcher} from "./wildcard-tag-matcher";
 
-/** `Tag` is just a string */
+/** `Tag` is just a string. */
 export type Tag = string;
-/** `TagLine` is a string of one or more `Tag`s separated by a separator (a space by default)*/
-export type TagLine = `${Tag}`;
-/** `TagList` is an array of `Tag`s */
-export type TagList = Tag[];
-/**
- * `TagListMixed` is an array of `Tag`s or/and `TagLine`s.
- * The `split` option of `TagsLineGenSetting`/`CustomPropsOptionsObject` must be set to `true` for the correct work.
- */
-export type TagListMixed = Array<Tag | TagLine>;
-
-/** `PropName` is the key of `PropsObject` is containing `TagLine`, or `TagList` */
+/** `PropName` is the property name (key) of `PropsObject` is containing tags. */
 export type PropName = string;
-/** `PropNameList` is a string of one or more `PropName`s separated by a separator (a space by default)*/
-export type PropNameLine = `${PropName}`;
-/** `PropNameList` is an array of `PropName`s */
-export type PropNameList = PropName[];
+
+/** `Word` represents either `Tag` or `PropName`. */
+export type Word<T extends string> = T;
 /**
- * It's similar to `TagListMixed`. Use with `split: true`.
+ * A list (array) of `Word`s.
  * @example
- * const a1: PropNameListMixed = ["a", "b", "c d e"];
- * const a2: PropName[] = ["a", "b", "c", "d", "e"];
+ * const wList: WordList<string> = ["red", "green, "blue"];
+ * */
+export type WordList<T extends string> = Word<T>[];
+/**
+ * A string line of `Word`s separated by a separator (a space by default).
+ * @example
+ * const wLine: WordLine<string> = "red green blue";
+ * */
+export type WordLine<T extends string> = `${Word<T>}`;
+/**
+ * A list (array) of `Word`s and/or `WordLine`s. Use with `split: true`.
+ * @example
+ * const wlm: WordListMixed<string> = ["a", "b", "c d e"];
+ * const wl: WordList<string> = ["a", "b", "c", "d", "e"];
+ * */
+export type WordListMixed<T extends string> = Array<Word<T> | WordLine<T>>;
+/**
+ * Collection of `Word` in any form. To make the user input more convenient.
+ * (Instead of using the less convenient `WordList`.)
+ * @example
+ * const wc1: WordCollection<string> = "a b c d e";               // WordLine
+ * const wc2: WordCollection<string> = ["a", "b", "c", "d", "e"]; // WordList
+ * const wc3: WordCollection<string> = ["a b", "c", "d e"];       // WordListMixed
  */
-export type PropNameListMixed = Array<PropName | PropNameLine>;
+export type WordCollection<T extends string> = WordLine<T> | WordList<T> | WordListMixed<T>;
+
 
 /**
  * The property object can have `any` properties,
  * but the selected keys (sources for `selectedSets`) must be `string` (`TagLine`), or `string[]` (`TagList`), `TagListMixed`.
  */
 export type PropsObject = {
-    [key in PropName]: any | TagLine | TagList | TagListMixed
+    [key in PropName]: any | WordCollection<PropName>
 };
 
 /**
@@ -41,11 +52,11 @@ export type PropsObject = {
  * @private
  */
 export type CustomPropsObject = {
-    [key in PropName]: TagList
+    [key in PropName]: WordList<Tag>
 };
 
 export type TagsLineGenSetting = {
-    props: PropName | PropNameList | PropNameListMixed,
+    props?: WordCollection<PropName>,
     customProps?: CustomPropsOptionsObject, "custom-props"?: CustomPropsOptionsObject,
 
     tagLimit?: number, "tag-limit"?: number,
@@ -59,24 +70,24 @@ export type TagsLineGenSetting = {
     caseSens?: boolean, "case-sens"?: boolean,
 
     replace?: Array<[Tag, Tag]>,
-    onlyOne?: Array<TagList> | null, "only-one"?: Array<TagList> | null,
+    onlyOne?: Array<WordList<Tag>> | null, "only-one"?: Array<WordList<Tag>> | null,
 
-    only?:   TagLine | TagList | TagListMixed,
-    ignore?: TagLine | TagList | TagListMixed,
+    only?:   WordCollection<Tag>,
+    ignore?: WordCollection<Tag>,
 };
 
 
 export type CustomPropOptions = {
-    sources: PropName | PropName[],
-    only?:   TagLine | TagList | TagListMixed,
-    ignore?: TagLine | TagList | TagListMixed,
+    sources: WordCollection<PropName>,
+    only?:   WordCollection<Tag>,
+    ignore?: WordCollection<Tag>,
     split?: boolean,
     splitter?: string,
     tagLimit?: number, "tag-limit"?: number,
 };
 /** @private */
 export interface CustomPropOptionsExt extends Omit<CustomPropOptions, "tag-limit"> {
-    source: TagList,
+    sources: WordList<PropName>,
     ignoreMatcher?: WildcardTagMatcher,
     onlyMatcher?:   WildcardTagMatcher,
 }
