@@ -901,6 +901,43 @@ t({
     expected: "tag 2, tag 3, tag 4, tag 1"
 });
 
+
+t({
+    genSettings: {
+        "customProps": {
+            "hair_eyes_tags": {
+                "sources": "tag_string_general",
+                "only": "*_hair *_eyes"
+            },
+            "hair_eyes_tags_limited": {
+                "sources": ["hair_eyes_tags"],
+                "tagLimit": 3
+            },
+        },
+        "props": "hair_eyes_tags_limited",
+    },
+    propsObject: sankaku3,
+    expected: "black_hair blue_eyes brown_eyes"
+});
+t({
+    genSettings: {
+        "customProps": {
+            "hair_eyes_tags": {
+                "sources": "tag_string_general",
+                "only": "*_hair *_eyes"
+            },
+            "hair_eyes_tags_limited": {
+                "sources": "hair_eyes_tags   ",
+                "tagLimit": 3
+            },
+        },
+        "props": "hair_eyes_tags_limited tag_string_general",
+        "lenLimit": 100
+    },
+    propsObject: sankaku3,
+    expected: "black_hair blue_eyes brown_eyes 2girls abs bangs belt bikini bikini_top blue_jeans bra bracelet duo"
+});
+
 // caseSens
 // t({
 //     genSettings: {
@@ -911,7 +948,7 @@ t({
 //     propsObject: {
 //         "tags": "3D Animated Overwatch Source_Filmmaker Tracer"
 //     },
-//     expected: "tracer"
+//     expected: "Tracer"
 // });
 
 

@@ -125,7 +125,7 @@ export class TagsLineGenerator {
         const customPropsObject: CustomPropsObject = {};
         for (const [propName, opts] of Object.entries(this.customPropsOptionsObjectExt)) {
             let tags: WordList<Tag> = opts.sources
-                .flatMap((name: PropName) => {
+                .flatMap((name: PropName): WordList<Tag> => {
                     return this.toArray(propsObject[name] || customPropsObject[name], opts);
                 })
                 .filter((tag: Tag) => {
@@ -173,13 +173,9 @@ export class TagsLineGenerator {
         };
     }
 
-    private toArray(value?: string | string[], opt?: ToArrayOpt): string[] {
+    private toArray(value?: WordCollection<string>, opt?: ToArrayOpt): WordList<string> {
         const split    = opt?.split ?? this.split;
         const splitter = opt?.splitter ?? this.splitter;
-        return TagsLineGenerator._toArray(value, split, splitter).filter(e => Boolean(e));
-    }
-
-    private static _toArray(value: WordCollection<string> | undefined, split: boolean, splitter: string): WordList<string> {
         if (!value) { // "" | undefined
             return [];
         }
@@ -189,8 +185,13 @@ export class TagsLineGenerator {
             }
             return value;
         }
+        return TagsLineGenerator._toArray(value, splitter).filter(e => Boolean(e));
+    }
+
+    // The result should be filtered. "animated   webm" -> ["animated", "", "webm"]
+    private static _toArray(value: WordCollection<string>, splitter: string): WordList<string> {
         if (Array.isArray(value)) {
-            return value.map(value => value.split(splitter)).flat();
+            return value.flatMap(value => value.split(splitter));
         }
         return value.split(splitter);
     }
