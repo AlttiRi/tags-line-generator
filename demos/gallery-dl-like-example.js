@@ -12,24 +12,24 @@ import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 /** @type {TagLineGenSetting} */
 const computedTagLineSetting = {
     "custom-props": {
-        "tags__important": {
-            "props": ["tags"],
-            "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"],
+        "__important": {
+            "props": "tags",
+            "only": "third-party_edit sound_edit ai_generated artist_request",
         },
-        "tags__important_medium": {
-            "props": ["tags_medium"],
-            "only": ["3d"]
+        "__important_medium": {
+            "props": "tags_medium",
+            "only": "3d"
         },
-        "tags__filtered_medium": {
-            "props": ["tags_medium"],
-            "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
+        "__filtered_medium": {
+            "props": "tags_medium",
+            "ignore": "*filesize *resolution *filesize *aspect_ratio hd fhd"
         },
-        "tags__custom_general": {
-            "props": ["tags_general"],
+        "__custom_general": {
+            "props": "tags_general",
             // "tag-limit": 2
         }
     },
-    "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
+    "ignore": "tagme  cg_art game_cg artist_cg  webm mp4  video animated",
     "replace": [
         ["megane", "glasses"]
     ],
@@ -39,13 +39,13 @@ const computedTagLineSetting = {
         ["one_piece:_two_years_later", "one_piece"],
     ],
     "props": [
-        "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
-        "tags__important_medium",
-        "tags__custom_general",
-        "tags_genre", "tags__filtered_medium", "tags_meta"
+        "tags_artist __important tags_character tags_copyright tags_studio",
+        "__important_medium",
+        "__custom_general",
+        "tags_genre __filtered_medium tags_meta"
     ],
-    // "only": ["gwendolyn_tennyson", "violet_parr"],
-    "len-limit": 110,
+    // "only": "gwendolyn_tennyson violet_parr jessica_rabbit nico_robin",
+    "len-limit": 100,
     // "tag-limit": 7
 };
 const tagLineGen = new TagLineGenerator(computedTagLineSetting);
