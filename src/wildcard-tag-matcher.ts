@@ -1,46 +1,60 @@
-type Wildcard = `*${string}` | `${string}*` | `*${string}*`;
-type WildcardMatcher = (text: string) => boolean;
+import {IWildcardTagMatcher, Tag, WildcardTag} from "./types";
 
-export class WildcardTagMatcher {
-    private specTagsSet: Set<string>;
+type WildcardMatcher = (tag: Tag) => boolean;
+
+/**
+ * Allows to check does a tag match any tag of some set of tags (passed to `constructor`).
+ * With simple wildcard support.
+ *
+ * @example
+ * const wtm = new WildcardTagMatcher(["*_hair", "black_eyes"]);
+ * wtm.match("white_hair"); // true
+ * wtm.match("black_hair"); // true
+ * wtm.match("black_eyes"); // true
+ * wtm.match("blue_eyes");  // false
+ * wtm.match("pink_dress"); // false
+ */
+export class WildcardTagMatcher implements IWildcardTagMatcher {
+    private tags: Set<Tag>;
     private wildcardMatchers: WildcardMatcher[];
-    constructor(tagsSet: string[]) {
-        const wildcards: Wildcard[] = [];
-        const tags: string[] = [];
-        for (const tag of tagsSet) {
-            if (WildcardTagMatcher._isWildcard(tag)) {
+
+    constructor(inputTags: Array<Tag | WildcardTag>) {
+        const wildcards: WildcardTag[] = [];
+        const tags: Tag[] = [];
+        for (const tag of inputTags) {
+            if (WildcardTagMatcher.isWildcard(tag)) {
                 wildcards.push(tag);
             } else {
                 tags.push(tag);
             }
         }
         this.wildcardMatchers = [...new Set(wildcards)].map(wildcardTag => {
-            return WildcardTagMatcher._getWildcardMatcher(wildcardTag);
+            return WildcardTagMatcher.getWildcardMatcher(wildcardTag);
         });
-        this.specTagsSet = new Set(tags);
+        this.tags = new Set(tags);
     }
 
-    match(tag: string) {
-        return this.specTagsSet.has(tag) || this.wildcardMatchers.some(matcher => matcher(tag));
+    match(tag: Tag) {
+        return this.tags.has(tag) || this.wildcardMatchers.some(matcher => matcher(tag));
     }
 
-    static _isWildcard(value: string): value is Wildcard { // Simplified implementation
+    private static isWildcard(value: Tag | WildcardTag): value is WildcardTag {
         return value.startsWith("*") || value.endsWith("*");
     }
 
-    static _getWildcardMatcher(wildcard: Wildcard): WildcardMatcher { // Simplified implementation
+    private static getWildcardMatcher(wildcard: WildcardTag): WildcardMatcher {
         if (wildcard.startsWith("*") && wildcard.endsWith("*")) {
             const substring = wildcard.slice(1, -1);
-            return (text: string) => text.includes(substring);
+            return (tag: Tag) => tag.includes(substring);
         }
         if (wildcard.startsWith("*")) {
             const substring = wildcard.slice(1);
-            return (text: string) => text.endsWith(substring);
+            return (tag: Tag) => tag.endsWith(substring);
         }
         if (wildcard.endsWith("*")) {
             const substring = wildcard.slice(0, -1);
-            return (text: string) => text.startsWith(substring);
+            return (tag: Tag) => tag.startsWith(substring);
         }
-        throw new Error("Invalid input string: " + wildcard);
+        throw new Error("Invalid input string: " + wildcard); // Unreachable. To pass TS check.
     }
 }

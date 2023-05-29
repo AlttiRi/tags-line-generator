@@ -188,7 +188,7 @@ export class TagsLineGenerator {
         return TagsLineGenerator._toArray(value, splitter).filter(e => Boolean(e));
     }
 
-    // The result should be filtered. "animated   webm" -> ["animated", "", "webm"]
+    // The result should be filtered, since "animated   webm" -> ["animated", "", "webm"]
     private static _toArray(value: WordCollection<string>, splitter: string): WordList<string> {
         if (Array.isArray(value)) {
             return value.flatMap(value => value.split(splitter));
@@ -207,6 +207,6 @@ export class TagsLineGenerator {
             const te = new TextEncoder();
             return {length: (string: string) => te.encode(string).length};
         }
-        throw new Error("Wrong LimitType");
+        throw new Error("Wrong LimitType"); // Unreachable. To pass TS check.
     }
 }

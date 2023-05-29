@@ -7,6 +7,6 @@ export type {
     TagsLineGenSetting,
     CustomPropOptions,
     CustomPropsObject,
-    Tag, PropName,
-    WordLine, WordList, WordCollection,
+    Tag, PropName, WildcardTag,
+    Word, WordLine, WordList, WordCollection,
 } from "./types.js";
