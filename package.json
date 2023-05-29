@@ -1,9 +1,9 @@
 {
-  "name": "tags-line-generator",
-  "version": "3.0.0-alpha.13-2023.5.29",
+  "name": "tag-line-generator",
+  "version": "3.0.0-beta.0-2023.5.29",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/tags-line-generator.js",
+  "main": "./dist/tag-line-generator.js",
   "devDependencies": {
     "@alttiri/util-node-js": "1.6.0",
     "@rollup/plugin-typescript": "11.1.1",

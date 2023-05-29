@@ -1,4 +1,4 @@
-# tags-line-generator
+# TagLineGenerator
 
 This library allows you to generate a tag line based on the declarative rules described in JSON format.
 
@@ -40,10 +40,11 @@ const genSettings = {
 
 `selectedSets` option determines which tags sets should be used from `propsObject`. It's order sensitive.
 
-The example of using `TagsLineGenerator` class with the `propsObject` and `genSettings` variable above:
+The example of using `TagLineGenerator` class with the `propsObject` and `genSettings` variable above:
+
 ```js
-const tagsLineGen = new TagsLineGenerator(genSettings);
-const result = tagsLineGen.generateLine(propsObject);
+const tagLineGen = new TagLineGenerator(genSettings);
+const result = tagLineGen.generateLine(propsObject);
 console.log(result);
 ```
 
@@ -52,20 +53,20 @@ The `result` is the follow `String`:
 "leonardo_da_vinci mona_lisa original 1girl brown_hair chair closed_mouth curly_hair dress female grey_dress long_dress"
 ```
 
-Since it's aimed to be used for as a filename part, by default, the generator limits the result tags line length up to 120 characters.
+Since it's aimed to be used for as a filename part, by default, the generator limits the result tag line length up to 120 characters.
 The last tag are not cut. If some tag is too long to be fitted in the length limit the generator looks for the follow tags.
 
-Once the `TagsLineGenerator` is created `generateLine` method can be used multiple times with the different property objects:
+Once the `TagLineGenerator` is created `generateLine` method can be used multiple times with the different property objects:
 
 ```js
-const result2 = tagsLineGen.generateLine(propsObject2);
+const result2 = tagLineGen.generateLine(propsObject2);
 console.log(result2);
 
-const result3 = tagsLineGen.generateLine(propsObject3);
+const result3 = tagLineGen.generateLine(propsObject3);
 console.log(result3);
 ```
 
-It's recommended to reuse the same `TagsLineGenerator` instance due to optimisations.
+It's recommended to reuse the same `TagLineGenerator` instance due to optimisations.
 
 ---
 

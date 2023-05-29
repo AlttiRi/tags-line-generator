@@ -7,26 +7,26 @@ import pixiv     from "./jsons/pixiv-78254724.json"     assert {type: "json"};
 import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
 import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
 
-import {TagsLineGenerator} from "../src/main.js";
-/** @typedef {import("../src/tags-line-generator").TagsLineGenSetting} TagsLineGenSetting */
-/** @typedef {import("../src/tags-line-generator").PropsObject} PropsObject */
+import {TagLineGenerator} from "../src/main.js";
+/** @typedef {import("../src/tag-line-generator.js").TagLineGenSetting} TagLineGenSetting */
+/** @typedef {import("../src/tag-line-generator.js").PropsObject} PropsObject */
 
 /** @type {number[]} */
 const testOnly = [];
 
-/** @type {TagsLineGenerator} */
-let tagsLineGen;
+/** @type {TagLineGenerator} */
+let tagLineGen;
 /**
  * @param {Object} opts
- * @param {TagsLineGenSetting?} opts.genSettings
+ * @param {TagLineGenSetting?} opts.genSettings
  * @param {PropsObject} opts.propsObject
  * @param {string} opts.expected
  */
 function t({genSettings, propsObject, expected}) {
     if (genSettings !== undefined) {
-        tagsLineGen = new TagsLineGenerator(genSettings);
+        tagLineGen = new TagLineGenerator(genSettings);
     }
-    const result = tagsLineGen.generateLine(propsObject);
+    const result = tagLineGen.generateLine(propsObject);
     test({result, expected, stackDeep: 1, testOnly});
 }
 

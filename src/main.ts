@@ -1,10 +1,10 @@
 export {
-    TagsLineGenerator
-} from "./tags-line-generator.js";
+    TagLineGenerator
+} from "./tag-line-generator.js";
 
 export type {
     PropsObject,
-    TagsLineGenSetting,
+    TagLineGenSetting,
     CustomPropOptions,
     CustomPropsObject,
     Tag, PropName, WildcardTag,
