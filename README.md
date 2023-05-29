@@ -6,7 +6,7 @@ It's mainly aimed for generating tag lines for using them in filenames when you 
 
 ## Hello World example
 
-The expected input is an object with keys contain a set of tags (as a `String`, or `String[]` value) and some others _optional_ keys like this one:
+The expected input is an object with keys contain a set of tags (as a `string`, or `string[]` value) and some others _optional_ keys like this one:
 
 ```js
 const propsObject = {    
@@ -26,7 +26,7 @@ const propsObject = {
 };
 ```
 
-_The property object `propsObject` are intended to be similar to a JSON response usually is returned by API._
+_The props object `propsObject` are intended to be similar to a JSON response usually is returned by API._
 
 The most simple use case is to order the tags by type — the most important tags are first (like `artist` and `character` types tags),
 the less important ones are at the end.
@@ -34,13 +34,13 @@ the less important ones are at the end.
 Here is the generator's setting object for this case:
 ```js
 const genSettings = {
-    "selectedSets": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta"
+    "props": "tag_string_artist tag_string_character tag_string_copyright tag_string_general tag_string_meta"
 };
 ```
 
-`selectedSets` option determines which tags sets should be used from `propsObject`. It's order sensitive.
+`props` option determines which tags sets should be used from `propsObject`. It's order sensitive.
 
-The example of using `TagLineGenerator` class with the `propsObject` and `genSettings` variable above:
+The example of using `TagLineGenerator` class with the `propsObject` and `genSettings` variables above:
 
 ```js
 const tagLineGen = new TagLineGenerator(genSettings);
@@ -48,7 +48,7 @@ const result = tagLineGen.generateLine(propsObject);
 console.log(result);
 ```
 
-The `result` is the follow `String`:
+The `result` is the follow `string`:
 ```js
 "leonardo_da_vinci mona_lisa original 1girl brown_hair chair closed_mouth curly_hair dress female grey_dress long_dress"
 ```
@@ -56,7 +56,7 @@ The `result` is the follow `String`:
 Since it's aimed to be used for as a filename part, by default, the generator limits the result tag line length up to 120 characters.
 The last tag are not cut. If some tag is too long to be fitted in the length limit the generator looks for the follow tags.
 
-Once the `TagLineGenerator` is created `generateLine` method can be used multiple times with the different property objects:
+Once the `TagLineGenerator` is created, `generateLine` method can be used multiple times with the different props objects:
 
 ```js
 const result2 = tagLineGen.generateLine(propsObject2);
@@ -70,11 +70,16 @@ It's recommended to reuse the same `TagLineGenerator` instance due to optimisati
 
 ---
 
+
+
 ...
 
 ## todo: more complicated examples and describe API
 
 ...
+
+
+
 
 ---
 
@@ -116,5 +121,7 @@ The bonus config example:
     "length-limit": 110
 }
 ```
+
+
 
 ### todo: describe that it does
