@@ -17,7 +17,7 @@ export class TagsLineGenerator {
     private readonly splitter: string;
     private readonly split:   boolean;
     private readonly dedup:   boolean;
-    private readonly caseSens: boolean;
+    // private readonly caseSens: boolean;
     private readonly customPropsOptionsObjectExt: CustomPropsOptionsObjectExt;
     private readonly props: PropName[];
     private readonly replace: Map<Tag, Tag>;
@@ -38,7 +38,7 @@ export class TagsLineGenerator {
         this.split = settings.split ?? true;
         this.dedup = settings.dedup ?? true;
 
-        this.caseSens = settings.caseSens || settings["case-sens"] || false;
+        // this.caseSens = settings.caseSens || settings["case-sens"] || false;
 
         this.props   = this.toArray(settings.props);
         this.replace = new Map(settings.replace);

@@ -144,6 +144,7 @@ export type TagsLineGenSetting = {
     /**
      * -- not implemented --
      * Case sensitive tag matching.
+     * @default true
      */
     caseSens?: boolean,
     /** Alias for `caseSens` */
