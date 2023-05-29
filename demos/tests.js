@@ -254,11 +254,11 @@ t({
     genSettings: {
         "customProps": {
             "tags__general": {
-                "sources": ["tag_string_general"],
+                "props": ["tag_string_general"],
                 "tagLimit": 3
             },
             "tags__artist": {
-                "sources": ["tag_string_artist"],
+                "props": ["tag_string_artist"],
                 "tagLimit": 1
             },
         },
@@ -273,11 +273,11 @@ t({
     genSettings: {
         "custom-props": {
             "tags__example1": {
-                "sources": ["tags_artist tag_string_general"],
+                "props": ["tags_artist tag_string_general"],
                 "tag-limit": 4
             },
             "tags__example2": {
-                "sources": "tags_artist tag_string_general",
+                "props": "tags_artist tag_string_general",
                 "tag-limit": 2
             }
         },
@@ -293,11 +293,11 @@ t({
     genSettings: {
         "custom-props": {
             "tags__example1": {
-                "sources": ["tags_artist", "tag_string_general"],
+                "props": ["tags_artist", "tag_string_general"],
                 "tag-limit": 4
             },
             "tags__example2": {
-                "sources": ["tags_artist"]
+                "props": ["tags_artist"]
             }
         },
         "props": "tags__example1 tags__example2",
@@ -390,7 +390,7 @@ t({
     genSettings: {
         "customProps": {
             "tags__example": {
-                "sources": "tag_string_general",
+                "props": "tag_string_general",
                 "only": "megane"
             },
         },
@@ -512,7 +512,7 @@ t({
     genSettings: {
         "custom-props": {
             "spec-uploader-tag": {
-                "sources": "uploader",
+                "props": "uploader",
                 "only": "user1"
             }
         },
@@ -529,7 +529,7 @@ t({
     genSettings: {
         "custom-props": {
             "spec-uploader-tag": {
-                "sources": "uploader",
+                "props": "uploader",
                 "only": "user1"
             }
         },
@@ -548,7 +548,7 @@ t({
         "split": false,
         "custom-props": {
             "spec-uploader-tag": {
-                "sources": ["uploader"],
+                "props": ["uploader"],
                 "only": ["user 1"]
             }
         },
@@ -570,7 +570,7 @@ t({
     genSettings: {
         "custom-props": {
             "spec-uploader-tag": {
-                "sources": ["uploader"],
+                "props": ["uploader"],
                 "only": ["user 1"],
                 "split": false
             }
@@ -591,7 +591,7 @@ t({
     genSettings: {
         "custom-props": {
             "spec-uploader-tag": {
-                "sources": ["uploader"],
+                "props": ["uploader"],
                 "only": ["user 1"],
                 "split": false
             }
@@ -772,11 +772,11 @@ t({
 const genSettingsOptionalAnimated = {
     "customProps": {
         "__main_tags": {
-            "sources": "tags",
+            "props": "tags",
             "ignore": "Animated"
         },
         "__extra_tags": {
-            "sources": "extension tags",
+            "props": "extension tags",
             "only": "mp4 webm gif Animated"
         }
     },
@@ -807,11 +807,11 @@ t({
 const genSettingsOptionalAnimatedWithSource_Filmmaker = {
     "customProps": {
         "__main_tags": {
-            "sources": "tags",
+            "props": "tags",
             "ignore": "Animated Source_Filmmaker"
         },
         "__extra_tags": {
-            "sources": "extension tags",
+            "props": "extension tags",
             "only": "mp4 webm gif Animated Source_Filmmaker"
         }
     },
@@ -843,7 +843,7 @@ t({
     genSettings: {
         "customProps": {
             "__custom_tags_1": {
-                "sources": "tags",
+                "props": "tags",
                 "splitter": ", "
             }
         },
@@ -860,12 +860,12 @@ t({
     genSettings: {
         "customProps": {
             "__custom_tags_1": {
-                "sources": "tags",
+                "props": "tags",
                 "splitter": ", ",
                 "ignore": "tag 1"
             },
             "__custom_tags_2": {
-                "sources": "tags",
+                "props": "tags",
                 "splitter": ", ",
                 "only": "tag 1"
             }
@@ -884,11 +884,11 @@ t({
         "splitter": ", ",
         "customProps": {
             "__custom_tags_1": {
-                "sources": "tags",
+                "props": "tags",
                 "ignore": "tag 1"
             },
             "__custom_tags_2": {
-                "sources": "tags",
+                "props": "tags",
                 "only": "tag 1"
             }
         },
@@ -906,11 +906,11 @@ t({
     genSettings: {
         "customProps": {
             "hair_eyes_tags": {
-                "sources": "tag_string_general",
+                "props": "tag_string_general",
                 "only": "*_hair *_eyes"
             },
             "hair_eyes_tags_limited": {
-                "sources": ["hair_eyes_tags"],
+                "props": ["hair_eyes_tags"],
                 "tagLimit": 3
             },
         },
@@ -923,11 +923,11 @@ t({
     genSettings: {
         "customProps": {
             "hair_eyes_tags": {
-                "sources": "tag_string_general",
+                "props": "tag_string_general",
                 "only": "*_hair *_eyes"
             },
             "hair_eyes_tags_limited": {
-                "sources": "hair_eyes_tags   ",
+                "props": "hair_eyes_tags   ",
                 "tagLimit": 3
             },
         },

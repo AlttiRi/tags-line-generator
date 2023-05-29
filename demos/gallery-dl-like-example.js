@@ -13,19 +13,19 @@ import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 const computedTagLineSetting = {
     "custom-props": {
         "tags__important": {
-            "sources": ["tags"],
+            "props": ["tags"],
             "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"],
         },
         "tags__important_medium": {
-            "sources": ["tags_medium"],
+            "props": ["tags_medium"],
             "only": ["3d"]
         },
         "tags__filtered_medium": {
-            "sources": ["tags_medium"],
+            "props": ["tags_medium"],
             "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
         },
         "tags__custom_general": {
-            "sources": ["tags_general"],
+            "props": ["tags_general"],
             // "tag-limit": 2
         }
     },

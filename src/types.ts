@@ -184,7 +184,7 @@ export type TagsLineGenSetting = {
 
 
 export type CustomPropOptions = {
-    sources: WordCollection<PropName>,
+    props:   WordCollection<PropName>,
     only?:   WordCollection<Tag | WildcardTag>,
     ignore?: WordCollection<Tag | WildcardTag>,
     split?: boolean,
@@ -193,7 +193,7 @@ export type CustomPropOptions = {
 };
 /** @private */
 export interface CustomPropOptionsExt extends Omit<CustomPropOptions, "tag-limit"> {
-    sources: WordList<PropName>,
+    props: WordList<PropName>,
     ignoreMatcher?: IWildcardTagMatcher,
     onlyMatcher?:   IWildcardTagMatcher,
 }

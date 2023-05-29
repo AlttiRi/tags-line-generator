@@ -57,14 +57,13 @@ export class TagsLineGenerator {
 
     generateLine(propsObject: PropsObject): WordLine<Tag> {
         const customPropsObject = this.getCustomPropsObject(propsObject);
-        const tagSources: Array<WordList<Tag>> = this.props.map(name => {
+        let tags: WordList<Tag> = this.props.flatMap(name => {
             if (propsObject[name] !== undefined) {
                 return this.toArray(propsObject[name]);
             }
             return customPropsObject[name] || [];
         });
 
-        let tags: WordList<Tag> = tagSources.flat();
         if (this.dedup) {
             tags = [...new Set(tags)];
         }
@@ -124,7 +123,7 @@ export class TagsLineGenerator {
     private getCustomPropsObject(propsObject: PropsObject): CustomPropsObject {
         const customPropsObject: CustomPropsObject = {};
         for (const [propName, opts] of Object.entries(this.customPropsOptionsObjectExt)) {
-            let tags: WordList<Tag> = opts.sources
+            let tags: WordList<Tag> = opts.props
                 .flatMap((name: PropName): WordList<Tag> => {
                     return this.toArray(propsObject[name] || customPropsObject[name], opts);
                 })
@@ -166,7 +165,7 @@ export class TagsLineGenerator {
         const tagLimit = opts.tagLimit || opts["tag-limit"];
         return {
             ...opts,
-            sources: this.toArray(opts.sources, opts),
+            props: this.toArray(opts.props, opts),
             ...(tagLimit !== undefined ? {tagLimit} : {}),
             ...(ignoreMatcher ? {ignoreMatcher} : {}),
             ...(onlyMatcher   ? {onlyMatcher}   : {}),
