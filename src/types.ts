@@ -6,13 +6,21 @@ export type PropName = string;
 /** For partial tag matching. */
 export type WildcardTag = `*${Tag}` | `${Tag}*` | `*${Tag}*`;
 /**
- * The help class to check does the passed tag match any tag
- * of some `WordCollection` (passed to `constructor`) of `Tag`'s and/or `WildcardTag`'s.
+ * The help class to check does the passed tag match any tag of some set of tags (passed to `constructor`).
  * With simple wildcard (`WildcardTag`) support.
+ *
+ * @example
+ * const wtm = new WildcardTagMatcher(["*_hair", "black_eyes"]);
+ * wtm.match("white_hair"); // true
+ * wtm.match("black_hair"); // true
+ * wtm.match("black_eyes"); // true
+ * wtm.match("blue_eyes");  // false
+ * wtm.match("pink_dress"); // false
  * @private
  */
-export interface IWildcardTagMatcher {
-    match(tag: Tag): boolean
+export declare class IWildcardTagMatcher {
+    constructor(inputTags: Array<Tag | WildcardTag>);
+    match(tag: Tag): boolean;
 }
 
 /** `Word` represents either `Tag` or `PropName`. */

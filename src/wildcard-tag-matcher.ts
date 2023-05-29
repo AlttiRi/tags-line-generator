@@ -2,18 +2,6 @@ import {IWildcardTagMatcher, Tag, WildcardTag} from "./types";
 
 type WildcardMatcher = (tag: Tag) => boolean;
 
-/**
- * Allows to check does a tag match any tag of some set of tags (passed to `constructor`).
- * With simple wildcard support.
- *
- * @example
- * const wtm = new WildcardTagMatcher(["*_hair", "black_eyes"]);
- * wtm.match("white_hair"); // true
- * wtm.match("black_hair"); // true
- * wtm.match("black_eyes"); // true
- * wtm.match("blue_eyes");  // false
- * wtm.match("pink_dress"); // false
- */
 export class WildcardTagMatcher implements IWildcardTagMatcher {
     private tags: Set<Tag>;
     private wildcardMatchers: WildcardMatcher[];
