@@ -9,4 +9,5 @@ export type {
     CustomPropsObject,
     Tag, PropName, WildcardTag,
     Word, WordLine, WordList, WordCollection,
+    LimitType,
 } from "./types.js";

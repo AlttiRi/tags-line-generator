@@ -182,7 +182,14 @@ export type TagsLineGenSetting = {
     ignore?: WordCollection<Tag | WildcardTag>,
 };
 
-
+/**
+ * The object with options how to create a custom property — a custom tags source.
+ * A custom property is needed to create a more specific tags set.
+ * In order to use it then in `props` key of `TagsLineGenSetting` object.
+ *
+ * All keys are similar to `TagsLineGenSetting`'s keys.
+ * @see TagsLineGenSetting
+ */
 export type CustomPropOptions = {
     props:   WordCollection<PropName>,
     only?:   WordCollection<Tag | WildcardTag>,
@@ -202,7 +209,7 @@ export type CustomPropsOptionsObject = Record<PropName, CustomPropOptions>;
 /** @private */
 export type CustomPropsOptionsObjectExt = Record<PropName, CustomPropOptionsExt>;
 
-/** @private */
+/** @see TagsLineGenSetting.limitType */
 export type LimitType = "byte" | "char";
 /** @private */
 export type LengthFunc = (text: string) => number;
