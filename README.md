@@ -86,39 +86,39 @@ It's recommended to reuse the same `TagLineGenerator` instance due to optimisati
 The bonus config example:
 ```json
 {
-    "custom-sets": {
-        "tags__important": {
-            "source": ["tags"],
-            "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"]
-        },
-        "tags__important_medium": {
-            "source": ["tags_medium"],
-            "only": ["3d"]
-        },
-        "tags__filtered_medium": {
-            "source": ["tags_medium"],
-            "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
-        },
-        "tags__custom_general": {
-            "source": ["tags_general"]
-        }
+  "custom-props": {
+    "tags__important": {
+      "props": ["tags"],
+      "only": ["third-party_edit", "sound_edit", "ai_generated", "artist_request"]
     },
-    "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
-    "replace": [
-        ["megane", "glasses"]
-    ],
-    "only-one": [
-        ["third-party_edit", "edit"],
-        ["sound_edit", "edit"],
-        ["one_piece:_two_years_later", "one_piece"]
-    ],
-    "selected-sets": [
-        "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
-        "tags__important_medium",
-        "tags__custom_general",
-        "tags_genre", "tags__filtered_medium", "tags_meta"
-    ],
-    "length-limit": 110
+    "tags__important_medium": {
+      "props": ["tags_medium"],
+      "only": ["3d"]
+    },
+    "tags__filtered_medium": {
+      "props": ["tags_medium"],
+      "ignore": ["*filesize", "*resolution", "*filesize", "*aspect_ratio", "hd", "fhd"]
+    },
+    "tags__custom_general": {
+      "props": ["tags_general"]
+    }
+  },
+  "ignore": ["tagme", "cg_art", "game_cg", "artist_cg", "webm", "mp4", "video", "animated"],
+  "replace": [
+    ["megane", "glasses"]
+  ],
+  "only-one": [
+    ["third-party_edit", "edit"],
+    ["sound_edit", "edit"],
+    ["one_piece:_two_years_later", "one_piece"]
+  ],
+  "props": [
+    "tags_artist", "tags__important", "tags_character", "tags_copyright", "tags_studio",
+    "tags__important_medium",
+    "tags__custom_general",
+    "tags_genre", "tags__filtered_medium", "tags_meta"
+  ],
+  "len-limit": 110
 }
 ```
 
