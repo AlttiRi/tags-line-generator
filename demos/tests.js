@@ -1,7 +1,7 @@
 import {t as test} from "./tester.js";
-import {TagLineGenerator} from "../src/main.js";
-/** @typedef {import("../src/tag-line-generator.js").TagLineGenSetting} TagLineGenSetting */
-/** @typedef {import("../src/tag-line-generator.js").PropsObject} PropsObject */
+import {TagsLineGenerator} from "../src/main.js";
+/** @typedef {import("../src/tags-line-generator.js").TagsLineGenSetting} TagsLineGenSetting */
+/** @typedef {import("../src/tags-line-generator.js").PropsObject} PropsObject */
 
 import {createRequire} from "node:module";
 const require = createRequire(import.meta.url);
@@ -17,19 +17,19 @@ const paheal    = require("./jsons/paheal-3864982.json");
 /** @type {number[]} */
 const testOnly = [];
 
-/** @type {TagLineGenerator} */
-let tagLineGen;
+/** @type {TagsLineGenerator} */
+let tagsLineGen;
 /**
  * @param {Object} opts
- * @param {TagLineGenSetting?} opts.genSettings
+ * @param {TagsLineGenSetting?} opts.genSettings
  * @param {PropsObject} opts.propsObject
  * @param {string} opts.expected
  */
 function t({genSettings, propsObject, expected}) {
     if (genSettings !== undefined) {
-        tagLineGen = new TagLineGenerator(genSettings);
+        tagsLineGen = new TagsLineGenerator(genSettings);
     }
-    const result = tagLineGen.generateLine(propsObject);
+    const result = tagsLineGen.generateLine(propsObject);
     test({result, expected, stackDeep: 1, testOnly});
 }
 

@@ -1,6 +1,6 @@
 {
-  "name": "tag-line-generator",
-  "version": "3.0.0-beta.4-2024.9.29",
+  "name": "tags-line-generator",
+  "version": "3.0.0-beta.5-2024.9.29",
   "license": "MIT",
   "type": "module",
   "main": "./src/main.ts",

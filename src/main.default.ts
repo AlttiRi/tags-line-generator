@@ -1,4 +1,4 @@
-import {TagLineGenerator} from "./tag-line-generator";
+import {TagsLineGenerator} from "./tags-line-generator";
 
 // Required to create the correct IIFE for the browser bundle.
-export default TagLineGenerator;
+export default TagsLineGenerator;

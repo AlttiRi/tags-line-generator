@@ -66,14 +66,14 @@ export type PropsObject = {
 /**
  * The same as `PropsObject`,
  * but it is created automatically based on the input `PropsObject`
- * and rules described in `CustomPropsOptionsObject` of `TagLineGenSetting`.
+ * and rules described in `CustomPropsOptionsObject` of `TagsLineGenSetting`.
  * @private
  */
 export type CustomPropsObject = {
     [key in PropName]: WordList<Tag>
 };
 
-export type TagLineGenSetting = {
+export type TagsLineGenSetting = {
     /**
      * The list of property names (keys) of the props object `PropsObject` or/and custom props object `CustomPropsObject`.
      * The selected keys will be sources of the tags.
@@ -193,10 +193,10 @@ export type TagLineGenSetting = {
 /**
  * The object with options how to create a custom property — a custom tags source.
  * A custom property is needed to create a more specific tags set.
- * In order to use it then in `props` key of `TagLineGenSetting` object.
+ * In order to use it then in `props` key of `TagsLineGenSetting` object.
  *
- * All keys are similar to `TagLineGenSetting`'s keys.
- * @see TagLineGenSetting
+ * All keys are similar to `TagsLineGenSetting`'s keys.
+ * @see TagsLineGenSetting
  */
 export type CustomPropOptions = {
     props:   WordCollection<PropName>,
@@ -217,7 +217,7 @@ export type CustomPropsOptionsObject = Record<PropName, CustomPropOptions>;
 /** @private */
 export type CustomPropsOptionsObjectExt = Record<PropName, CustomPropOptionsExt>;
 
-/** @see TagLineGenSetting.limitType */
+/** @see TagsLineGenSetting.limitType */
 export type LimitType = "byte" | "char";
 /** @private */
 export type LengthFunc = (text: string) => number;

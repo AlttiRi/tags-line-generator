@@ -11,7 +11,7 @@ const packageJson  = require("./package.json");
 const options = [{
     input: "src/main.ts",
     output: {
-        file: "dist/tag-line-generator.js",
+        file: "dist/tags-line-generator.js",
         format: "es",
         name: "TagLinGen",
     },
@@ -29,7 +29,7 @@ const options = [{
 }, {
     input: "./dist/dts/main.d.ts",
     output: [{
-        file: "dist/tag-line-generator.d.ts",
+        file: "dist/tags-line-generator.d.ts",
         format: "es",
     }],
     plugins: [
@@ -38,9 +38,9 @@ const options = [{
 }, {
     input: "src/main.default.ts",
     output: {
-        file: "dist/tag-line-generator.browser.js",
+        file: "dist/tags-line-generator.browser.js",
         format: "iife",
-        name: "TagLineGenerator",
+        name: "TagsLineGenerator",
         exports: "default",
         banner: `/*! TLG v${packageJson.version} */`
     },

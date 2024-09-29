@@ -1,5 +1,5 @@
 import {ANSI_CYAN} from "@alttiri/util-node-js";
-import {TagLineGenerator} from "../src/main.js";
+import {TagsLineGenerator} from "../src/main.js";
 import {dateParts, renderTemplateString} from "./util.js";
 
 import {createRequire} from "node:module";
@@ -10,11 +10,11 @@ const json2  = require("./jsons/sankaku-29652683.json");
 const json3  = require("./jsons/sankaku-31113165.json");
 
 
-/** @typedef {import("../src/tag-line-generator").TagLineGenSetting} TagLineGenSetting */
+/** @typedef {import("../src/tags-line-generator").TagsLineGenSetting} TagsLineGenSetting */
 
 
-/** @type {TagLineGenSetting} */
-const computedTagLineSetting = {
+/** @type {TagsLineGenSetting} */
+const computedTagsLineSetting = {
     "custom-props": {
         "__important": {
             "props": "tags",
@@ -52,9 +52,9 @@ const computedTagLineSetting = {
     "len-limit": 100,
     // "tag-limit": 7
 };
-const tagLineGen = new TagLineGenerator(computedTagLineSetting);
+const tagsLineGen = new TagsLineGenerator(computedTagsLineSetting);
 
-const filenamePatter = "[{category}] {id}—{YYYY}.{MM}.{DD}—{computedTagLine}—{md5}.{extension}";
+const filenamePatter = "[{category}] {id}—{YYYY}.{MM}.{DD}—{computedTagsLine}—{md5}.{extension}";
 console.log(ANSI_CYAN(filenamePatter));
 
 
@@ -63,7 +63,7 @@ for (const json of [json1, json2, json3]) {
     Object.assign(propsObject, {
         ...json,
         ...dateParts(json.created_at * 1000),
-        computedTagLine: tagLineGen.generateLine(propsObject),
+        computedTagsLine: tagsLineGen.generateLine(propsObject),
     });
 
     const {value: filename} = renderTemplateString(filenamePatter, propsObject);

@@ -4,12 +4,12 @@ import {
     CustomPropsOptionsObject, CustomPropsOptionsObjectExt,
     CustomPropOptions, CustomPropOptionsExt,
     LengthFunc, getLengthFuncResult, LimitType, ToArrayOpt,
-    TagLineGenSetting, PropsObject, CustomPropsObject,
+    TagsLineGenSetting, PropsObject, CustomPropsObject,
     Tag, PropName, WordLine, WordList, WordCollection,
 } from "./types.js";
 
 
-export class TagLineGenerator {
+export class TagsLineGenerator {
     private readonly tagLimit: number;
     private readonly lenLimit: number;
     private readonly len: LengthFunc;
@@ -25,11 +25,11 @@ export class TagLineGenerator {
     private readonly ignoreMatcher?: WildcardTagMatcher;
     private readonly onlyMatcher?:   WildcardTagMatcher;
 
-    constructor(settings: TagLineGenSetting) {
+    constructor(settings: TagsLineGenSetting) {
         this.tagLimit   = settings.tagLimit  || settings["tag-limit"]  || 0;
         const lenLimit  = settings.lenLimit  || settings["len-limit"]  || 120;
         const limitType = settings.limitType || settings["limit-type"] || "char";
-        const {length, lengthLimit = lenLimit} = TagLineGenerator.getLengthFunc(lenLimit, limitType);
+        const {length, lengthLimit = lenLimit} = TagsLineGenerator.getLengthFunc(lenLimit, limitType);
         this.len = length;
         this.lenLimit = lengthLimit;
 
@@ -184,7 +184,7 @@ export class TagLineGenerator {
             }
             return value;
         }
-        return TagLineGenerator._toArray(value, splitter).filter(e => Boolean(e));
+        return TagsLineGenerator._toArray(value, splitter).filter(e => Boolean(e));
     }
 
     // The result should be filtered, since "animated   webm" -> ["animated", "", "webm"]
