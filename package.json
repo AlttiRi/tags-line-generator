@@ -11,17 +11,20 @@
     "@rollup/plugin-typescript": "12.1.0",
     "@rollup/plugin-node-resolve": "15.3.0",
     "typescript": "5.6.2",
-    "@types/node": "20.12.12"
+    "@types/node": "20.12.12",
+    "tsx": "4.19.1"
   },
   "scripts": {
     "compile":       "tsc --build",
     "compile-watch": "tsc --build -w",
     "clean":         "tsc --build --clean",
 
-    "test":     "npx tsx ./demos/tests.ts",
-    "test-gdl": "npx tsx ./demos/gallery-dl-like-example.js",
-    "compile-and-test": "tsc --build && npx tsx ./demos/tests.js",
+    "test":     "node --import ./node_modules/tsx/dist/loader.cjs ./demos/tests.ts",
+    "test-gdl": "node --import ./node_modules/tsx/dist/loader.cjs ./demos/gallery-dl-like-example.js",
+    "compile-and-test": "tsc --build && node --import ./node_modules/tsx/dist/loader.cjs ./demos/tests.js",
 
-    "build": "rollup --config rollup.config.js"
+    "build": "rollup --config rollup.config.js",
+
+    "test-with-deno": "deno run --allow-read=. ./demos/tests.ts"
   }
 }
