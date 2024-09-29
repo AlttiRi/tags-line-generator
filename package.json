@@ -14,13 +14,13 @@
     "@types/node": "20.12.12"
   },
   "scripts": {
-    "compile": "tsc --build",
+    "compile":       "tsc --build",
     "compile-watch": "tsc --build -w",
-    "clean": "tsc --build --clean",
+    "clean":         "tsc --build --clean",
 
-    "test": "node ./demos/tests.js",
-    "test-gdl": "node ./demos/gallery-dl-like-example.js",
-    "compile-and-test": "tsc --build && node --no-warnings ./demos/tests.js",
+    "test":     "npx tsx ./demos/tests.ts",
+    "test-gdl": "npx tsx ./demos/gallery-dl-like-example.js",
+    "compile-and-test": "tsc --build && npx tsx ./demos/tests.js",
 
     "build": "rollup --config rollup.config.js"
   }
