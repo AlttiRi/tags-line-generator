@@ -1,4 +1,4 @@
-/*! TLG v2.0.7-2023.5.24 */
+/*! TLG v3.0.0-2024.9.29 */
 var TagsLineGenerator = (function () {
     'use strict';
 
@@ -7,11 +7,11 @@ var TagsLineGenerator = (function () {
     }
 
     class WildcardTagMatcher {
-        constructor(tagsSet) {
+        constructor(inputTags) {
             const wildcards = [];
             const tags = [];
-            for (const tag of tagsSet) {
-                if (WildcardTagMatcher._isWildcard(tag)) {
+            for (const tag of inputTags) {
+                if (WildcardTagMatcher.isWildcard(tag)) {
                     wildcards.push(tag);
                 }
                 else {
@@ -19,62 +19,51 @@ var TagsLineGenerator = (function () {
                 }
             }
             this.wildcardMatchers = [...new Set(wildcards)].map(wildcardTag => {
-                return WildcardTagMatcher._getWildcardMatcher(wildcardTag);
+                return WildcardTagMatcher.getWildcardMatcher(wildcardTag);
             });
-            this.specTagsSet = new Set(tags);
+            this.tags = new Set(tags);
         }
         match(tag) {
-            return this.specTagsSet.has(tag) || this.wildcardMatchers.some(matcher => matcher(tag));
+            return this.tags.has(tag) || this.wildcardMatchers.some(matcher => matcher(tag));
         }
-        static _isWildcard(value) {
+        static isWildcard(value) {
             return value.startsWith("*") || value.endsWith("*");
         }
-        static _getWildcardMatcher(wildcard) {
+        static getWildcardMatcher(wildcard) {
             if (wildcard.startsWith("*") && wildcard.endsWith("*")) {
                 const substring = wildcard.slice(1, -1);
-                return (text) => text.includes(substring);
+                return (tag) => tag.includes(substring);
             }
             if (wildcard.startsWith("*")) {
                 const substring = wildcard.slice(1);
-                return (text) => text.endsWith(substring);
+                return (tag) => tag.endsWith(substring);
             }
             if (wildcard.endsWith("*")) {
                 const substring = wildcard.slice(0, -1);
-                return (text) => text.startsWith(substring);
+                return (tag) => tag.startsWith(substring);
             }
-            throw new Error("Invalid input string: " + wildcard);
+            throw new Error("Invalid input string: " + wildcard); // Unreachable. To pass TS check.
         }
     }
 
     class TagsLineGenerator {
-        constructor(settings = {}) {
-            this.charsLimit = settings.charsLimit || settings["chars-limit"]
-                || settings.lengthLimit || settings["length-limit"] || 120;
-            this.bytesLimit = settings.bytesLimit || settings["bytes-limit"] || 0;
-            this.tagsLimit = settings.tagsLimit || settings["tags-limit"] || 0;
-            if (this.bytesLimit < 0 || this.charsLimit < 0) {
-                this.limitType = "unlimited";
-                this.lengthLimit = Number.MAX_SAFE_INTEGER;
-            }
-            else if (this.bytesLimit) {
-                this.limitType = "bytes";
-                this.lengthLimit = this.bytesLimit;
-            }
-            else {
-                this.limitType = "chars";
-                this.lengthLimit = this.charsLimit;
-            }
-            this.calcLength = TagsLineGenerator.getLengthFunc(this.limitType);
+        constructor(settings) {
+            this.tagLimit = settings.tagLimit || settings["tag-limit"] || 0;
+            const lenLimit = settings.lenLimit || settings["len-limit"] || 120;
+            const limitType = settings.limitType || settings["limit-type"] || "char";
+            const { length, lengthLimit = lenLimit } = TagsLineGenerator.getLengthFunc(lenLimit, limitType);
+            this.len = length;
+            this.lenLimit = lengthLimit;
             this.joiner = settings.joiner || " ";
             this.splitter = settings.splitter || " ";
-            this.splitString = settings.splitString ?? settings["split-string"] ?? true;
-            this.deduplicate = settings.deduplicate ?? true;
-            this.caseSensitive = settings.caseSensitive || settings["case-sensitive"] || false;
-            this.selectedSets = this.toArray(settings.selectedSets || settings["selected-sets"]);
+            this.split = settings.split ?? true;
+            this.dedup = settings.dedup ?? true;
+            // this.caseSens = settings.caseSens || settings["case-sens"] || false;
+            this.props = this.toArray(settings.props);
             this.replace = new Map(settings.replace);
             this.onlyOne = settings.onlyOne || settings["only-one"] || null;
-            const customSets = settings.customSets || settings["custom-sets"] || {};
-            this.customSetsExt = this.extendCustomSets(customSets);
+            const customProps = settings.customProps || settings["custom-props"] || {};
+            this.customPropsOptionsObjectExt = this.extendCustomSets(customProps);
             if (settings.only) {
                 this.onlyMatcher = new WildcardTagMatcher(this.toArray(settings.only));
             }
@@ -83,21 +72,20 @@ var TagsLineGenerator = (function () {
             }
         }
         generateLine(propsObject) {
-            const customTagsMap = this.getCustomTagsSets(propsObject);
-            const sets = this.selectedSets.map(name => {
+            const customPropsObject = this.getCustomPropsObject(propsObject);
+            let tags = this.props.flatMap(name => {
                 if (propsObject[name] !== undefined) {
                     return this.toArray(propsObject[name]);
                 }
-                return customTagsMap.get(name) || [];
+                return customPropsObject[name] || [];
             });
-            let tags = sets.flat();
-            if (this.deduplicate) {
-                tags = new Set(tags);
+            if (this.dedup) {
+                tags = [...new Set(tags)];
             }
             tags = this.removeByOnlyOneRule(tags);
             const resultTags = [];
             let currentLength = 0;
-            const joinerLength = this.calcLength(this.joiner);
+            const joinerLength = this.len(this.joiner);
             for (let tag of tags) {
                 if (this.onlyMatcher && !this.onlyMatcher.match(tag)) {
                     continue;
@@ -109,12 +97,12 @@ var TagsLineGenerator = (function () {
                 if (replacer) {
                     tag = replacer;
                 }
-                const tagLength = this.calcLength(tag);
+                const tagLength = this.len(tag);
                 const expectedLineLength = currentLength + tagLength + joinerLength * resultTags.length;
-                if (expectedLineLength <= this.lengthLimit) {
+                if (expectedLineLength <= this.lenLimit) {
                     resultTags.push(tag);
                     currentLength += tagLength;
-                    if (this.tagsLimit === resultTags.length) {
+                    if (this.tagLimit === resultTags.length) {
                         break;
                     }
                 }
@@ -143,33 +131,33 @@ var TagsLineGenerator = (function () {
             }
             return [...set];
         }
-        getCustomTagsSets(propsObject) {
-            const customTagsMap = new Map();
-            for (const [name, opts] of Object.entries(this.customSetsExt)) {
-                const sourceTags = opts.source.map((name) => {
-                    return this.toArray(propsObject[name] || customTagsMap.get(name), opts);
-                }).flat();
-                let tags = [];
-                for (const tag of sourceTags) {
+        getCustomPropsObject(propsObject) {
+            const customPropsObject = {};
+            for (const [propName, opts] of Object.entries(this.customPropsOptionsObjectExt)) {
+                let tags = opts.props
+                    .flatMap((name) => {
+                    return this.toArray(propsObject[name] || customPropsObject[name], opts);
+                })
+                    .filter((tag) => {
                     if (opts.onlyMatcher && !opts.onlyMatcher.match(tag)) {
-                        continue;
+                        return false;
                     }
                     else if (opts.ignoreMatcher && opts.ignoreMatcher.match(tag)) {
-                        continue;
+                        return false;
                     }
-                    tags.push(tag);
+                    return true;
+                });
+                if (opts.tagLimit && opts.tagLimit > 0) {
+                    tags = tags.slice(0, opts.tagLimit);
                 }
-                if (opts.tagsLimit) {
-                    tags = tags.slice(0, opts.tagsLimit);
-                }
-                customTagsMap.set(name, tags);
+                customPropsObject[propName] = tags;
             }
-            return customTagsMap;
+            return customPropsObject;
         }
         extendCustomSets(customSets) {
             const customSetsExt = {};
-            for (const [key, opts] of Object.entries(customSets)) {
-                customSetsExt[key] = this.createSetsOptionsExt(opts);
+            for (const [propName, opts] of Object.entries(customSets)) {
+                customSetsExt[propName] = this.createSetsOptionsExt(opts);
             }
             return customSetsExt;
         }
@@ -181,45 +169,48 @@ var TagsLineGenerator = (function () {
             else if (opts.ignore) {
                 ignoreMatcher = new WildcardTagMatcher(this.toArray(opts.ignore, opts));
             }
+            const tagLimit = opts.tagLimit || opts["tag-limit"];
             return {
                 ...opts,
-                source: this.toArray(opts.source, opts),
+                props: this.toArray(opts.props, opts),
+                ...(tagLimit !== undefined ? { tagLimit } : {}),
                 ...(ignoreMatcher ? { ignoreMatcher } : {}),
                 ...(onlyMatcher ? { onlyMatcher } : {}),
             };
         }
         toArray(value, opt) {
-            const splitString = (opt?.splitString ?? opt?.["split-string"] ?? this.splitString);
-            const splitter = (opt?.splitter ?? this.splitter);
-            return TagsLineGenerator._toArray(value, splitString, splitter).filter(e => Boolean(e));
-        }
-        static _toArray(value, splitString, splitter) {
-            if (!value) {
+            const split = opt?.split ?? this.split;
+            const splitter = opt?.splitter ?? this.splitter;
+            if (!value) { // "" | undefined
                 return [];
             }
-            if (!splitString) {
+            if (!split) {
                 if (isString(value)) {
                     return [value];
                 }
                 return value;
             }
+            return TagsLineGenerator._toArray(value, splitter).filter(e => Boolean(e));
+        }
+        // The result should be filtered, since "animated   webm" -> ["animated", "", "webm"]
+        static _toArray(value, splitter) {
             if (Array.isArray(value)) {
-                return value.map(value => value.split(splitter)).flat();
+                return value.flatMap(value => value.split(splitter));
             }
             return value.split(splitter);
         }
-        static getLengthFunc(limitType) {
-            if (limitType === "chars") {
-                return (string) => string.length;
+        static getLengthFunc(lenLimit, limitType) {
+            if (lenLimit <= 0) {
+                return { length: (_) => 0, lengthLimit: Number.MAX_SAFE_INTEGER };
             }
-            else if (limitType === "bytes") {
+            if (limitType === "char") {
+                return { length: (string) => string.length };
+            }
+            else if (limitType === "byte") {
                 const te = new TextEncoder();
-                return (string) => te.encode(string).length;
+                return { length: (string) => te.encode(string).length };
             }
-            else if (limitType === "unlimited") {
-                return (_) => 0;
-            }
-            throw new Error("Wrong LimitType");
+            throw new Error("Wrong LimitType"); // Unreachable. To pass TS check.
         }
     }
 
