@@ -17,8 +17,8 @@
     "compile-watch": "tsc --build -w",
     "clean": "tsc --build --clean",
 
-    "test": "node --no-warnings ./demos/tests.js",
-    "test-gdl": "node --no-warnings ./demos/gallery-dl-like-example.js",
+    "test": "node ./demos/tests.js",
+    "test-gdl": "node ./demos/gallery-dl-like-example.js",
     "compile-and-test": "tsc --build && node --no-warnings ./demos/tests.js",
 
     "build": "rollup --config rollup.config.js"
