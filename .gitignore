@@ -2,6 +2,7 @@
 /node_modules/
 /src/*.js
 /src/*.js.map
+/src/*.d.ts
 /dist/*
 !/dist/*.browser.js
 /todo.txt

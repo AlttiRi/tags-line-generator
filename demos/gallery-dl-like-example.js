@@ -6,7 +6,7 @@ import json1 from "./jsons/sankaku-31250632.json" assert {type: "json"};
 import json2 from "./jsons/sankaku-29652683.json" assert {type: "json"};
 import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
 
-/** @typedef {import("../src/tag-line-generator.js").TagLineGenSetting} TagLineGenSetting */
+/** @typedef {import("../src/tag-line-generator").TagLineGenSetting} TagLineGenSetting */
 
 
 /** @type {TagLineGenSetting} */
