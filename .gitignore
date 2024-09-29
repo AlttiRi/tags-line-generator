@@ -6,3 +6,4 @@
 /dist/*
 !/dist/*.browser.js
 /todo.txt
+/tsconfig.tsbuildinfo
