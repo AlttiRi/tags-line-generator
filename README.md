@@ -74,7 +74,16 @@ It's recommended to reuse the same `TagsLineGenerator` instance due to optimisat
 
 
 
+---
 
+### v2 -> v3 changes
+
+```
+"custom-sets"   ->  "custom-props"
+"source"        ->  "props"
+"selected-sets" ->  "props"
+"chars-limit"   ->  "len-limit"
+```
 
 ---
 

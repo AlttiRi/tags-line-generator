@@ -1,36 +1,32 @@
-import {t as test} from "./tester.js";
-import {TagsLineGenerator} from "../src/main.js";
-/** @typedef {import("../src/tags-line-generator.js").TagsLineGenSetting} TagsLineGenSetting */
-/** @typedef {import("../src/tags-line-generator.js").PropsObject} PropsObject */
+import {Tester} from "@alttiri/util-node-js";
+import {PropsObject, TagsLineGenerator, TagsLineGenSetting} from "../index.js";
 
 import {createRequire} from "node:module";
-const require = createRequire(import.meta.url);
+const require_ex = createRequire(import.meta.url);
 
-const sankaku1  = require("./jsons/sankaku-29652683.json");
-const sankaku2  = require("./jsons/sankaku-31250632.json");
-const sankaku3  = require("./jsons/sankaku-31113165.json");
-const pixiv     = require("./jsons/pixiv-78254724.json");
-const safebooru = require("./jsons/safebooru-5615470.json");
-const paheal    = require("./jsons/paheal-3864982.json");
+const sankaku1  = require_ex("./jsons/sankaku-29652683.json");
+const sankaku2  = require_ex("./jsons/sankaku-31250632.json");
+const sankaku3  = require_ex("./jsons/sankaku-31113165.json");
+const pixiv     = require_ex("./jsons/pixiv-78254724.json");
+const safebooru = require_ex("./jsons/safebooru-5615470.json");
+const paheal    = require_ex("./jsons/paheal-3864982.json");
 
 
-/** @type {number[]} */
-const testOnly = [];
 
-/** @type {TagsLineGenerator} */
-let tagsLineGen;
-/**
- * @param {Object} opts
- * @param {TagsLineGenSetting?} opts.genSettings
- * @param {PropsObject} opts.propsObject
- * @param {string} opts.expected
- */
-function t({genSettings, propsObject, expected}) {
+const testOnly: number[] = [];
+const {t: test} = new Tester({testOnly}).destructible();
+type TOpts = {
+    genSettings?: TagsLineGenSetting;
+    propsObject: PropsObject;
+    expected: string;
+};
+let tagsLineGen: TagsLineGenerator;
+function t({genSettings, propsObject, expected}: TOpts) {
     if (genSettings !== undefined) {
         tagsLineGen = new TagsLineGenerator(genSettings);
     }
     const result = tagsLineGen.generateLine(propsObject);
-    test({result, expected, stackDeep: 1, testOnly});
+    test({result, expect: expected, stackDeep: 1});
 }
 
 
@@ -629,6 +625,7 @@ t({
     genSettings: {
         "props": "tags",
         "replace": [
+            // @ts-ignore
             []
         ]
     },

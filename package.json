@@ -1,16 +1,17 @@
 {
   "name": "tags-line-generator",
-  "version": "3.0.0-2024.9.29",
+  "version": "3.1.0-2024.9.29",
   "license": "MIT",
   "type": "module",
-  "main": "./src/main.ts",
+  "main": "./index.js",
   "devDependencies": {
+    "@alttiri/util-js": "1.14.1-20240908",
     "@alttiri/util-node-js": "2.2.0-20240821",
-    "@rollup/plugin-typescript": "12.1.0",
-    "rollup-plugin-dts": "6.1.1",
     "rollup": "4.22.5",
+    "@rollup/plugin-typescript": "12.1.0",
+    "@rollup/plugin-node-resolve": "15.3.0",
     "typescript": "5.6.2",
-    "tslib": "2.7.0"
+    "@types/node": "20.12.12"
   },
   "scripts": {
     "compile": "tsc --build",

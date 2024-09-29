@@ -1,4 +1,4 @@
-import {IWildcardTagMatcher, Tag, WildcardTag} from "./types";
+import {IWildcardTagMatcher, Tag, WildcardTag} from "./types.js";
 
 type WildcardMatcher = (tag: Tag) => boolean;
 

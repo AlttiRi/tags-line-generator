@@ -1,20 +1,16 @@
 import {ANSI_CYAN} from "@alttiri/util-node-js";
-import {TagsLineGenerator} from "../src/main.js";
 import {dateParts, renderTemplateString} from "./util.js";
+import {TagsLineGenerator, TagsLineGenSetting} from "../index.js";
 
 import {createRequire} from "node:module";
-const require = createRequire(import.meta.url);
+const require_ex = createRequire(import.meta.url);
 
-const json1  = require("./jsons/sankaku-31250632.json");
-const json2  = require("./jsons/sankaku-29652683.json");
-const json3  = require("./jsons/sankaku-31113165.json");
-
-
-/** @typedef {import("../src/tags-line-generator").TagsLineGenSetting} TagsLineGenSetting */
+const json1 = require_ex("./jsons/sankaku-31250632.json");
+const json2 = require_ex("./jsons/sankaku-29652683.json");
+const json3 = require_ex("./jsons/sankaku-31113165.json");
 
 
-/** @type {TagsLineGenSetting} */
-const computedTagsLineSetting = {
+const computedTagsLineSetting: TagsLineGenSetting = {
     "custom-props": {
         "__important": {
             "props": "tags",

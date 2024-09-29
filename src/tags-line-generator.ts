@@ -1,4 +1,3 @@
-import {isString} from "./util.js";
 import {WildcardTagMatcher} from "./wildcard-tag-matcher.js";
 import {
     CustomPropsOptionsObject, CustomPropsOptionsObjectExt,
@@ -7,6 +6,7 @@ import {
     TagsLineGenSetting, PropsObject, CustomPropsObject,
     Tag, PropName, WordLine, WordList, WordCollection,
 } from "./types.js";
+import {isString} from "@alttiri/util-js";
 
 
 export class TagsLineGenerator {
