@@ -1,15 +1,18 @@
 import {t as test} from "./tester.js";
-
-import sankaku1  from "./jsons/sankaku-29652683.json"   assert {type: "json"};
-import sankaku2  from "./jsons/sankaku-31250632.json"   assert {type: "json"};
-import sankaku3  from "./jsons/sankaku-31113165.json"   assert {type: "json"};
-import pixiv     from "./jsons/pixiv-78254724.json"     assert {type: "json"};
-import safebooru from "./jsons/safebooru-5615470.json"  assert {type: "json"};
-import paheal    from "./jsons/paheal-3864982.json"     assert {type: "json"};
-
 import {TagLineGenerator} from "../src/main.js";
 /** @typedef {import("../src/tag-line-generator.js").TagLineGenSetting} TagLineGenSetting */
 /** @typedef {import("../src/tag-line-generator.js").PropsObject} PropsObject */
+
+import {createRequire} from "node:module";
+const require = createRequire(import.meta.url);
+
+const sankaku1  = require("./jsons/sankaku-29652683.json");
+const sankaku2  = require("./jsons/sankaku-31250632.json");
+const sankaku3  = require("./jsons/sankaku-31113165.json");
+const pixiv     = require("./jsons/pixiv-78254724.json");
+const safebooru = require("./jsons/safebooru-5615470.json");
+const paheal    = require("./jsons/paheal-3864982.json");
+
 
 /** @type {number[]} */
 const testOnly = [];

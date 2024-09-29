@@ -2,9 +2,13 @@ import {ANSI_CYAN} from "@alttiri/util-node-js";
 import {TagLineGenerator} from "../src/main.js";
 import {dateParts, renderTemplateString} from "./util.js";
 
-import json1 from "./jsons/sankaku-31250632.json" assert {type: "json"};
-import json2 from "./jsons/sankaku-29652683.json" assert {type: "json"};
-import json3 from "./jsons/sankaku-31113165.json" assert {type: "json"};
+import {createRequire} from "node:module";
+const require = createRequire(import.meta.url);
+
+const json1  = require("./jsons/sankaku-31250632.json");
+const json2  = require("./jsons/sankaku-29652683.json");
+const json3  = require("./jsons/sankaku-31113165.json");
+
 
 /** @typedef {import("../src/tag-line-generator").TagLineGenSetting} TagLineGenSetting */
 

@@ -1,6 +1,10 @@
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
-import packageJson from "./package.json" assert {type: "json"};
+
+import {createRequire} from "node:module";
+const require = createRequire(import.meta.url);
+
+const packageJson  = require("./package.json");
 
 
 /** @type {import("rollup").RollupOptions[]} */
