@@ -1,6 +1,10 @@
-/*! TLG v3.1.0-2024.9.29 */
+/*! TLG v3.2.0-20240930 */
 var TagsLineGenerator = (function () {
     'use strict';
+
+    function isString(value) {
+        return typeof value === "string";
+    }
 
     class WildcardTagMatcher {
         constructor(inputTags) {
@@ -40,10 +44,6 @@ var TagsLineGenerator = (function () {
             }
             throw new Error("Invalid input string: " + wildcard); // Unreachable. To pass TS check.
         }
-    }
-
-    function isString(value) {
-        return typeof value === "string";
     }
 
     class TagsLineGenerator {

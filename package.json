@@ -1,30 +1,51 @@
 {
   "name": "tags-line-generator",
-  "version": "3.1.0-2024.9.29",
+  "version": "3.2.0-20240930",
+  "description": "Generated a tags line",
+  "keywords": [
+    "tags"
+  ],
+  "homepage": "https://github.com/alttiri/tags-line-generator",
   "license": "MIT",
   "type": "module",
-  "main": "./index.js",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "files": [
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "index.js",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alttiri/tags-line-generator.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "ts-compile":       "tsc --build",
+    "ts-compile-watch": "tsc --build --watch",
+    "ts-clean":         "tsc --build --clean",
+    ".": "",
+    "build-browser": "rollup --config rollup.config.js",
+    "-": "",
+    "test":     "node --import ./node_modules/tsx/dist/loader.cjs ./demos/tests.ts",
+    "test-gdl": "node --import ./node_modules/tsx/dist/loader.cjs ./demos/gallery-dl-like-example.js",
+    "_": "",
+    "test-publish": "tsc --build && npm pack"
+  },
+  "dependencies": {
+    "@alttiri/util-js": "1.14.1-20240908"
+  },
   "devDependencies": {
-    "@alttiri/util-js": "1.14.1-20240908",
     "@alttiri/util-node-js": "2.2.0-20240821",
     "rollup": "4.22.5",
-    "@rollup/plugin-typescript": "12.1.0",
     "@rollup/plugin-node-resolve": "15.3.0",
+    "@rollup/plugin-typescript": "12.1.0",
+    "tslib": "2.7.0",
     "typescript": "5.6.2",
     "@types/node": "20.12.12",
     "tsx": "4.19.1"
-  },
-  "scripts": {
-    "compile":       "tsc --build",
-    "compile-watch": "tsc --build -w",
-    "clean":         "tsc --build --clean",
-
-    "test":     "node --import ./node_modules/tsx/dist/loader.cjs ./demos/tests.ts",
-    "test-gdl": "node --import ./node_modules/tsx/dist/loader.cjs ./demos/gallery-dl-like-example.js",
-    "compile-and-test": "tsc --build && node --import ./node_modules/tsx/dist/loader.cjs ./demos/tests.js",
-
-    "build": "rollup --config rollup.config.js",
-
-    "test-with-deno": "deno run --allow-read=. ./demos/tests.ts"
   }
 }
