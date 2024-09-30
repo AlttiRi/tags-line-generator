@@ -72,7 +72,7 @@ It's recommended to reuse the same `TagsLineGenerator` instance due to optimisat
 
 ## API
 
-
+...
 
 ---
 
@@ -80,7 +80,7 @@ It's recommended to reuse the same `TagsLineGenerator` instance due to optimisat
 
 ```
 "custom-sets"   ->  "custom-props"
-"source"        ->  "props"
+"source"        ->  "props"        ("custom-sets.source"  ->  "custom-props.props")
 "selected-sets" ->  "props"
 "chars-limit"   ->  "len-limit"
 ```
