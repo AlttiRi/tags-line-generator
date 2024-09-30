@@ -30,8 +30,8 @@
     ".": "",
     "build-browser": "rollup --config rollup.config.js",
     "-": "",
-    "test":     "node --import ./node_modules/tsx/dist/loader.cjs ./demos/tests.ts",
-    "test-gdl": "node --import ./node_modules/tsx/dist/loader.cjs ./demos/gallery-dl-like-example.js",
+    "test":     "node --require ./node_modules/tsx/dist/loader.cjs ./demos/tests.ts",
+    "test-gdl": "node --require ./node_modules/tsx/dist/loader.cjs ./demos/gallery-dl-like-example.ts",
     "_": "",
     "test-publish": "tsc --build && npm pack"
   },
