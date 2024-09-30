@@ -22,7 +22,7 @@ export class WildcardTagMatcher implements IWildcardTagMatcher {
         this.tags = new Set(tags);
     }
 
-    match(tag: Tag) {
+    match(tag: Tag): boolean {
         return this.tags.has(tag) || this.wildcardMatchers.some(matcher => matcher(tag));
     }
 
