@@ -6,7 +6,7 @@
     /* Library preset */
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": false,
+    "allowImportingTsExtensions": false, // "rewriteRelativeImportExtensions": true,
     "noEmit": false,
     "declaration": true,
 
