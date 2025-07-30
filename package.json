@@ -1,6 +1,6 @@
 {
   "name": "tags-line-generator",
-  "version": "3.2.0-20240930",
+  "version": "3.2.1-20250730",
   "description": "Generated a tags line",
   "keywords": [
     "tags"

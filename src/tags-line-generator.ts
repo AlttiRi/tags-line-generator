@@ -70,7 +70,7 @@ export class TagsLineGenerator {
 
         tags = this.removeByOnlyOneRule(tags);
 
-        const resultTags = [];
+        let resultTags = [];
         let currentLength = 0;
         const joinerLength = this.len(this.joiner);
         for (let tag of tags) {
@@ -93,6 +93,10 @@ export class TagsLineGenerator {
                     break;
                 }
             }
+        }
+
+        if (this.dedup) { // after replacing may appear duplicates
+            resultTags = [...new Set(resultTags)];
         }
 
         return resultTags.join(this.joiner);
